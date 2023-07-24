@@ -1,18 +1,20 @@
 const env = "production";
 
 const development = {
-  port: "4242",
+  port: 27017,
   hostname: "localhost",
+  dbName: "Ecommerce",
 };
 
 const production = {
-  port: "4242",
+  port: 27017,
   hostname: "localhost",
+  dbName: "Ecommerce",
 };
 
-const appConfig = {
+const config = {
   development,
   production,
 };
 
-export appConfig[env];
+module.exports = config[env];
