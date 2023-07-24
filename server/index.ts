@@ -1,10 +1,10 @@
+import config from "./src/configs/appConfig";
 import express, { Express } from "express";
+import router from "./src/routers/router.ts";
 
-const config = require("./src/configs/appConfig");
 const app: Express = express();
-const router = require("/src/routers/index.ts");
 
-app.listen(config.port, config.hostname, () => {
+app.listen(parseInt(config.port), config.hostname, () => {
   console.log(`Server is running at '${config.hostname}:${config.port}'.`);
 });
 

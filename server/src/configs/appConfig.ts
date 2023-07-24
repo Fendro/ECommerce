@@ -15,4 +15,4 @@ const appConfig = {
   production,
 };
 
-export appConfig[env];
+export default appConfig[env];
