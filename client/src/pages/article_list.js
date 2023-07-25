@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import { createGlobalStyle } from 'styled-components';
-import RegisterForm from "../components/form/registerForm";
+// import ArticleForm from "../components/article/articleForm";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,14 +12,14 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function Register() {
+function Article() {
 	return (
 		<>
 			<Header />
-			<RegisterForm />
+			{/* <ArticleForm /> */}
 			<GlobalStyle />
 		</>
 	)
 }
 
-export default Register;
+export default Article;
