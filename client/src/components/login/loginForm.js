@@ -1,35 +1,76 @@
-import React from 'react';
-import {Box, Button, Container, TextField} from '@mui/material';
-import {styled} from '@mui/material/styles';
-import {Link} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Box, Button, Container, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
+    const [formData, setFormData] = useState({
+        identifier: '',
+        password: '',
+        remember: "",
+    });
+
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        if (type !== 'checkbox') {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: value,
+            }));
+        } else {
+            setFormData((prevFormData) => ({
+                ...prevFormData,
+                [name]: checked,
+            }));
+        }
+    };
+
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (formData.identifier.length < 6) {
+            alert('Username must be at least 6 characters long');
+            return;
+        }else if(formData.password.length < 6){
+            alert('Password must be at least 6 characters long');
+            return;
+        }else{
+        console.log(formData);
+    }
+    };
+
     return (
-        <form action="GET">
-        <CenteredContainer>
-            <FormContainer>
-                <StyledTextField
-                    label="Email or username"
-                    variant="outlined"
-                    fullWidth
-                />
-                <StyledTextField
-                    label="Password"
-                    type="password"
-                    variant="outlined"
-                    fullWidth
-                />
-                <Button variant="contained" color="primary" type="submit" width={'100'} mb={'5'}>
-                    Register
-                </Button>
-                <label>
-                    <input type="checkbox" name="remember" style={{marginTop: '10px'}}/> Remember me
-                </label>
-                <div className="link" style={{marginTop: '20px'}}>
-                    <StyledLink to={{pathname: "/register"}}>Create an account?</StyledLink>
-                </div>
-            </FormContainer>
-        </CenteredContainer>
+        <form onSubmit={handleSubmit}>
+            <CenteredContainer>
+                <FormContainer>
+                    <StyledTextField
+                        label="Email or username"
+                        variant="outlined"
+                        name="identifier"
+                        value={formData.identifier}
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                    <StyledTextField
+                        label="Password"
+                        type="password"
+                        variant="outlined"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        fullWidth
+                    />
+                    <Button variant="contained" color="primary" type="submit" width={'100'} mb={'5'}>
+                        Register
+                    </Button>
+                    <label>
+                        <input type="checkbox" name="remember" value="true" onChange={handleChange} style={{ marginTop: '10px' }} /> Remember me
+                    </label>
+                    <div className="link" style={{ marginTop: '20px' }}>
+                        <StyledLink to={{ pathname: "/register" }}>Create an account?</StyledLink>
+                    </div>
+                </FormContainer>
+            </CenteredContainer>
         </form>
     );
 };
@@ -52,7 +93,7 @@ const FormContainer = styled(Box)({
     borderRadius: '8px',
     backgroundColor: 'darkorange',
     width: '600px',
-    height: 'auto'
+    height: 'auto',
 });
 
 const StyledTextField = styled(TextField)({

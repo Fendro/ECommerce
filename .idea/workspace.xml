@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="Page login finished">
+    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="Changed register page so you can get values on console.log">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/login/loginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/login/loginForm.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/register/registrationForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/register/registrationForm.js" afterDir="false" />
@@ -91,7 +91,7 @@
       <option name="presentableId" value="Default" />
       <updated>1690272117240</updated>
       <workItem from="1690272121461" duration="3752000" />
-      <workItem from="1690275897192" duration="954000" />
+      <workItem from="1690275897192" duration="3373000" />
     </task>
     <task id="LOCAL-00001" summary="removed .idea">
       <option name="closed" value="true" />
@@ -125,7 +125,15 @@
       <option name="project" value="LOCAL" />
       <updated>1690274265242</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Changed register page so you can get values on console.log">
+      <option name="closed" value="true" />
+      <created>1690277124839</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1690277124839</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -152,6 +160,7 @@
     <MESSAGE value="removed .idea" />
     <MESSAGE value="Restructured pages" />
     <MESSAGE value="Page login finished" />
-    <option name="LAST_COMMIT_MESSAGE" value="Page login finished" />
+    <MESSAGE value="Changed register page so you can get values on console.log" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed register page so you can get values on console.log" />
   </component>
 </project>
