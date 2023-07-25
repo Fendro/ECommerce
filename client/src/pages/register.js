@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../components/register/header';
+import Header from '../components/header';
 import {createGlobalStyle} from 'styled-components';
 import RegistrationForm from "../components/register/registrationForm";
 

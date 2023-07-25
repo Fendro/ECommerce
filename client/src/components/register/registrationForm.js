@@ -27,7 +27,7 @@ const RegistrationForm = () => {
                     Register
                 </Button>
                 <div className="link" style={{marginTop: '20px'}}>
-                    <StyledLink to={{pathname: "/"}} target="_blank">Already have an account?</StyledLink>
+                    <StyledLink to={{pathname: "/"}}>Already have an account?</StyledLink>
                 </div>
             </FormContainer>
         </CenteredContainer>
