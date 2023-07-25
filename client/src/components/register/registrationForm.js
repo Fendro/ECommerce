@@ -20,7 +20,18 @@ const RegistrationForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+        if (formData.username.length < 6) {
+            alert('Username must be at least 6 characters long');
+            return;
+        }else if(formData.password.length < 6){
+            alert('Password must be at least 6 characters long');
+            return;
+        }else if(formData.email.length < 6){
+            alert('Email must be at least 6 characters long');
+            return;
+        }else {
+            console.log(formData);
+        }
     };
 
     return (
@@ -29,6 +40,8 @@ const RegistrationForm = () => {
                 <FormContainer>
                     <StyledTextField
                         label="Email"
+                        type="email"
+                        minLength="6"
                         variant="outlined"
                         name="email"
                         value={formData.email}
@@ -39,6 +52,7 @@ const RegistrationForm = () => {
                         label="Username"
                         variant="outlined"
                         name="username"
+                        minLength="6"
                         value={formData.username}
                         onChange={handleChange}
                         fullWidth
@@ -48,6 +62,7 @@ const RegistrationForm = () => {
                         type="password"
                         variant="outlined"
                         name="password"
+                        minLength="6"
                         value={formData.password}
                         onChange={handleChange}
                         fullWidth
