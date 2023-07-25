@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom';
 
 const LoginForm = () => {
     return (
+        <form action="GET">
         <CenteredContainer>
             <FormContainer>
                 <StyledTextField
@@ -29,6 +30,7 @@ const LoginForm = () => {
                 </div>
             </FormContainer>
         </CenteredContainer>
+        </form>
     );
 };
 
