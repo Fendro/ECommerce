@@ -1,7 +1,7 @@
 import config from "../configs/dbConfig";
-import { Db, MongoClient } from "mongodb";
+import { Document, ModifyResult, MongoClient, WithId } from "mongodb";
 
-async function connectDB(): Promise<MongoClient | false> {
+async function establishConnection(): Promise<MongoClient | false> {
   const client: MongoClient = new MongoClient(
     `mongodb://${config.hostname}:${config.port}/${config.dbName}`,
     { monitorCommands: true },
@@ -9,15 +9,6 @@ async function connectDB(): Promise<MongoClient | false> {
 
   try {
     await client.connect();
-    console.log(
-      "Connected to database " +
-        config.hostname +
-        ":" +
-        config.port +
-        "/" +
-        config.dbName +
-        ".",
-    );
     return client;
   } catch (error) {
     console.error("Connection to the database failed.", error);
@@ -26,18 +17,19 @@ async function connectDB(): Promise<MongoClient | false> {
 }
 
 function logRulesNotSatisfied(rules: string[]) {
-  console.log(rules);
   for (let rule of rules) {
     console.error(rule);
   }
 }
 
-async function getLastInsertedDocument(collection: string) {
+async function getLastInsertedDocument(
+  collection: string,
+): Promise<WithId<Document>[]> {
   try {
-    const client = await connectDB();
-    if (!client) return;
+    const client = await establishConnection();
+    if (!client) return [];
 
-    const db: Db = client.db();
+    const db = client.db();
 
     return await db
       .collection(collection)
@@ -45,7 +37,7 @@ async function getLastInsertedDocument(collection: string) {
       .sort({ _id: -1 })
       .limit(1)
       .toArray();
-  } catch (error) {
+  } catch (error: any) {
     console.error("getLastInsertedDocument failed.", error);
     if (error.errInfo)
       logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
@@ -53,13 +45,18 @@ async function getLastInsertedDocument(collection: string) {
   }
 }
 
-async function find(collection: string, find: string) {
+async function find(
+  collection: string,
+  find: object,
+): Promise<WithId<Document>[]> {
   try {
-    const client = await connectDB();
+    const client = await establishConnection();
+    if (!client) return [];
+
     const db = client.db();
 
     return await db.collection(collection).find(find).toArray();
-  } catch (error) {
+  } catch (error: any) {
     console.error(`${collection} find action failed.`, error);
     if (error.errInfo)
       logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
@@ -67,14 +64,16 @@ async function find(collection: string, find: string) {
   }
 }
 
-async function insert(collection: string, data: object) {
+async function insert(collection: string, data: object): Promise<boolean> {
   try {
-    const client = await connectDB();
+    const client = await establishConnection();
+    if (!client) return false;
+
     const db = client.db();
 
     await db.collection(collection).insertOne(data);
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`${collection} insert action failed.`, error);
     if (error.errInfo)
       logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
@@ -82,9 +81,15 @@ async function insert(collection: string, data: object) {
   }
 }
 
-async function update(collection: string, find: string, set: any) {
+async function update(
+  collection: string,
+  find: object,
+  set: object,
+): Promise<ModifyResult | false> {
   try {
-    const client = await connectDB();
+    const client = await establishConnection();
+    if (!client) return false;
+
     const db = client.db();
 
     return await db
@@ -92,9 +97,9 @@ async function update(collection: string, find: string, set: any) {
       .findOneAndUpdate(
         { find },
         { $set: { set } },
-        { returnNewDocument: true },
+        { returnDocument: "after" },
       );
-  } catch (error) {
+  } catch (error: any) {
     console.error(`${collection} update action failed.`, error);
     if (error.errInfo)
       logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
@@ -102,14 +107,16 @@ async function update(collection: string, find: string, set: any) {
   }
 }
 
-async function remove(collection, find) {
+async function remove(collection: string, find: object) {
   try {
-    const client = await connectDB();
+    const client = await establishConnection();
+    if (!client) return false;
+
     const db = client.db();
 
     await db.collection(collection).deleteOne(find);
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.error(`${collection} remove action failed.`, error);
     if (error.errInfo)
       logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
@@ -117,10 +124,4 @@ async function remove(collection, find) {
   }
 }
 
-module.exports = {
-  getLastInsertedDocument,
-  insert,
-  find,
-  update,
-  remove,
-};
+export default { getLastInsertedDocument, insert, find, update, remove };

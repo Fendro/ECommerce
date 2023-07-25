@@ -1,6 +1,10 @@
-const authRouter = require("express").Router();
+import { Router } from "express";
+import * as UserController from "../controllers/userController";
+const authRouter: Router = Router();
 
-authRouter.get("/auth/");
-authRouter.post("/auth");
+authRouter.get("/auth", UserController.login);
+authRouter.post("/auth", UserController.register);
 authRouter.put("/auth");
-authRouter.delete("/auth");
+authRouter.delete("/auth", UserController.deleteAccount);
+
+export default authRouter;

@@ -1,4 +1,5 @@
-const env = "production";
+require("dotenv").config();
+const env = process.env.DOT_ENV === "production" ? "production" : "development";
 
 const development = {
   port: 27017,

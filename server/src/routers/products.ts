@@ -1,4 +1,7 @@
-const router = require("express").Router();
+import { Router } from "express";
+const prodRouter: Router = Router();
 
-router.get("/auth");
-router.get("/auth/:id");
+prodRouter.get("/product");
+prodRouter.get("/product/:id");
+
+export default prodRouter;

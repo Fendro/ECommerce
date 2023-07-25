@@ -1,9 +1,9 @@
 import { ObjectId } from "mongodb";
 
 interface User {
-  name: string;
+  username: string;
   email: string;
   password: string;
-  admin: boolean;
+  admin?: boolean;
   id?: ObjectId;
 }
