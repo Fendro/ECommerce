@@ -1,0 +1,19 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EpitechWebAcademiePromo2024/W-WEB-502-MLH-2-1-ecommerce-maksym.prokopovych.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EpitechWebAcademiePromo2024/W-WEB-502-MLH-2-1-ecommerce-maksym.prokopovych/issues"
+  },
+  "homepage": "https://github.com/EpitechWebAcademiePromo2024/W-WEB-502-MLH-2-1-ecommerce-maksym.prokopovych#readme"
+}
