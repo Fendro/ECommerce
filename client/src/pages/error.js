@@ -17,7 +17,7 @@ function ErrorPage() {
         <>
             <Header />
             <CenteredContainer>
-            <h1>Page not founnd</h1>
+            <h1>Page not found</h1>
             </CenteredContainer>
             <GlobalStyle />
         </>
