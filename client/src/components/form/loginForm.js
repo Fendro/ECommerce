@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Link } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { CenteredContainer, FormContainer, StyledTextField, StyledLink } from '../styling';
 
-const LoginForm = () => {
+export default () => {
 	const [formData, setFormData] = useState({
 		identifier: '',
 		password: '',
@@ -39,9 +38,8 @@ const LoginForm = () => {
 		} else {
 			console.log(formData);
 			try {
-				const res = await fetch("localhost:4242/auth", {
+				const res = await fetch("localhost:4242/auth/?email=" + formData.identifier + "&password=" + formData.password, {
 					method: "GET",
-					query: JSON.stringify(formData),
 				});
 				res.json();
 			} catch {
@@ -54,7 +52,7 @@ const LoginForm = () => {
 		<form onSubmit={handleSubmit}>
 			<CenteredContainer>
 				<FormContainer>
-				<div>{message}</div>
+					<div>{message}</div>
 					<StyledTextField
 						label="Email or username"
 						variant="outlined"
@@ -86,41 +84,3 @@ const LoginForm = () => {
 		</form>
 	);
 };
-
-export default LoginForm;
-
-const CenteredContainer = styled(Container)({
-	display: 'flex',
-	justifyContent: 'center',
-	alignItems: 'center',
-	height: '100vh',
-});
-
-const FormContainer = styled(Box)({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center',
-	padding: '20px',
-	boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-	borderRadius: '8px',
-	backgroundColor: 'darkorange',
-	width: '600px',
-	height: 'auto',
-});
-
-const StyledTextField = styled(TextField)({
-	marginBottom: '30px',
-	'& .MuiOutlinedInput-root': {
-		background: 'white',
-		'&:hover .MuiOutlinedInput-notchedOutline': {
-			borderColor: 'white',
-		},
-		'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-			borderColor: 'black',
-		},
-	},
-});
-
-const StyledLink = styled(Link)({
-	marginTop: '50px',
-});

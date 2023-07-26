@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-
-
+import { CenteredContainer } from '../styling';
 
 export default function Article() {
 	const { idProduct } = useParams();
@@ -15,11 +13,12 @@ export default function Article() {
 			let res;
 			console.log(res);
 			try {
-				res = await fetch("localhost:4242/product/id", {
+				res = await fetch("http://localhost:4242/product/".idProduct, {
 					method: "GET",
 					query: JSON.stringify(idProduct),
 				});
 				setFetchRes("success");
+				console.log(res);
 				setData(res);
 			} catch (e) {
 				console.log(e);
@@ -33,5 +32,8 @@ export default function Article() {
 	}, []);
 
 
-	return <div />;
+	return (
+			<CenteredContainer>
+			</CenteredContainer>
+	);
 }

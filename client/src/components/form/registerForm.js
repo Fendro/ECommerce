@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Box, Button, Container, TextField } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Link, redirect } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { CenteredContainer, FormContainer, StyledTextField, StyledLink } from '../styling';
 
-const RegistrationForm = () => {
+export default () => {
 	const [formData, setFormData] = useState({
 		email: '',
 		username: '',
@@ -90,41 +89,3 @@ const RegistrationForm = () => {
 		</form>
 	);
 };
-
-export default RegistrationForm;
-
-const CenteredContainer = styled(Container)({
-	display: 'flex',
-	justifyContent: 'center',
-	alignItems: 'center',
-	height: '100vh',
-});
-
-const FormContainer = styled(Box)({
-	display: 'flex',
-	flexDirection: 'column',
-	alignItems: 'center',
-	padding: '20px',
-	boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)',
-	borderRadius: '8px',
-	backgroundColor: 'darkorange',
-	width: '600px',
-	height: 'auto'
-});
-
-const StyledTextField = styled(TextField)({
-	marginBottom: '30px',
-	'& .MuiOutlinedInput-root': {
-		background: 'white',
-		'&:hover .MuiOutlinedInput-notchedOutline': {
-			borderColor: 'white',
-		},
-		'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-			borderColor: 'black',
-		},
-	},
-});
-
-const StyledLink = styled(Link)({
-	marginTop: '50px',
-});
