@@ -4,7 +4,7 @@ interface Product {
   name: string;
   price: number;
   description: string;
-  pictures: string[];
-  specs: string[];
+  pictures?: string[];
+  specs?: string[];
   id?: ObjectId;
 }
