@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="Changed register page so you can get values on console.log">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/login/loginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/login/loginForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/register/registrationForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/register/registrationForm.js" afterDir="false" />
-    </list>
+    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="Changed register page so you can get values on console.log" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
