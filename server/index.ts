@@ -1,10 +1,10 @@
 import bodyParser from "body-parser";
 import config from "./src/configs/appConfig";
-import express, { Express, Router } from "express";
+import cors from "cors";
+import express, { Express, Router, Request, Response } from "express";
 import routers from "./src/routers";
 
 const app: Express = express();
-import cors from "cors";
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

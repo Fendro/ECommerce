@@ -4,7 +4,7 @@ const authRouter: Router = Router();
 
 authRouter.get("/auth", UserController.login);
 authRouter.post("/auth", UserController.register);
-authRouter.put("/auth");
+authRouter.put("/auth", UserController.editAccount);
 authRouter.delete("/auth", UserController.deleteAccount);
 
 export default authRouter;
