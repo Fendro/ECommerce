@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
-		identifier: '',
+		email: '',
 		password: '',
 		remember: "",
 	});
@@ -27,26 +27,27 @@ const LoginForm = () => {
 		}
 	};
 
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		switch (true) {
-			case formData.identifier.length < 6:
+			case formData.email.length < 6:
 				alert('Username must be at least 6 characters long');
 				break;
 			case formData.password.length < 6:
 				alert('Password must be at least 6 characters long');
 				break;
 			default:
-				console.log(formData);
 			try {
-				const res = await fetch("localhost:4242/auth", {
+				const res = await fetch("http://localhost:4242/auth?email="+formData.email+"&password="+formData.password, {
 					method: "GET",
-					query: JSON.stringify(formData),
+					headers: {
+						"Content-Type": "application/json",
+					},
 				});
-				res.json();
-			} catch {
-				setMessage("Couldn't find server. Please wait and try again.");
+				console.log("ok")
+			} catch{
+				console.log("not ok")
+				setMessage("Wrong credentials. Please try again.");
 			}
 		}
 	};
@@ -59,8 +60,8 @@ const LoginForm = () => {
 					<StyledTextField
 						label="Email or username"
 						variant="outlined"
-						name="identifier"
-						value={formData.identifier}
+						name="email"
+						value={formData.email}
 						onChange={handleChange}
 						fullWidth
 					/>
@@ -74,7 +75,7 @@ const LoginForm = () => {
 						fullWidth
 					/>
 					<Button variant="contained" color="primary" type="submit" width={'100'} mb={'5'}>
-						Register
+						Login
 					</Button>
 					<label>
 						<input type="checkbox" name="remember" value="true" onChange={handleChange} style={{ marginTop: '10px' }} /> Remember me
