@@ -4,7 +4,7 @@ import { CenteredContainer, FormContainer, StyledTextField, StyledLink } from '.
 
 export default () => {
 	const [formData, setFormData] = useState({
-		identifier: '',
+		email: '',
 		password: '',
 		remember: "",
 	});
@@ -26,24 +26,27 @@ export default () => {
 		}
 	};
 
-
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (formData.identifier.length < 6) {
-			alert('Username must be at least 6 characters long');
-			return;
-		} else if (formData.password.length < 6) {
-			alert('Password must be at least 6 characters long');
-			return;
-		} else {
-			console.log(formData);
+		switch (true) {
+			case formData.email.length < 6:
+				alert('Username must be at least 6 characters long');
+				break;
+			case formData.password.length < 6:
+				alert('Password must be at least 6 characters long');
+				break;
+			default:
 			try {
-				const res = await fetch("localhost:4242/auth/?email=" + formData.identifier + "&password=" + formData.password, {
+				const res = await fetch("http://localhost:4242/auth?email="+formData.email+"&password="+formData.password, {
 					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
 				});
-				res.json();
-			} catch {
-				setMessage("Couldn't find server. Please wait and try again.");
+				window.location.replace("/articles")
+			} catch{
+				console.log("not ok")
+				setMessage("Wrong credentials. Please try again.");
 			}
 		}
 	};
@@ -56,8 +59,8 @@ export default () => {
 					<StyledTextField
 						label="Email or username"
 						variant="outlined"
-						name="identifier"
-						value={formData.identifier}
+						name="email"
+						value={formData.email}
 						onChange={handleChange}
 						fullWidth
 					/>
@@ -71,7 +74,7 @@ export default () => {
 						fullWidth
 					/>
 					<Button variant="contained" color="primary" type="submit" width={'100'} mb={'5'}>
-						Register
+						Login
 					</Button>
 					<label>
 						<input type="checkbox" name="remember" value="true" onChange={handleChange} style={{ marginTop: '10px' }} /> Remember me

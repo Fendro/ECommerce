@@ -30,9 +30,7 @@ function fetchParams(
   for (const object of objects) {
     for (const soughtParam of soughtParams) {
       if (soughtParam in object) {
-        fetchedParams[soughtParam] = (object as { [key: string]: any })[
-          soughtParam
-        ];
+        fetchedParams[soughtParam] = object[soughtParam];
       }
     }
   }
@@ -41,7 +39,7 @@ function fetchParams(
     missingParams(req, soughtParams, fetchedParams);
     sendResponse(res, 400, {
       message:
-        "Missing request parameters, check the server console for details.",
+        "Parameters count mismatch, check the server console for details.",
     });
     return false;
   }
