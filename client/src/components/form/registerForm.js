@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Button, Container, TextField } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { Link, redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
@@ -22,17 +22,18 @@ const RegistrationForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (formData.username.length < 6) {
-      alert("Username must be at least 6 characters long");
-      return;
-    } else if (formData.password.length < 6) {
-      alert("Password must be at least 6 characters long");
-      return;
-    } else if (formData.email.length < 6) {
-      alert("Email must be at least 6 characters long");
-      return;
-    } else {
-      console.log(formData);
+    switch (true) {
+        case formData.username.length < 6:
+            alert("Username must be at least 6 characters long");
+            break;
+        case formData.password.length < 6:
+            alert("Password must be at least 6 characters long");
+            break;
+        case formData.email.length < 6:
+            alert("Email must be at least 6 characters long");
+            break;
+        default:
+            console.log(formData);
       try {
         const res = await fetch("http://localhost:4242/auth", {
           method: "POST",
@@ -41,7 +42,7 @@ const RegistrationForm = () => {
           },
           body: JSON.stringify(formData),
         });
-        // window.location.replace("/");
+        window.location.replace("/");
       } catch {
         setMessage("Couldn't find server. Please wait and try again.");
       }

@@ -30,14 +30,15 @@ const LoginForm = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		if (formData.identifier.length < 6) {
-			alert('Username must be at least 6 characters long');
-			return;
-		} else if (formData.password.length < 6) {
-			alert('Password must be at least 6 characters long');
-			return;
-		} else {
-			console.log(formData);
+		switch (true) {
+			case formData.identifier.length < 6:
+				alert('Username must be at least 6 characters long');
+				break;
+			case formData.password.length < 6:
+				alert('Password must be at least 6 characters long');
+				break;
+			default:
+				console.log(formData);
 			try {
 				const res = await fetch("localhost:4242/auth", {
 					method: "GET",
