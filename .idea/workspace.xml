@@ -4,10 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="last version of proj">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="e8a95e15-d50c-40d2-acbb-0a605589af24" name="Changes" comment="Changed register page so you can get values on console.log">
+      <change afterPath="$PROJECT_DIR$/server/src/controllers/productController.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/server/src/utils/usersUtils.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/form/loginForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/form/loginForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/server/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/.placeholder" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/controllers/userController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/controllers/userController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/models/Product.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/models/Product.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/routers/authentication.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/routers/authentication.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/dbCRUD.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/dbCRUD.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/src/services/requestHandler.ts" beforeDir="false" afterPath="$PROJECT_DIR$/server/src/services/requestHandler.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,6 +30,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="TypeScript File" />
       </list>
     </option>
   </component>
@@ -45,27 +55,31 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;maksym&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/maksym/Documents/projects/epitech/ecommerce/server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/maksym/Documents/projects/epitech/ecommerce/client/node_modules/prettier&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/maksym/.local/share/JetBrains/Toolbox/apps/IDEA-U/ch-0/231.9161.38/plugins/javascript-impl/jsLanguageServicesImpl/external&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "tristan",
+    "last_opened_file_path": "/home/maksym/Documents/projects/epitech/ecommerce/server",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "/home/tristan/Projects/Ecommerce/server/node_modules/prettier",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "ts.external.directory.path": "/home/tristan/Projects/Ecommerce/server/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/src/controllers" />
       <recent name="$PROJECT_DIR$/server" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/server/src/utils" />
     </key>
   </component>
   <component name="RunManager">
@@ -82,21 +96,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="start" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/server/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="start" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="npm.start" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -108,8 +107,6 @@
       <updated>1690272117240</updated>
       <workItem from="1690272121461" duration="3752000" />
       <workItem from="1690275897192" duration="3373000" />
-      <workItem from="1690357925331" duration="3132000" />
-      <workItem from="1690362689524" duration="4361000" />
     </task>
     <task id="LOCAL-00001" summary="removed .idea">
       <option name="closed" value="true" />
@@ -151,23 +148,7 @@
       <option name="project" value="LOCAL" />
       <updated>1690277124839</updated>
     </task>
-    <task id="LOCAL-00006" summary="push before pull">
-      <option name="closed" value="true" />
-      <created>1690358003470</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1690358003470</updated>
-    </task>
-    <task id="LOCAL-00007" summary="last version of proj">
-      <option name="closed" value="true" />
-      <created>1690358256433</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1690358256433</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -195,8 +176,6 @@
     <MESSAGE value="Restructured pages" />
     <MESSAGE value="Page login finished" />
     <MESSAGE value="Changed register page so you can get values on console.log" />
-    <MESSAGE value="push before pull" />
-    <MESSAGE value="last version of proj" />
-    <option name="LAST_COMMIT_MESSAGE" value="last version of proj" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed register page so you can get values on console.log" />
   </component>
 </project>

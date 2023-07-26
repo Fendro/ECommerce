@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import * as Utils from "../utils/usersUtils";
 
-const collection: string = "users";
+const collection: string = "products";
 
-const register = async (req: Request, res: Response): Promise<void> => {
+const addProduct = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, [
     "username",
     "email",
@@ -22,8 +21,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  data.password = Utils.passwordHashing(data.password);
-
   (await dbCRUD.insert(collection, data))
     ? requestHandler.sendResponse(res, 200, {
         message: "Registration succeeded",
@@ -33,21 +30,20 @@ const register = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-const login = async (req: Request, res: Response): Promise<void> => {
+const getProduct = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["email", "password"]);
 
   if (!data) return;
-  data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.find(collection, data);
-  user.length
+  user
     ? requestHandler.sendResponse(res, 200, { message: "Login succeeded." })
     : requestHandler.sendResponse(res, 400, { message: "Login failed." });
 };
 
 const editAccount = () => {};
 
-const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["email", "password"]);
 
   if (!data) return;
@@ -67,4 +63,4 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-export { register, login, editAccount, deleteAccount };
+export { addProduct, getProduct, editAccount, deleteProduct };

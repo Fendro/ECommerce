@@ -16,12 +16,20 @@ async function establishConnection(): Promise<MongoClient | false> {
   }
 }
 
+/**
+ *
+ * @param rules
+ */
 function logRulesNotSatisfied(rules: string[]) {
   for (let rule of rules) {
     console.error(rule);
   }
 }
 
+/**
+ *
+ * @param collection
+ */
 async function getLastInsertedDocument(
   collection: string,
 ): Promise<WithId<Document>[]> {
@@ -45,6 +53,14 @@ async function getLastInsertedDocument(
   }
 }
 
+/**
+ * Searches the provided collection for documents containing the fields
+ * and values provided.
+ * @param collection The collection name.
+ * @param find An object containing the fields and values to look for.
+ * @returns array An array containing the documents matching the search
+ * parameters.
+ */
 async function find(
   collection: string,
   find: object,
@@ -64,6 +80,13 @@ async function find(
   }
 }
 
+/**
+ * Searches the provided collection for documents containing the fields
+ * and values provided.
+ * @param collection The collection name.
+ * @param data An object containing the fields and values of the document.
+ * @returns boolean true on success, false on failure.
+ */
 async function insert(collection: string, data: object): Promise<boolean> {
   try {
     const client = await establishConnection();
@@ -81,6 +104,12 @@ async function insert(collection: string, data: object): Promise<boolean> {
   }
 }
 
+/**
+ *
+ * @param collection
+ * @param find
+ * @param set
+ */
 async function update(
   collection: string,
   find: object,
@@ -107,6 +136,11 @@ async function update(
   }
 }
 
+/**
+ *
+ * @param collection
+ * @param find
+ */
 async function remove(collection: string, find: object) {
   try {
     const client = await establishConnection();
