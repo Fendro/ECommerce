@@ -44,7 +44,7 @@ const LoginForm = () => {
 						"Content-Type": "application/json",
 					},
 				});
-				console.log("ok")
+				window.location.replace("/articles")
 			} catch{
 				console.log("not ok")
 				setMessage("Wrong credentials. Please try again.");
