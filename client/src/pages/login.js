@@ -1,7 +1,8 @@
 import React from 'react';
 import Header from '../components/header';
-import {createGlobalStyle} from 'styled-components';
-import LoginForm from "../components/login/loginForm";
+import { createGlobalStyle } from 'styled-components';
+import LoginForm from "../components/form/loginForm";
+
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -10,14 +11,15 @@ const GlobalStyle = createGlobalStyle`
     color: white;
   }
 `;
+
 function Login() {
-    return (
-        <>
-        <Header/>
-        <LoginForm/>
-        <GlobalStyle/>
-        </>
-    )
+	return (
+		<>
+			<Header />
+			<LoginForm />
+			<GlobalStyle />
+		</>
+	)
 }
 
 export default Login;

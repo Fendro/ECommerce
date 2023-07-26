@@ -2,18 +2,20 @@ require("dotenv").config();
 const env = process.env.DOT_ENV === "production" ? "production" : "development";
 
 const development = {
-  port: 4242,
+  port: 27017,
   hostname: "localhost",
+  dbName: "Ecommerce",
 };
 
 const production = {
-  port: 4242,
+  port: 27017,
   hostname: "localhost",
+  dbName: "Ecommerce",
 };
 
-const appConfig = {
+const config = {
   development,
   production,
 };
 
-export default appConfig[env];
+export default config[env];
