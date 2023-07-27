@@ -42,8 +42,14 @@ export default () => {
 					headers: {
 						"Content-Type": "application/json",
 					},
-				});
-				window.location.replace("/articles")
+				})
+				const json = await res.json()
+				console.log(json.message)
+				if (json.message == "Login succeeded.") {
+					 window.location.replace("/admin")
+				}else{
+					setMessage("Wrong credentials. Please try again.");
+				}
 			} catch{
 				console.log("not ok")
 				setMessage("Wrong credentials. Please try again.");
