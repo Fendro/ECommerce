@@ -3,7 +3,9 @@ import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
 import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-
+try{
+    const res = await fetch("")
+}
 export default () => {
     return (
         <TopCenterContainer>
