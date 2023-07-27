@@ -3,8 +3,10 @@ import config from "./src/configs/appConfig";
 import cors from "cors";
 import express, { Express, Router, Request, Response } from "express";
 import routers from "./src/routers";
+import session from "express-session";
 
 const app: Express = express();
+const userSession = session();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
