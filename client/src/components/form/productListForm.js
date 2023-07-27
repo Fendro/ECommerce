@@ -14,6 +14,7 @@ export default function Product() {
 				}).then((response) => {
 					return response.json();
 				});
+				
 				setFetchRes(json.statusCode);
 				if (json.statusCode === 200) {
 					setData(json.data);
