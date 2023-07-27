@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button } from '@mui/material';
-import { CenteredContainer, FormContainer, StyledTextField, StyledLink } from '../styling';
+import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
 
 export default () => {
 	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
+		email: "",
+		password: "",
 		remember: "",
 	});
 
@@ -43,7 +43,7 @@ export default () => {
 						"Content-Type": "application/json",
 					},
 				});
-				window.location.replace("/articles")
+				window.location.replace("/product")
 			} catch{
 				console.log("not ok")
 				setMessage("Wrong credentials. Please try again.");
@@ -56,15 +56,16 @@ export default () => {
 			<CenteredContainer>
 				<FormContainer>
 					<div>{message}</div>
-					<StyledTextField
+					<StyledInput
 						label="Email or username"
+						type="email"
 						variant="outlined"
 						name="email"
 						value={formData.email}
 						onChange={handleChange}
 						fullWidth
 					/>
-					<StyledTextField
+					<StyledInput
 						label="Password"
 						type="password"
 						variant="outlined"
