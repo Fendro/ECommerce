@@ -3,28 +3,27 @@ import { useParams } from 'react-router-dom';
 import { AnyText, ProductContainer } from '../styling';
 
 export default function Product() {
-	const { idProduct } = useParams();
+	const { id } = useParams();
 	const [fetchRes, setFetchRes] = useState("loading");
 	const [data, setData] = useState();
-	console.log(idProduct);
+	console.log(id);
 
 	useEffect(() => {
 		(async () => {
 			let res;
 			console.log(res);
 			try {
-				res = await fetch("http://localhost:4242/product/".idProduct, {
+				res = await fetch("http://localhost:4242/product/"+id, {
 					method: "GET",
-					query: JSON.stringify(idProduct),
-				});
-				console.log(res);
-				res = await res.json();
+					query: JSON.stringify(id),
+				})
+				const json = await res.json();
 				setFetchRes("success");
-				console.log(res);
-				setData(res);
+				console.log(json);
+				setData(json.message);
 			} catch (e) {
 				console.log(e);
-				console.log(idProduct);
+				console.log(id);
 				setFetchRes("failed");
 				// setFetchRes("server_off");
 				// setFetchRes("product_none");
@@ -38,7 +37,7 @@ export default function Product() {
 			<ProductContainer>
 				<AnyText text={"Product name"} width="60"></AnyText>
 				<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
-				<AnyText text={"X, between 0€ & 10^6€"} width="20"></AnyText>
+				<AnyText text={fetchRes} width="20"></AnyText>
 			</ProductContainer>
 		);	
 	}
