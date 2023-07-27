@@ -9,22 +9,22 @@ export default () => {
 		remember: "",
 	});
 
-	const [message, setMessage] = useState("");
+  const [message, setMessage] = useState("");
 
-	const handleChange = (e) => {
-		const { name, value, type, checked } = e.target;
-		if (type !== 'checkbox') {
-			setFormData((prevFormData) => ({
-				...prevFormData,
-				[name]: value,
-			}));
-		} else {
-			setFormData((prevFormData) => ({
-				...prevFormData,
-				[name]: checked,
-			}));
-		}
-	};
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type !== "checkbox") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: checked,
+      }));
+    }
+  };
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
