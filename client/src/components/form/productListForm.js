@@ -39,7 +39,7 @@ export default function Product() {
 			return (
 				<>
 					{data?.map((product) => (
-						<ProductContainer>
+						<ProductContainer key={product?.name ?? "no_name"}>
 							<AnyText text={product?.name ?? "default_name"} width="60"></AnyText>
 							<AnyText text={product?.description ?? "default_desc"} width="80"></AnyText>
 							<AnyText text={product?.price ?? "default_price"} width="20"></AnyText>
