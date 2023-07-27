@@ -8,6 +8,7 @@ import session from "express-session";
 const app: Express = express();
 const userSession = session();
 
+/*  Setting up requests encoding and permissions  */
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -18,6 +19,14 @@ app.use(
   }),
 );
 
+// app.use(
+//   userSession({
+//     secret: "Your_Secret_Key",
+//     resave: true,
+//     saveUninitialized: true,
+//   }),
+// );
+/*  Starting the server  */
 app.listen(config.port, config.hostname, () => {
   console.log(`Server is running at '${config.hostname}:${config.port}'.`);
 });
@@ -26,6 +35,7 @@ app.on("error", (error) => {
   console.log("Failed to start the server.", error);
 });
 
+/*  Setting routes up  */
 for (const router in routers) {
   app.use("/", routers[router] as Router);
 }

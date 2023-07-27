@@ -12,7 +12,7 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
   ]);
   if (!data) return;
 
-  const product = await dbCRUD.findOne(collection, { name: data.name });
+  const product = await dbCRUD.find(collection, { name: data.name });
   if (product.length) {
     requestHandler.sendResponse(res, {
       message: "A product with this name already exists.",
@@ -33,10 +33,10 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["id"]);
+  const data = requestHandler.fetchParams(req, res, ["name"]);
   if (!data) return;
 
-  if (!(await dbCRUD.findOne(collection, data))) {
+  if (!(await dbCRUD.find(collection, data))) {
     requestHandler.sendResponse(res, {
       message: "No product found matching the provided parameters.",
       statusCode: 400,
@@ -57,10 +57,10 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
 const editProduct = () => {};
 
 const getProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["id"]);
+  const data = requestHandler.fetchParams(req, res, ["name"]);
   if (!data) return;
 
-  const products = await dbCRUD.findOne(collection, data);
+  const products = await dbCRUD.find(collection, data);
   products.length
     ? requestHandler.sendResponse(res, {
         data: products,

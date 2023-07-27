@@ -1,60 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
-import { CenteredContainer, FormContainer, StyledTextField, StyledLink } from '../styling';
+import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
 
 export default () => {
-	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
-		remember: "",
-	});
-
 	const [message, setMessage] = useState("");
-
-	const handleChange = (e) => {
-		const { name, value, type, checked } = e.target;
-		if (type !== 'checkbox') {
-			setFormData((prevFormData) => ({
-				...prevFormData,
-				[name]: value,
-			}));
-		} else {
-			setFormData((prevFormData) => ({
-				...prevFormData,
-				[name]: checked,
-			}));
-		}
-	};
+	const inputMail = useRef();
+	const inputPsw = useRef();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		switch (true) {
-			case formData.email.length < 6:
-				alert('Username must be at least 6 characters long');
-				break;
-			case formData.password.length < 6:
-				alert('Password must be at least 6 characters long');
-				break;
-			default:
-			try {
-				const res = await fetch("http://localhost:4242/auth?email="+formData.email+"&password="+formData.password, {
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				})
-				const json = await res.json()
-				console.log(json)
-				if (json.message == "Login succeeded.") {
-					 window.location.replace("/product");
-				}else{
-					setMessage("Wrong credentials. Please try again.");
-				}
-			} catch{
-				console.log("not ok")
+		const email = inputMail.current.children[1].children[0].value;
+		const password = inputPsw.current.children[1].children[0].value;
+		let error_msg = "";
+		if (email < 6)
+			error_msg += "Email must be at least 6 characters long";
+		if (password < 6)
+			error_msg += "Password must be at least 6 characters long";
+
+		if (error_msg.length) {
+			alert(error_msg);
+			return;
+		}
+
+		try {
+			const res = await fetch("http://localhost:4242/auth?email=" + email + "&password=" + password, {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})
+			const json = await res.json()
+			console.log(json)
+			if (json.message == "Login succeeded.") {
+				window.location.replace("/product");
+			} else {
 				setMessage("Wrong credentials. Please try again.");
 			}
+		} catch {
+			console.log("not ok")
+			setMessage("Wrong credentials. Please try again.");
 		}
+
 	};
 
 	return (
@@ -62,28 +48,27 @@ export default () => {
 			<CenteredContainer>
 				<FormContainer>
 					<div>{message}</div>
-					<StyledTextField
+					<StyledInput
 						label="Email or username"
+						type="email"
+						minLength="6"
 						variant="outlined"
-						name="email"
-						value={formData.email}
-						onChange={handleChange}
+						ref={inputMail}
 						fullWidth
 					/>
-					<StyledTextField
+					<StyledInput
 						label="Password"
 						type="password"
 						variant="outlined"
-						name="password"
-						value={formData.password}
-						onChange={handleChange}
+						minLength="6"
+						ref={inputPsw}
 						fullWidth
 					/>
 					<Button variant="contained" color="primary" type="submit" width={'100'} mb={'5'}>
 						Login
 					</Button>
 					<label>
-						<input type="checkbox" name="remember" value="true" onChange={handleChange} style={{ marginTop: '10px' }} /> Remember me
+						<input type="checkbox" name="remember" value="true" style={{ marginTop: '10px' }} /> Remember me
 					</label>
 					<div className="link" style={{ marginTop: '20px' }}>
 						<StyledLink to={{ pathname: "/register" }}>Create an account?</StyledLink>
