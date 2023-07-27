@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { ResponseData } from "../../types";
 
 function missingParams(
   req: Request,
