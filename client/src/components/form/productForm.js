@@ -10,16 +10,17 @@ export default function Product() {
 
 	useEffect(() => {
 		(async () => {
-			let res;
-			console.log(res);
+			let json;
 			try {
-				res = await fetch("http://localhost:4242/product/"+id, {
+				json = await fetch("http://localhost:4242/product/"+id, {
 					method: "GET",
 					query: JSON.stringify(id),
-				})
-				const json = await res.json();
-				setFetchRes("success");
+				}).then((response) => {
+					console.log(response);
+					return response.json();
+				});
 				console.log(json);
+				setFetchRes("success");
 				setData(json.message);
 			} catch (e) {
 				console.log(e);
@@ -32,7 +33,7 @@ export default function Product() {
 		// eslint-disable-next-line
 	}, []);
 
-	if (true || fetchRes === "loading") {
+	if (fetchRes === "loading") {
 		return (
 			<ProductContainer>
 				<AnyText text={"Product name"} width="60"></AnyText>

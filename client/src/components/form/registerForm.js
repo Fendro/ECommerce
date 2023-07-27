@@ -11,9 +11,9 @@ export default () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const email = inputMail.current.children[0].value;
-		const username = inputUser.current.children[0].value;
-		const password = inputPsw.current.children[0].value;
+		const email = inputMail.current.children[1].children[0].value;
+		const username = inputUser.current.children[1].children[0].value;
+		const password = inputPsw.current.children[1].children[0].value;
 
 		let error_msg = "";
 		if (email < 6)
@@ -27,14 +27,17 @@ export default () => {
 			alert(error_msg);
 			return;
 		}
-
 		try {
 			const res = await fetch("http://localhost:4242/auth", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({ email, username, password }),
+				body: JSON.stringify({
+					email: email,
+					username: username,
+					password: password,
+				}),
 			});
 			window.location.replace("/");
 		} catch {
