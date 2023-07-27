@@ -29,9 +29,7 @@ export default function Product() {
 		case 0:
 			return (
 				<ProductContainer>
-					<AnyText text={"Product name"} width="60"></AnyText>
 					<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
-					<AnyText text={fetchRes} width="20"></AnyText>
 				</ProductContainer>
 			);
 		case 200:
