@@ -34,6 +34,7 @@ export default function Admin() {
                 if (json.statusCode === 200) {
                     setData(json.data);
                 }
+
             } catch (e) {
                 console.log(e);
             }
