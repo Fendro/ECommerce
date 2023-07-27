@@ -37,9 +37,10 @@ function fetchParams(
 
   if (Object.keys(fetchedParams).length !== soughtParams.length) {
     missingParams(req, soughtParams, fetchedParams);
-    sendResponse(res, 400, {
+    sendResponse(res, {
       message:
         "Parameters count mismatch, check the server console for details.",
+      statusCode: 400,
     });
     return false;
   }
@@ -47,8 +48,8 @@ function fetchParams(
   return fetchedParams;
 }
 
-function sendResponse(res: Response, code: number, data: {}): void {
-  res.status(code).send(JSON.stringify(data));
+function sendResponse(res: Response, data: ResponseData): void {
+  res.status(data.statusCode).send(JSON.stringify(data));
 }
 
 export default {

@@ -58,10 +58,10 @@ async function getLastInsertedDocument(
  * and values provided.
  * @param collection The collection name.
  * @param find An object containing the fields and values to look for.
- * @returns array An array containing the documents matching the search
+ * @returns An array containing the documents matching the search
  * parameters.
  */
-async function find(
+async function findOne(
   collection: string,
   find: object,
 ): Promise<WithId<Document>[]> {
@@ -84,8 +84,30 @@ async function find(
  * Searches the provided collection for documents containing the fields
  * and values provided.
  * @param collection The collection name.
+ * @returns An array containing the documents of the collection.
+ */
+async function getCollection(collection: string): Promise<WithId<Document>[]> {
+  try {
+    const client = await establishConnection();
+    if (!client) return [];
+
+    const db = client.db();
+
+    return await db.collection(collection).find({}).toArray();
+  } catch (error: any) {
+    console.error(`${collection} find action failed.`, error);
+    if (error.errInfo)
+      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
+    return [];
+  }
+}
+
+/**
+ * Searches the provided collection for documents containing the fields
+ * and values provided.
+ * @param collection The collection name.
  * @param data An object containing the fields and values of the document.
- * @returns boolean true on success, false on failure.
+ * @returns true on success, false on failure.
  */
 async function insert(collection: string, data: object): Promise<boolean> {
   try {
@@ -158,4 +180,11 @@ async function remove(collection: string, find: object) {
   }
 }
 
-export default { getLastInsertedDocument, insert, find, update, remove };
+export default {
+  getLastInsertedDocument,
+  insert,
+  findOne,
+  getCollection,
+  update,
+  remove,
+};
