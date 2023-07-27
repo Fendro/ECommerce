@@ -37,3 +37,9 @@ export const StyledTextField = styled(TextField)({
 export const StyledLink = styled(Link)({
 	marginTop: '50px',
 });
+export const TopCenterContainer = styled(Container)({
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	width: '100%',
+});
