@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["email", "password"]);
+  const data = requestHandler.fetchParams(req, res, ["email"]);
   if (!data) return;
 
   if (!(await dbCRUD.findOne(collection, data))) {
@@ -29,53 +28,37 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 
 const editAccount = () => {};
 
-const login = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["email", "password"]);
+const getUser = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.fetchParams(req, res, ["email"]);
   if (!data) return;
-
-  data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
   user.length
     ? requestHandler.sendResponse(res, {
-        message: "Login succeeded.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Login failed.",
-        statusCode: 400,
-      });
-};
-
-const register = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, [
-    "username",
-    "email",
-    "password",
-  ]);
-  if (!data) return;
-
-  const user = await dbCRUD.findOne(collection, { email: data.email });
-  if (user.length) {
-    requestHandler.sendResponse(res, {
-      message: "This email is already in use.",
-      statusCode: 400,
-    });
-    return;
-  }
-
-  data.password = Utils.passwordHashing(data.password);
-
-  (await dbCRUD.insert(collection, data))
-    ? requestHandler.sendResponse(res, {
         data: user,
-        message: "Registration succeeded",
+        message: "Product retrieved.",
         statusCode: 200,
       })
     : requestHandler.sendResponse(res, {
-        message: "Registration failed.",
+        message: "No product matches the requested id.",
         statusCode: 400,
       });
 };
 
-export { deleteAccount, editAccount, login, register };
+const getUsers = async (req: Request, res: Response): Promise<void> => {
+  const users = await dbCRUD.getCollection(collection);
+  users.length
+    ? requestHandler.sendResponse(res, {
+        data: users,
+        message: "Products retrieved.",
+        statusCode: 200,
+      })
+    : requestHandler.sendResponse(res, {
+        message: "No products found.",
+        statusCode: 400,
+      });
+};
+
+const isAdmin = () => {};
+
+export { deleteAccount, editAccount, getUser, getUsers, isAdmin };
