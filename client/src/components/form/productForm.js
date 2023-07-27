@@ -22,7 +22,7 @@ export default function Product() {
 
 				setFetchRes(json.statusCode);
 				if (json.statusCode === 200) {
-					setData(json.data);
+					setData(json.data[0]);
 				}
 			} catch (e) {
 				console.log(e);
