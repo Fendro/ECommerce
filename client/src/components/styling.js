@@ -21,7 +21,7 @@ export const FormContainer = styled(Box)({
 	height: 'auto',
 });
 
-export const StyledTextField = styled(TextField)({
+export const StyledInput = styled(TextField)({
 	marginBottom: '30px',
 	'& .MuiOutlinedInput-root': {
 		background: 'white',
@@ -37,6 +37,39 @@ export const StyledTextField = styled(TextField)({
 export const StyledLink = styled(Link)({
 	marginTop: '50px',
 });
+
+export const ProductContainer = styled(Container)({
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+	width: '90%',
+});
+
+export const ProductImage = styled(Image)({
+
+});
+
+export function AnyText(props) {
+	const style = {
+		width: props.width + "%",
+		borderColor: "lightgrey"
+	};
+	return (
+		<div style={style}>
+			{props.text}
+		</div>
+	);
+}
+
+export function AnyImage(props) {
+	const style = {
+		width: props.width + "%",
+		borderColor: "lightgrey"
+	};
+	return (
+		<img style={style} alt={props.alt}></img>
+	);
+}
 export const TopCenterContainer = styled(Container)({
 	display: 'flex',
 	justifyContent: 'center',
