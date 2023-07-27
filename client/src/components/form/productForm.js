@@ -6,59 +6,57 @@ export default function Product() {
 	const { id } = useParams();
 	const [fetchRes, setFetchRes] = useState("loading");
 	const [data, setData] = useState();
-	console.log(id);
 
 	useEffect(() => {
 		(async () => {
 			let json;
+			console.log(id);
 			try {
-				json = await fetch("http://localhost:4242/product/"+id, {
+				json = await fetch("http://localhost:4242/product/" + id, {
 					method: "GET",
-					query: JSON.stringify(id),
 				}).then((response) => {
-					console.log(response);
 					return response.json();
 				});
+
 				console.log(json);
-				setFetchRes("success");
-				setData(json.message);
+
+				setFetchRes(json.statusCode);
+				if (json.statusCode === 200) {
+					setData(json.data);
+				}
 			} catch (e) {
 				console.log(e);
-				console.log(id);
-				setFetchRes("failed");
-				// setFetchRes("server_off");
-				// setFetchRes("product_none");
 			}
 		})();
 		// eslint-disable-next-line
 	}, []);
 
-	if (fetchRes === "loading") {
-		return (
-			<ProductContainer>
-				<AnyText text={"Product name"} width="60"></AnyText>
-				<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
-				<AnyText text={fetchRes} width="20"></AnyText>
-			</ProductContainer>
-		);	
-	}
+	switch (fetchRes) {
+		case 0:
+			return (
+				<ProductContainer>
+					<AnyText text={"Product name"} width="60"></AnyText>
+					<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
+					<AnyText text={fetchRes} width="20"></AnyText>
+				</ProductContainer>
+			);
+		case 200:
+			return (
+				<>
+					<ProductContainer>
+						<AnyText text={data?.name ?? "default_name"} width="60"></AnyText>
+						<AnyText text={data?.description ?? "default_desc"} width="80"></AnyText>
+						<AnyText text={data?.price ?? "default_price"} width="20"></AnyText>
+					</ProductContainer>
 
-	if (fetchRes === "failed") {
-		return (
-			<ProductContainer>
-				<AnyText text={""} width="60"></AnyText>
-				<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
-			</ProductContainer>
-		);	
-	}
-
-	if (fetchRes === "success") {
-		return (
-			<ProductContainer>
-				<AnyText text={data.name} width="60"></AnyText>
-				<AnyText text={data.description} width="80"></AnyText>
-				<AnyText text={data.price} width="20"></AnyText>
-			</ProductContainer>
-		);	
+				</>
+			);
+		case 400:
+			return (
+				<ProductContainer>
+					<AnyText text={""} width="60"></AnyText>
+					<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
+				</ProductContainer>
+			);
 	}
 }

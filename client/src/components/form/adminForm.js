@@ -4,7 +4,7 @@ import {TopCenterContainer} from '../styling';
 import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 
-export default () => {
+export default function Admin() {
     return (
         <TopCenterContainer>
             <table>

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledLink, StyledInput } from '../styling';
 
-export default () => {
+export default function Register() {
 
 	const inputMail = useRef();
 	const inputUser = useRef();
