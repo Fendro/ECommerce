@@ -61,7 +61,7 @@ async function getLastInsertedDocument(
  * @returns An array containing the documents matching the search
  * parameters.
  */
-async function findOne(
+async function find(
   collection: string,
   find: object,
 ): Promise<WithId<Document>[]> {
@@ -181,10 +181,10 @@ async function remove(collection: string, find: object) {
 }
 
 export default {
+  find,
+  getCollection,
   getLastInsertedDocument,
   insert,
-  findOne,
-  getCollection,
   update,
   remove,
 };

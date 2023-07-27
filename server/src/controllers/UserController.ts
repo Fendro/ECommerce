@@ -9,7 +9,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["email", "password"]);
   if (!data) return;
 
-  if (!(await dbCRUD.findOne(collection, data))) {
+  if (!(await dbCRUD.find(collection, data))) {
     requestHandler.sendResponse(res, {
       message: "No account found matching the provided credentials.",
       statusCode: 400,
@@ -19,7 +19,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
   (await dbCRUD.remove(collection, data))
     ? requestHandler.sendResponse(res, {
         message: "Account deletion succeeded.",
-        statusCode: 400,
+        statusCode: 200,
       })
     : requestHandler.sendResponse(res, {
         message: "Account deletion failed.",
@@ -35,16 +35,23 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
   data.password = Utils.passwordHashing(data.password);
 
-  const user = await dbCRUD.findOne(collection, data);
-  user.length
-    ? requestHandler.sendResponse(res, {
-        message: "Login succeeded.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Login failed.",
-        statusCode: 400,
-      });
+  const user = await dbCRUD.find(collection, data);
+
+  if (!user.length) {
+    requestHandler.sendResponse(res, {
+      message: "Login failed.",
+      statusCode: 400,
+    });
+    return;
+  }
+
+  delete user[0].password;
+
+  requestHandler.sendResponse(res, {
+    data: user,
+    message: "Login succeeded.",
+    statusCode: 200,
+  });
 };
 
 const register = async (req: Request, res: Response): Promise<void> => {
@@ -55,7 +62,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
   ]);
   if (!data) return;
 
-  const user = await dbCRUD.findOne(collection, { email: data.email });
+  const user = await dbCRUD.find(collection, { email: data.email });
   if (user.length) {
     requestHandler.sendResponse(res, {
       message: "This email is already in use.",
@@ -65,6 +72,7 @@ const register = async (req: Request, res: Response): Promise<void> => {
   }
 
   data.password = Utils.passwordHashing(data.password);
+  data.admin = false;
 
   (await dbCRUD.insert(collection, data))
     ? requestHandler.sendResponse(res, {
