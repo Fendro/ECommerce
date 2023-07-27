@@ -44,6 +44,7 @@ export default () => {
 					},
 				})
 				const json = await res.json()
+				console.log(json)
 				if (json.message == "Login succeeded.") {
 					 window.location.replace("/articles");
 				}else{
