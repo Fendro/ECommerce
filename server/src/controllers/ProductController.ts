@@ -10,7 +10,6 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
     "price",
     "description",
   ]);
-
   if (!data) return;
 
   const product = await dbCRUD.findOne(collection, { name: data.name });
@@ -33,42 +32,8 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-const getProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["id"]);
-  if (!data) return;
-
-  const products = await dbCRUD.findOne(collection, data);
-  products.length
-    ? requestHandler.sendResponse(res, {
-        data: products,
-        message: "Product retrieved.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "No product matches the requested id.",
-        statusCode: 400,
-      });
-};
-
-const getProducts = async (res: Response): Promise<void> => {
-  const products = await dbCRUD.getCollection(collection);
-  products.length
-    ? requestHandler.sendResponse(res, {
-        data: products,
-        message: "Products retrieved.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "No products found.",
-        statusCode: 400,
-      });
-};
-
-const editProduct = () => {};
-
 const deleteProduct = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["id"]);
-
   if (!data) return;
 
   if (!(await dbCRUD.findOne(collection, data))) {
@@ -89,4 +54,38 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-export { addProduct, getProduct, getProducts, editProduct, deleteProduct };
+const editProduct = () => {};
+
+const getProduct = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.fetchParams(req, res, ["id"]);
+  if (!data) return;
+
+  const products = await dbCRUD.findOne(collection, data);
+  products.length
+    ? requestHandler.sendResponse(res, {
+        data: products,
+        message: "Product retrieved.",
+        statusCode: 200,
+      })
+    : requestHandler.sendResponse(res, {
+        message: "No product matches the requested id.",
+        statusCode: 400,
+      });
+};
+
+const getProducts = async (req: Request, res: Response): Promise<void> => {
+  console.log("hello");
+  const products = await dbCRUD.getCollection(collection);
+  products.length
+    ? requestHandler.sendResponse(res, {
+        data: products,
+        message: "Products retrieved.",
+        statusCode: 200,
+      })
+    : requestHandler.sendResponse(res, {
+        message: "No products found.",
+        statusCode: 400,
+      });
+};
+
+export { addProduct, deleteProduct, editProduct, getProduct, getProducts };
