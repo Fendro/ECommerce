@@ -74,7 +74,6 @@ const getProduct = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getProducts = async (req: Request, res: Response): Promise<void> => {
-  console.log("hello");
   const products = await dbCRUD.getCollection(collection);
   products.length
     ? requestHandler.sendResponse(res, {

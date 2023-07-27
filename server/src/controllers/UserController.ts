@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { Response } from "express";
+import Request from "../interfaces/Request";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
 import * as Utils from "../utils/usersUtils";
@@ -30,6 +31,8 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 const editAccount = () => {};
 
 const login = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) console.log("alrdy logged", req.user);
+
   const data = requestHandler.fetchParams(req, res, ["email", "password"]);
   if (!data) return;
 
@@ -46,13 +49,16 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 
   delete user[0].password;
-
+  // req.session.user = user[0];
+  console.log(req.session);
   requestHandler.sendResponse(res, {
     data: user,
     message: "Login succeeded.",
     statusCode: 200,
   });
 };
+
+const logout = (req: Request, res: Response): void => {};
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, [
@@ -86,4 +92,4 @@ const register = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-export { deleteAccount, editAccount, login, register };
+export { deleteAccount, editAccount, login, logout, register };

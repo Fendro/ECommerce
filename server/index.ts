@@ -1,16 +1,18 @@
 import bodyParser from "body-parser";
 import config from "./src/configs/appConfig";
+import cookieParser from "cookie-parser";
 import cors from "cors";
-import express, { Express, Router, Request, Response } from "express";
+import express, { Express, Router } from "express";
 import routers from "./src/routers";
 import session from "express-session";
 
+import Request from "./src/interfaces/Request";
+
 const app: Express = express();
-const userSession = session();
 
 /*  Setting up requests encoding and permissions  */
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -19,13 +21,17 @@ app.use(
   }),
 );
 
-// app.use(
-//   userSession({
-//     secret: "Your_Secret_Key",
-//     resave: true,
-//     saveUninitialized: true,
-//   }),
-// );
+/*  Setting up user session manager  */
+app.use(cookieParser());
+app.use(
+  session({
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 2 },
+    saveUninitialized: true,
+    secret: "Ecommerce",
+    resave: true,
+  }),
+);
+
 /*  Starting the server  */
 app.listen(config.port, config.hostname, () => {
   console.log(`Server is running at '${config.hostname}:${config.port}'.`);
