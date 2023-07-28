@@ -61,11 +61,6 @@ export default function Admin() {
                                 <td>{admin?.username ?? "default_username"}</td>
                                 <td>{admin?.email ?? "default_email"}</td>
                                 <td>
-                                    <Button variant="outlined">
-                                        <EditRounded/>
-                                    </Button>
-                                </td>
-                                <td>
                                     <Button variant="outlined" color = "error" onClick={() => handleDelete(admin?.email)}>
                                         <DeleteRoundedIcon/>
                                     </Button>

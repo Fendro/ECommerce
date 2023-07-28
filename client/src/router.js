@@ -6,6 +6,7 @@ import Register from './pages/register';
 import Product from './pages/product';
 import ProductList from './pages/product_list';
 import Admin from './pages/admin';
+import Change from './pages/changer';
 const AppRouter = () => {
     return (
         <Router>
@@ -15,6 +16,7 @@ const AppRouter = () => {
                 <Route path="/product" element={<ProductList/>}/>
                 <Route path="/product/:id" element={<Product/>}/>
                 <Route path="/admin" element={<Admin/>}/>
+                <Route path="/change" element={<Change/>}/>
                 <Route path="*" element={<ErrorPage />} />
             </Routes>
         </Router>

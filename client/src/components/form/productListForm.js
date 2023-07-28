@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { AnyText, ProductContainer } from '../styling';
+import { UserContext } from '../../context/UserContext';
 
 export default function Product() {
+	const { admin, setAdmin } = useContext(UserContext);
 	const [fetchRes, setFetchRes] = useState(0);
 	const [data, setData] = useState();
+
 
 	useEffect(() => {
 		(async () => {
@@ -23,7 +26,6 @@ export default function Product() {
 				console.log(e);
 			}
 		})();
-		// eslint-disable-next-line
 	}, []);
 
 	switch (fetchRes) {

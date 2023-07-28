@@ -1,20 +1,29 @@
+// Login.js
 import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
+import {UserContext}  from '../../context/UserContext';
+import { EmailContext } from '../../context/EmailContext';
+import { useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
 	const [message, setMessage] = useState("");
 	const inputMail = useRef();
 	const inputPsw = useRef();
+	const { admin, setAdmin} = useContext(UserContext);
+	const { email, setEmail} = useContext(EmailContext);
+	const navigate = useNavigate();
+
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const email = inputMail.current.children[1].children[0].value;
 		const password = inputPsw.current.children[1].children[0].value;
 		let error_msg = "";
-		if (email < 6)
+		if (email.length < 6)
 			error_msg += "Email must be at least 6 characters long";
-		if (password < 6)
+		if (password.length < 6)
 			error_msg += "Password must be at least 6 characters long";
 
 		if (error_msg.length) {
@@ -28,20 +37,23 @@ export default function Login() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-			})
-			const json = await res.json()
-			console.log(json)
-			if (json.message == "Login succeeded.") {
-				window.location.replace("/product");
+			});
+			const json = await res.json();
+			if (json.message === "Login succeeded.") {
+				console.log(`${json.data[0]["email"]}`);
+				setEmail(`${json.data[0]["email"]}`);
+				setAdmin(`${json.data[0]["admin"]}`);
+				navigate("/product")
+
 			} else {
 				setMessage("Wrong credentials. Please try again.");
 			}
-		} catch {
-			console.log("not ok")
+		} catch (error) {
+			console.log("not ok", error);
 			setMessage("Wrong credentials. Please try again.");
 		}
-
 	};
+
 
 	return (
 		<form onSubmit={handleSubmit}>
@@ -77,4 +89,4 @@ export default function Login() {
 			</CenteredContainer>
 		</form>
 	);
-};
+}
