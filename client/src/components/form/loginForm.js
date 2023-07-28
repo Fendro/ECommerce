@@ -32,7 +32,7 @@ export default function Login() {
 			const json = await res.json()
 			console.log(json)
 			if (json.message == "Login succeeded.") {
-				window.location.replace("/product");
+				window.location.replace("/articles");
 			} else {
 				setMessage("Wrong credentials. Please try again.");
 			}
