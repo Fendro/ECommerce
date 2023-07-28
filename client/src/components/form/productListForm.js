@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { AnyText, ProductContainer } from '../styling';
+import { Link } from 'react-router-dom';
 
 export default function Product() {
 	const [fetchRes, setFetchRes] = useState(0);
@@ -14,7 +15,7 @@ export default function Product() {
 				}).then((response) => {
 					return response.json();
 				});
-				
+
 				setFetchRes(json.statusCode);
 				if (json.statusCode === 200) {
 					setData(json.data);
@@ -38,12 +39,14 @@ export default function Product() {
 		case 200:
 			return (
 				<>
-					{data?.map((product) => (
-						<ProductContainer key={product?.name ?? "no_name"}>
-							<AnyText text={product?.name ?? "default_name"} width="60"></AnyText>
-							<AnyText text={product?.description ?? "default_desc"} width="80"></AnyText>
-							<AnyText text={product?.price ?? "default_price"} width="20"></AnyText>
-						</ProductContainer>
+					{data?.map((product, index) => (
+						<Link to={"/articles/" + product?.name} style={{ textDecoration: 'none', color:'inherit'}}>
+							<ProductContainer key={product?.id ?? index}>
+								<AnyText text={product?.name} width="60"></AnyText>
+								<AnyText text={product?.description} width="60"></AnyText>
+								<AnyText text={product?.price} width="20"></AnyText>
+							</ProductContainer>
+						</Link>
 					))}
 				</>
 			);
@@ -54,5 +57,10 @@ export default function Product() {
 					<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
 				</ProductContainer>
 			);
+		default:
+			<ProductContainer>
+				<AnyText text={""} width="60"></AnyText>
+				<AnyText text={"There is an unrecognized error, good luck !"} width="80"></AnyText>
+			</ProductContainer>
 	}
 }
