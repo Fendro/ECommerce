@@ -39,21 +39,28 @@ export const StyledLink = styled(Link)({
 });
 
 export const ProductContainer = styled(Container)({
+	marginTop: "3%",
 	display: 'flex',
-	justifyContent: 'center',
+	justifyContent: 'left',
 	alignItems: 'center',
 	width: '90%',
+	flexWrap: "wrap"
 });
 
 export const ProductImage = styled(Image)({
-
+	width: "100%",
 });
 
 export function AnyText(props) {
 	const style = {
 		width: props.width + "%",
-		borderColor: "lightgrey"
+		borderColor: "grey",
+		border: "1px solid",
+		margin: "1px",
+		padding: "1px",
 	};
+	if (!props?.text)
+		return;
 	return (
 		<div style={style}>
 			{props.text}
@@ -64,8 +71,14 @@ export function AnyText(props) {
 export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
-		borderColor: "lightgrey"
+		aspectRatio: 4/3,
+		borderColor: "grey",
+		border: "1px solid",
+		margin: "1px",
+		padding: "1px",
 	};
+	// if (!props?.text)
+	// 	return;
 	return (
 		<img style={style} alt={props.alt}></img>
 	);

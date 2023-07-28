@@ -58,5 +58,10 @@ export default function Product() {
 					<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
 				</ProductContainer>
 			);
+		default:
+			<ProductContainer>
+				<AnyText text={""} width="60"></AnyText>
+				<AnyText text={"There is an unrecognized error, good luck !"} width="80"></AnyText>
+			</ProductContainer>
 	}
 }
