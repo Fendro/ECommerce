@@ -1,12 +1,12 @@
 import { Router } from "express";
 import adminRouter from "./admin";
-import authRouter from "./authentication";
-import prodRouter from "./product";
+import authRouter from "./auth";
+import articleRouter from "./articles";
 
 const routers: Record<string, Router> = {
   adminRouter,
   authRouter,
-  prodRouter,
+  articleRouter,
 };
 
 export default routers;
