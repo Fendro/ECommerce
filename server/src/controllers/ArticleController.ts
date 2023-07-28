@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
+import { ObjectId } from "mongodb";
 
 const collection: string = "products";
 
@@ -11,15 +12,6 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
     "description",
   ]);
   if (!data) return;
-
-  const product = await dbCRUD.find(collection, { name: data.name });
-  if (product.length) {
-    requestHandler.sendResponse(res, {
-      message: "A product with this name already exists.",
-      statusCode: 400,
-    });
-    return;
-  }
 
   (await dbCRUD.insert(collection, data))
     ? requestHandler.sendResponse(res, {
@@ -33,9 +25,10 @@ const addProduct = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["name"]);
+  const data = requestHandler.fetchParams(req, res, ["_id"]);
   if (!data) return;
 
+  data._id = new ObjectId(data._id);
   if (!(await dbCRUD.find(collection, data))) {
     requestHandler.sendResponse(res, {
       message: "No product found matching the provided parameters.",
@@ -57,7 +50,7 @@ const deleteProduct = async (req: Request, res: Response): Promise<void> => {
 const editProduct = () => {};
 
 const getProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["name"]);
+  const data = requestHandler.fetchParams(req, res, ["_id"]);
   if (!data) return;
 
   const products = await dbCRUD.find(collection, data);

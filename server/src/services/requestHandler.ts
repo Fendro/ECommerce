@@ -31,7 +31,12 @@ function fetchParams(
   for (const object of objects) {
     for (const soughtParam of soughtParams) {
       if (soughtParam in object) {
-        fetchedParams[soughtParam] = object[soughtParam];
+        fetchedParams[soughtParam]?.length
+          ? (fetchedParams[soughtParam] = [
+              fetchedParams[soughtParam],
+              object[soughtParam],
+            ])
+          : (fetchedParams[soughtParam] = object[soughtParam]);
       }
     }
   }

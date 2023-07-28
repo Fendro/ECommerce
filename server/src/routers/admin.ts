@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as AdminController from "../controllers/AdminController";
+import * as UserController from "../controllers/UserController";
 const adminRouter: Router = Router();
 
 adminRouter.get(
@@ -15,12 +16,12 @@ adminRouter.get(
 adminRouter.put(
   "/admin/users/:email",
   AdminController.isAdmin,
-  AdminController.editAccount,
+  UserController.editAccount,
 );
 adminRouter.delete(
   "/admin/users/:email",
   AdminController.isAdmin,
-  AdminController.deleteAccount,
+  UserController.deleteAccount,
 );
 
 export default adminRouter;
