@@ -26,7 +26,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-const editAccount = () => {};
+const editAccount = (req: Request, res: Response): void => {};
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["email"]);
@@ -74,7 +74,13 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
 };
 
 const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
-  next();
+  // @ts-ignore
+  if (req.session.user.admin) next();
+
+  requestHandler.sendResponse(res, {
+    message: "This action requires administrator privileges.",
+    statusCode: 400,
+  });
 };
 
 export { deleteAccount, editAccount, getUser, getUsers, isAdmin };

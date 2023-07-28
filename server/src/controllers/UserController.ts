@@ -1,5 +1,4 @@
-import { Response } from "express";
-import Request from "../interfaces/Request";
+import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
 import * as Utils from "../utils/usersUtils";
@@ -15,6 +14,8 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
       message: "No account found matching the provided credentials.",
       statusCode: 400,
     });
+
+    return;
   }
 
   (await dbCRUD.remove(collection, data))
@@ -31,7 +32,16 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 const editAccount = () => {};
 
 const login = async (req: Request, res: Response): Promise<void> => {
-  if (!req.user) console.log("alrdy logged", req.user);
+  // @ts-ignore
+  if (req.session.user) {
+    requestHandler.sendResponse(res, {
+      // @ts-ignore
+      data: req.session.user,
+      message: "A user is already logged.",
+      statusCode: 400,
+    });
+    return;
+  }
 
   const data = requestHandler.fetchParams(req, res, ["email", "password"]);
   if (!data) return;
@@ -49,7 +59,8 @@ const login = async (req: Request, res: Response): Promise<void> => {
   }
 
   delete user[0].password;
-  // req.session.user = user[0];
+  // @ts-ignore
+  req.session.user = user[0];
   console.log(req.session);
   requestHandler.sendResponse(res, {
     data: user,
@@ -58,7 +69,32 @@ const login = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-const logout = (req: Request, res: Response): void => {};
+const logout = (req: Request, res: Response): void => {
+  // @ts-ignore
+  if (!req.session.user) {
+    requestHandler.sendResponse(res, {
+      message: "No user currently logged.",
+      statusCode: 400,
+    });
+    return;
+  }
+
+  req.session.destroy((error) => {
+    if (error) {
+      console.error(error);
+      requestHandler.sendResponse(res, {
+        message: "Logout failed.",
+        statusCode: 400,
+      });
+      return;
+    }
+
+    requestHandler.sendResponse(res, {
+      message: "Logout succeeded.",
+      statusCode: 200,
+    });
+  });
+};
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, [
