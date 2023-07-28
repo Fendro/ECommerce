@@ -12,7 +12,7 @@ export default function Product() {
 		(async () => {
 			let json;
 			try {
-				json = await fetch("http://localhost:4242/product", {
+				json = await fetch("http://localhost:4242/articles", {
 					method: "GET",
 				}).then((response) => {
 					return response.json();
@@ -20,6 +20,7 @@ export default function Product() {
 				
 				setFetchRes(json.statusCode);
 				if (json.statusCode === 200) {
+					console.log(json.data);
 					setData(json.data);
 				}
 			} catch (e) {
@@ -27,7 +28,7 @@ export default function Product() {
 			}
 		})();
 	}, []);
-
+	console.log(fetchRes)
 	switch (fetchRes) {
 		case 0:
 			return (

@@ -43,7 +43,7 @@ export default function Login() {
 				console.log(`${json.data[0]["email"]}`);
 				setEmail(`${json.data[0]["email"]}`);
 				setAdmin(`${json.data[0]["admin"]}`);
-				navigate("/product")
+				navigate("/articles")
 
 			} else {
 				setMessage("Wrong credentials. Please try again.");
