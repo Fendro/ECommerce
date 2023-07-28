@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 
-interface Product {
+export default interface Product {
   name: string;
   price: number;
   description: string;

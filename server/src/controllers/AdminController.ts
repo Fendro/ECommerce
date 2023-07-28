@@ -4,29 +4,7 @@ import requestHandler from "../services/requestHandler";
 
 const collection: string = "users";
 
-const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["email"]);
-  if (!data) return;
-
-  if (!(await dbCRUD.find(collection, data))) {
-    requestHandler.sendResponse(res, {
-      message: "No account found matching the provided email.",
-      statusCode: 400,
-    });
-  }
-
-  (await dbCRUD.remove(collection, data))
-    ? requestHandler.sendResponse(res, {
-        message: "Account deletion succeeded.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Account deletion failed.",
-        statusCode: 400,
-      });
-};
-
-const editAccount = (req: Request, res: Response): void => {};
+const editAccount = async (req: Request, res: Response): Promise<void> => {};
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(req, res, ["email"]);
@@ -75,7 +53,7 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
 
 const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
-  if (req.session.user.admin) next();
+  if (req.session.user?.admin) next();
 
   requestHandler.sendResponse(res, {
     message: "This action requires administrator privileges.",
@@ -83,4 +61,4 @@ const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   });
 };
 
-export { deleteAccount, editAccount, getUser, getUsers, isAdmin };
+export { editAccount, getUser, getUsers, isAdmin };

@@ -29,7 +29,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-const editAccount = () => {};
+const editAccount = async (req: Request, res: Response): Promise<void> => {};
 
 const login = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
@@ -37,7 +37,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     requestHandler.sendResponse(res, {
       // @ts-ignore
       data: req.session.user,
-      message: "A user is already logged.",
+      message: "A user is already logged in.",
       statusCode: 400,
     });
     return;
@@ -73,7 +73,7 @@ const logout = (req: Request, res: Response): void => {
   // @ts-ignore
   if (!req.session.user) {
     requestHandler.sendResponse(res, {
-      message: "No user currently logged.",
+      message: "No user currently logged in.",
       statusCode: 400,
     });
     return;
