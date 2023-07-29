@@ -5,6 +5,7 @@ import cors from "cors";
 import express, { Express, Router } from "express";
 import routers from "./src/routers";
 import session from "express-session";
+import { ErrorHandler } from "./src/services/errorHandler";
 
 const app: Express = express();
 
@@ -43,3 +44,5 @@ app.on("error", (error) => {
 for (const router in routers) {
   app.use("/", routers[router] as Router);
 }
+
+app.use(ErrorHandler);

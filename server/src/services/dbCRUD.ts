@@ -12,6 +12,7 @@ async function establishConnection(): Promise<MongoClient | false> {
     return client;
   } catch (error) {
     console.error("Connection to the database failed.", error);
+    throw new Error("Connection to the database failed.");
     return false;
   }
 }

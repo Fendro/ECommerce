@@ -54,11 +54,25 @@ function fetchParams(
   return fetchedParams;
 }
 
+function seekParams(
+  soughtParams: string[],
+  params: { [key: string]: any },
+): { [key: string]: any } | false {
+  const data: { [key: string]: any } = {};
+  for (const soughtParam of soughtParams) {
+    if (!(soughtParam in params)) return false;
+    data[soughtParam] = params[soughtParam];
+  }
+
+  return data;
+}
+
 function sendResponse(res: Response, data: ResponseData): void {
-  res.status(data.statusCode).send(JSON.stringify(data));
+  res.status(data.statusCode).json(data);
 }
 
 export default {
   fetchParams,
+  seekParams,
   sendResponse,
 };

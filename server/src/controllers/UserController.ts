@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
 import * as Utils from "../utils/usersUtils";
+import { BadRequest, ServiceError, Unauthorized } from "../models/Errors";
 
 const collection: string = "users";
 
@@ -43,8 +44,13 @@ const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const data = requestHandler.fetchParams(req, res, ["email", "password"]);
-  if (!data) return;
+  const data = requestHandler.seekParams(["email", "password"], req.query);
+  if (!data)
+    throw new BadRequest(
+      "Missing parameters",
+      ["email", "password"],
+      req.query,
+    );
 
   data.password = Utils.passwordHashing(data.password);
 
@@ -71,23 +77,10 @@ const login = async (req: Request, res: Response): Promise<void> => {
 
 const logout = (req: Request, res: Response): void => {
   // @ts-ignore
-  if (!req.session.user) {
-    requestHandler.sendResponse(res, {
-      message: "No user currently logged in.",
-      statusCode: 400,
-    });
-    return;
-  }
+  if (!req.session.user) throw new Unauthorized("No user logged in.");
 
   req.session.destroy((error) => {
-    if (error) {
-      console.error(error);
-      requestHandler.sendResponse(res, {
-        message: "Logout failed.",
-        statusCode: 400,
-      });
-      return;
-    }
+    if (error) throw new ServiceError("Session manager failure.", error);
 
     requestHandler.sendResponse(res, {
       message: "Logout succeeded.",
