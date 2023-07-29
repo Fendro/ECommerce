@@ -12,7 +12,7 @@ export default function Product() {
 			let json;
 			console.log(id);
 			try {
-				json = await fetch("http://localhost:4242/product/" + id, {
+				json = await fetch("http://localhost:4242/articles/" + id, {
 					method: "GET",
 				}).then((response) => {
 					return response.json();

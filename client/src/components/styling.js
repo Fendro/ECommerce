@@ -38,18 +38,35 @@ export const StyledLink = styled(Link)({
 	marginTop: '50px',
 });
 
-export const ProductContainer = styled(Container)({
-	marginTop: "3%",
-	display: 'flex',
-	justifyContent: 'left',
-	alignItems: 'center',
-	width: '90%',
-	flexWrap: "wrap"
-});
-
-export const ProductImage = styled(Image)({
-	width: "100%",
-});
+export function ProductContainer(props) {
+	const style = {
+		marginTop: "3%",
+		marginRight: "auto",
+		marginLeft: "auto",
+		display: 'flex',
+		justifyContent: 'left',
+		alignItems: 'center',
+		width: '90%',
+		flexWrap: "wrap"
+	};
+	if (props?.link) {
+		const linkStyle = {
+			textDecoration: 'inherit',
+			color: 'inherit',
+		}
+		return (
+			<Link style={Object.assign({},style, linkStyle)} to={props.link}>
+				{props.children}
+			</Link>
+		);
+	} else {
+		return (
+			<div style={style}>
+				{props.children}
+			</div>
+		);
+	}
+}
 
 export function AnyText(props) {
 	const style = {
@@ -71,16 +88,14 @@ export function AnyText(props) {
 export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
-		aspectRatio: 4/3,
+		aspectRatio: 4 / 3,
 		borderColor: "grey",
 		border: "1px solid",
 		margin: "1px",
 		padding: "1px",
 	};
-	// if (!props?.text)
-	// 	return;
 	return (
-		<img style={style} alt={props.alt}></img>
+		<img style={style} alt={props.alt ?? "image"}></img>
 	);
 }
 export const TopCenterContainer = styled(Container)({

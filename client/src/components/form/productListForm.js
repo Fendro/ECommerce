@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AnyText, ProductContainer } from '../styling';
 import { UserContext } from '../../context/UserContext';
-import { Link } from 'react-router-dom';
 
 export default function Product() {
 	const { admin, setAdmin } = useContext(UserContext);
@@ -41,13 +40,11 @@ export default function Product() {
 			return (
 				<>
 					{data?.map((product, index) => (
-						<Link to={"/articles/" + product?.name} style={{ textDecoration: 'none', color:'inherit'}}>
-							<ProductContainer key={product?.id ?? index}>
-								<AnyText text={product?.name} width="60"></AnyText>
-								<AnyText text={product?.description} width="60"></AnyText>
-								<AnyText text={product?.price} width="20"></AnyText>
+							<ProductContainer key={product.id ?? index} link={"/articles/" + product.name}>
+								<AnyText text={product.name} width="60"></AnyText>
+								<AnyText text={product.description} width="60"></AnyText>
+								<AnyText text={product.price} width="20"></AnyText>
 							</ProductContainer>
-						</Link>
 					))}
 				</>
 			);
