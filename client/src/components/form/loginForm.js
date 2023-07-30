@@ -40,9 +40,8 @@ export default function Login() {
 			});
 			const json = await res.json();
 			if (json.message === "Login succeeded.") {
-				console.log(`${json.data[0]["email"]}`);
-				setEmail(`${json.data[0]["email"]}`);
-				setAdmin(`${json.data[0]["admin"]}`);
+				setEmail(json.data["email"]);
+				setAdmin(json.data["admin"]);
 				navigate("/articles")
 
 			} else {
