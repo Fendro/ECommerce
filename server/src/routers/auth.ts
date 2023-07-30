@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { catchWrapper } from "../utils/catchWrapper";
 import * as UserController from "../controllers/UserController";
+import { catchWrapper } from "../utils/catchWrapper";
+import { Router } from "express";
 const authRouter: Router = Router();
 
 authRouter.get("/auth", catchWrapper(UserController.login));

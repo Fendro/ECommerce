@@ -1,5 +1,5 @@
 import appConfig from "../configs/appConfig";
-import { User } from "../types";
+import { ResponseData, User } from "../types";
 
 class BadRequest extends Error {
   response: { [key: string]: any };
@@ -15,15 +15,17 @@ class BadRequest extends Error {
       success: false,
     };
     if (appConfig.env === "development") {
-      this.response.needed = needed;
-      this.response.obtained = obtained;
-      this.response.stack = this.stack;
+      this.response.dev = {
+        needed: needed,
+        obtained: obtained,
+        stack: this.stack,
+      };
     }
   }
 }
 
 class ForbiddenRequest extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
 
   constructor(message: string, user: User) {
     super();
@@ -32,8 +34,27 @@ class ForbiddenRequest extends Error {
       success: false,
     };
     if (appConfig.env === "development") {
-      this.response.user = user;
-      this.response.stack = this.stack;
+      this.response.dev = {
+        user: user,
+        stack: this.stack,
+      };
+    }
+  }
+}
+
+class NotFound extends Error {
+  response: ResponseData;
+
+  constructor(message: string) {
+    super();
+    this.response = {
+      message: message,
+      success: false,
+    };
+    if (appConfig.env === "development") {
+      this.response.dev = {
+        stack: this.stack,
+      };
     }
   }
 }
@@ -48,8 +69,10 @@ class ServiceError extends Error {
       success: false,
     };
     if (appConfig.env === "development") {
-      this.response.error = error;
-      this.response.stack = this.stack;
+      this.response.dev = {
+        error: error,
+        stack: this.stack,
+      };
     }
   }
 }
@@ -64,9 +87,11 @@ class Unauthorized extends Error {
       success: false,
     };
     if (appConfig.env === "development") {
-      this.response.stack = this.stack;
+      this.response.dev = {
+        stack: this.stack,
+      };
     }
   }
 }
 
-export { BadRequest, ForbiddenRequest, ServiceError, Unauthorized };
+export { BadRequest, ForbiddenRequest, NotFound, ServiceError, Unauthorized };

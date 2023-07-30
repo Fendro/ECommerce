@@ -7,30 +7,53 @@ import { BadRequest, ServiceError, Unauthorized } from "../models/Errors";
 const collection: string = "users";
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["email", "password"]);
-  if (!data) return;
+  const soughtParams = ["email", "password"];
+  const data = requestHandler.seekParams(soughtParams, req.body);
+  if (!data) throw new BadRequest("Missing parameters", soughtParams, req.body);
 
-  if (!(await dbCRUD.find(collection, data))) {
-    requestHandler.sendResponse(res, {
-      message: "No account found matching the provided credentials.",
-      statusCode: 400,
-    });
+  data.password = Utils.passwordHashing(data.password);
 
-    return;
-  }
+  const user = await dbCRUD.findOne(collection, data);
+  if (!user) throw new Unauthorized("Credentials don't match.");
 
-  (await dbCRUD.remove(collection, data))
-    ? requestHandler.sendResponse(res, {
-        message: "Account deletion succeeded.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Account deletion failed.",
-        statusCode: 400,
-      });
+  await dbCRUD.remove(collection, data);
+
+  requestHandler.sendResponse(res, {
+    message: "Account deletion succeeded.",
+    success: true,
+  });
 };
 
-const editAccount = async (req: Request, res: Response): Promise<void> => {};
+const editAccount = async (req: Request, res: Response): Promise<void> => {
+  const soughtParams = ["email", "password"];
+  const data = requestHandler.seekParams(soughtParams, req.body);
+  if (!data) throw new BadRequest("Missing parameters", soughtParams, req.body);
+
+  data.password = Utils.passwordHashing(data.password);
+
+  const user = await dbCRUD.findOne(collection, data);
+
+  if (!user) throw new Unauthorized("Credentials don't match.");
+
+  const keys = Object.keys(user);
+  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+
+  if (!fieldsToUpdate)
+    throw new BadRequest("No fields to update were provided.", keys, req.body);
+
+  if (fieldsToUpdate.password)
+    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
+
+  if (fieldsToUpdate.admin) throw new Unauthorized("Nice try.");
+
+  const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
+
+  requestHandler.sendResponse(res, {
+    data: updatedUser,
+    message: "Information edited.",
+    success: true,
+  });
+};
 
 const login = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
@@ -39,39 +62,28 @@ const login = async (req: Request, res: Response): Promise<void> => {
       // @ts-ignore
       data: req.session.user,
       message: "A user is already logged in.",
-      statusCode: 400,
+      success: false,
     });
     return;
   }
 
-  const data = requestHandler.seekParams(["email", "password"], req.query);
+  const soughtParams = ["email", "password"];
+  const data = requestHandler.seekParams(soughtParams, req.query);
   if (!data)
-    throw new BadRequest(
-      "Missing parameters",
-      ["email", "password"],
-      req.query,
-    );
+    throw new BadRequest("Missing parameters", soughtParams, req.query);
 
   data.password = Utils.passwordHashing(data.password);
 
-  const user = await dbCRUD.find(collection, data);
+  const user = await dbCRUD.findOne(collection, data);
+  if (!user) throw new Unauthorized("Invalid credentials.");
 
-  if (!user.length) {
-    requestHandler.sendResponse(res, {
-      message: "Login failed.",
-      statusCode: 400,
-    });
-    return;
-  }
-
-  delete user[0].password;
+  delete user.password;
   // @ts-ignore
-  req.session.user = user[0];
-  console.log(req.session);
+  req.session.user = user;
   requestHandler.sendResponse(res, {
     data: user,
     message: "Login succeeded.",
-    statusCode: 200,
+    success: true,
   });
 };
 
@@ -84,41 +96,29 @@ const logout = (req: Request, res: Response): void => {
 
     requestHandler.sendResponse(res, {
       message: "Logout succeeded.",
-      statusCode: 200,
+      success: true,
     });
   });
 };
 
 const register = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, [
-    "username",
-    "email",
-    "password",
-  ]);
-  if (!data) return;
+  const soughtParams = ["username", "email", "password"];
+  const data = requestHandler.seekParams(soughtParams, req.body);
+  if (!data)
+    throw new BadRequest("Missing parameters.", soughtParams, req.body);
 
   const user = await dbCRUD.find(collection, { email: data.email });
-  if (user.length) {
-    requestHandler.sendResponse(res, {
-      message: "This email is already in use.",
-      statusCode: 400,
-    });
-    return;
-  }
+  if (user.length) throw new Unauthorized("Email already in use.");
 
   data.password = Utils.passwordHashing(data.password);
   data.admin = false;
 
-  (await dbCRUD.insert(collection, data))
-    ? requestHandler.sendResponse(res, {
-        data: user,
-        message: "Registration succeeded",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Registration failed.",
-        statusCode: 400,
-      });
+  await dbCRUD.insert(collection, data);
+
+  requestHandler.sendResponse(res, {
+    message: "Registration succeeded",
+    success: true,
+  });
 };
 
 export { deleteAccount, editAccount, login, logout, register };

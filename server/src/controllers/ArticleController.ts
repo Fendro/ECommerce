@@ -1,83 +1,113 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
+import { BadRequest, NotFound } from "../models/Errors";
 import { ObjectId } from "mongodb";
+import * as Utils from "../utils/usersUtils";
 
-const collection: string = "products";
+const collection: string = "articles";
 
-const addProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, [
+const addArticle = async (req: Request, res: Response): Promise<void> => {
+  const soughtParams = [
     "name",
     "price",
     "description",
-  ]);
-  if (!data) return;
+    "images",
+    "specs",
+    "quantity",
+  ];
+  const data = requestHandler.seekParams(soughtParams, req.body);
+  if (!data)
+    throw new BadRequest("Missing parameters.", soughtParams, req.body);
+  data.views = 0;
 
-  (await dbCRUD.insert(collection, data))
-    ? requestHandler.sendResponse(res, {
-        message: "Product registered.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Product registration failed.",
-        statusCode: 400,
-      });
+  await dbCRUD.insert(collection, data);
+
+  requestHandler.sendResponse(res, {
+    message: "Article registered.",
+    success: true,
+  });
 };
 
-const deleteProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["_id"]);
-  if (!data) return;
-
+const deleteArticle = async (req: Request, res: Response): Promise<void> => {
+  const soughtParams = ["_id"];
+  const data = requestHandler.seekParams(soughtParams, req.params);
+  if (!data)
+    throw new BadRequest("Missing parameters.", soughtParams, req.params);
   data._id = new ObjectId(data._id);
-  if (!(await dbCRUD.find(collection, data))) {
-    requestHandler.sendResponse(res, {
-      message: "No product found matching the provided parameters.",
-      statusCode: 400,
-    });
-  }
 
-  (await dbCRUD.remove(collection, data))
-    ? requestHandler.sendResponse(res, {
-        message: "Product deletion succeeded.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "Product deletion failed.",
-        statusCode: 400,
-      });
+  const article = await dbCRUD.findOne(collection, data);
+  if (!article) throw new NotFound("No article found with the provided id");
+
+  await dbCRUD.remove(collection, data);
+
+  requestHandler.sendResponse(res, {
+    message: "Article deletion succeeded.",
+    success: true,
+  });
 };
 
-const editProduct = () => {};
+const editProduct = async (req: Request, res: Response) => {
+  const soughtParams = ["_id"];
+  const data = requestHandler.seekParams(soughtParams, req.params);
+  if (!data)
+    throw new BadRequest("Missing parameters", soughtParams, req.params);
+  data._id = new ObjectId(data._id);
 
-const getProduct = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["_id"]);
-  if (!data) return;
+  const article = await dbCRUD.findOne(collection, data);
+  if (!article) throw new NotFound("No article found with the provided id.");
 
-  const products = await dbCRUD.find(collection, data);
+  const keys = Object.keys(article);
+  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+
+  if (!fieldsToUpdate)
+    throw new BadRequest("No fields to update were provided.", keys, req.body);
+
+  if (fieldsToUpdate.password)
+    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
+
+  const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
+
+  requestHandler.sendResponse(res, {
+    data: updatedUser,
+    message: "Information edited.",
+    success: true,
+  });
+};
+
+const getArticle = async (req: Request, res: Response): Promise<void> => {
+  const soughtParams = ["_id"];
+  const data = requestHandler.seekParams(soughtParams, req.params);
+  if (!data)
+    throw new BadRequest("Missing parameters.", soughtParams, req.params);
+  data._id = new ObjectId(data._id);
+
+  const product = await dbCRUD.findOne(collection, data);
+
+  if (!product) throw new NotFound("No article found with the provided id");
+
+  requestHandler.sendResponse(res, {
+    data: product,
+    message: "Article retrieved.",
+    success: true,
+  });
+
+  await dbCRUD.update(collection, data, { views: product.views + 1 });
+};
+
+const getArticles = async (req: Request, res: Response): Promise<void> => {
+  const products = await dbCRUD.find(collection, {});
+
   products.length
     ? requestHandler.sendResponse(res, {
         data: products,
-        message: "Product retrieved.",
-        statusCode: 200,
+        message: "Articles retrieved.",
+        success: true,
       })
     : requestHandler.sendResponse(res, {
-        message: "No product matches the requested id.",
-        statusCode: 400,
+        message: "No articles found.",
+        success: false,
       });
 };
 
-const getProducts = async (req: Request, res: Response): Promise<void> => {
-  const products = await dbCRUD.getCollection(collection);
-  products.length
-    ? requestHandler.sendResponse(res, {
-        data: products,
-        message: "Products retrieved.",
-        statusCode: 200,
-      })
-    : requestHandler.sendResponse(res, {
-        message: "No products found.",
-        statusCode: 400,
-      });
-};
-
-export { addProduct, deleteProduct, editProduct, getProduct, getProducts };
+export { addArticle, deleteArticle, editProduct, getArticle, getArticles };
