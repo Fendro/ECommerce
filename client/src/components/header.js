@@ -16,7 +16,7 @@ function Header() {
         window.location.replace("/");
     }
     const handleProductClick = () => {
-        navigate('/product');
+        navigate('/articles');
     }
     const { admin, setAdmin } = useContext(UserContext);
     const { email, setEmail } = useContext(EmailContext);
