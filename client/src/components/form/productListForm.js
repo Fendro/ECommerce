@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AnyText, ProductContainer } from '../styling';
 import { UserContext } from '../../context/UserContext';
+import { Link } from 'react-router-dom';
 
 export default function Product() {
 	const { admin, setAdmin } = useContext(UserContext);
@@ -17,7 +18,7 @@ export default function Product() {
 				}).then((response) => {
 					return response.json();
 				});
-				
+
 				setFetchRes(json.statusCode);
 				if (json.statusCode === 200) {
 					console.log(json.data);
@@ -39,12 +40,14 @@ export default function Product() {
 		case 200:
 			return (
 				<>
-					{data?.map((product) => (
-						<ProductContainer>
-							<AnyText text={product?.name ?? "default_name"} width="60"></AnyText>
-							<AnyText text={product?.description ?? "default_desc"} width="80"></AnyText>
-							<AnyText text={product?.price ?? "default_price"} width="20"></AnyText>
-						</ProductContainer>
+					{data?.map((product, index) => (
+						<Link to={"/articles/" + product?.name} style={{ textDecoration: 'none', color:'inherit'}}>
+							<ProductContainer key={product?.id ?? index}>
+								<AnyText text={product?.name} width="60"></AnyText>
+								<AnyText text={product?.description} width="60"></AnyText>
+								<AnyText text={product?.price} width="20"></AnyText>
+							</ProductContainer>
+						</Link>
 					))}
 				</>
 			);
@@ -55,5 +58,10 @@ export default function Product() {
 					<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
 				</ProductContainer>
 			);
+		default:
+			<ProductContainer>
+				<AnyText text={""} width="60"></AnyText>
+				<AnyText text={"There is an unrecognized error, good luck !"} width="80"></AnyText>
+			</ProductContainer>
 	}
 }
