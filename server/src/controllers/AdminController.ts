@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import {
-  BadRequest,
-  ForbiddenRequest,
-  NotFound,
-  Unauthorized,
-} from "../models/Errors";
+import { BadRequest, ForbiddenRequest, NotFound } from "../models/Errors";
 import { ObjectId } from "mongodb";
 import * as Utils from "../utils/usersUtils";
 

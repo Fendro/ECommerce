@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import * as Utils from "../utils/usersUtils";
 import { BadRequest, ServiceError, Unauthorized } from "../models/Errors";
+import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
 

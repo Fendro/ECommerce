@@ -1,13 +1,7 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import * as Utils from "../utils/usersUtils";
-import {
-  BadRequest,
-  NotFound,
-  ServiceError,
-  Unauthorized,
-} from "../models/Errors";
+import { BadRequest, NotFound } from "../models/Errors";
 import { ObjectId } from "mongodb";
 
 const collection: string = "categories";
@@ -57,11 +51,6 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
 
-  if (fieldsToUpdate.password)
-    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
-
-  if (fieldsToUpdate.admin) throw new Unauthorized("Nice try.");
-
   const updatedCategory = await dbCRUD.update(collection, data, fieldsToUpdate);
 
   requestHandler.sendResponse(res, {
@@ -83,7 +72,7 @@ const getCategory = async (req: Request, res: Response): Promise<void> => {
 
   requestHandler.sendResponse(res, {
     data: category,
-    message: "User retrieved.",
+    message: "Category retrieved.",
     success: true,
   });
 };

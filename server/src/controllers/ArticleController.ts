@@ -96,7 +96,9 @@ const getArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getArticles = async (req: Request, res: Response): Promise<void> => {
-  const products = await dbCRUD.find(collection, {});
+  const search = requestHandler.searchBuilder(req);
+  console.log(requestHandler.searchBuilder(req));
+  const products = await dbCRUD.find(collection, search.find, search.options);
 
   products.length
     ? requestHandler.sendResponse(res, {
