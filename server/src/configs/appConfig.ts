@@ -2,6 +2,7 @@ require("dotenv").config();
 const env = process.env.DOT_ENV === "production" ? "production" : "development";
 
 const development = {
+  env: "development",
   port: 4242,
   hostname: "localhost",
   users: {
@@ -14,6 +15,7 @@ const development = {
 };
 
 const production = {
+  env: "production",
   port: 4242,
   hostname: "localhost",
   users: {
