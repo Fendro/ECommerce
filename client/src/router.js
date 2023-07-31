@@ -8,7 +8,7 @@ import ArticleList from "./pages/articleList";
 import Admin from "./pages/admin";
 import Change from "./pages/changer";
 import AddArticle from "./pages/addArticle";
-import AddUser from "./pages/addUser";
+// import AddUser from "./pages/addUser";
 const AppRouter = () => {
   return (
     <Router>
@@ -20,7 +20,7 @@ const AppRouter = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/change" element={<Change />} />
         <Route path="/admin/add" element={<AddArticle />} />
-        <Route path="/admin/addUser" element={<AddUser />} />
+        {/*<Route path="/admin/addUser" element={<AddUser />} />*/}
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
