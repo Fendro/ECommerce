@@ -75,6 +75,12 @@ const getArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getArticles = async (req: Request, res: Response): Promise<void> => {
+  // const { field } = req.query;
+  // console.log(field);
+  // const search = {
+  //   find: {},
+  //   options: { sort: { views: -1, searches: -1 } },
+  // };
   const search = requestHandler.searchBuilder(req);
   console.log(requestHandler.searchBuilder(req));
   const products = await dbCRUD.find(collection, search.find, search.options);

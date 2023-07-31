@@ -35,7 +35,7 @@ async function getLastInsertedDocument(
 async function find(
   collection: string,
   find: object,
-  options?: FindOptions,
+  options?: object,
 ): Promise<WithId<Document>[]> {
   const client: MongoClient = await establishConnection();
 
