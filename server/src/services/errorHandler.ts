@@ -8,7 +8,7 @@ import {
   ServiceError,
   Unauthorized,
 } from "../models/Errors";
-import { ResponseData } from "../types";
+import { ResponseData } from "../types/ResponseData";
 import { BSONError } from "bson";
 
 export const ErrorHandler = (

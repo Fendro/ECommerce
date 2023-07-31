@@ -3,22 +3,14 @@ import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
 import { BadRequest, NotFound } from "../models/Errors";
 import { ObjectId } from "mongodb";
-import * as Utils from "../utils/usersUtils";
 
 const collection: string = "articles";
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = [
-    "name",
-    "price",
-    "description",
-    "images",
-    "specs",
-    "quantity",
-  ];
-  const data = requestHandler.seekParams(soughtParams, req.body);
-  if (!data)
-    throw new BadRequest("Missing parameters.", soughtParams, req.body);
+  const data = requestHandler.seekParams(
+    ["name", "price", "description", "images", "specs", "quantity"],
+    req.body,
+  );
   data.views = 0;
 
   await dbCRUD.insert(collection, data);
@@ -30,10 +22,7 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteArticle = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["_id"];
-  const data = requestHandler.seekParams(soughtParams, req.params);
-  if (!data)
-    throw new BadRequest("Missing parameters.", soughtParams, req.params);
+  const data = requestHandler.seekParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const article = await dbCRUD.findOne(collection, data);
@@ -47,24 +36,18 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-const editProduct = async (req: Request, res: Response) => {
-  const soughtParams = ["_id"];
-  const data = requestHandler.seekParams(soughtParams, req.params);
-  if (!data)
-    throw new BadRequest("Missing parameters", soughtParams, req.params);
+const editArticle = async (req: Request, res: Response) => {
+  const data = requestHandler.seekParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const article = await dbCRUD.findOne(collection, data);
   if (!article) throw new NotFound("No article found with the provided id.");
 
-  const keys = Object.keys(article);
+  const keys = Object.keys(article).filter((key) => key !== "_id");
   const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
-
-  if (fieldsToUpdate.password)
-    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
 
   const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
 
@@ -76,14 +59,10 @@ const editProduct = async (req: Request, res: Response) => {
 };
 
 const getArticle = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["_id"];
-  const data = requestHandler.seekParams(soughtParams, req.params);
-  if (!data)
-    throw new BadRequest("Missing parameters.", soughtParams, req.params);
+  const data = requestHandler.seekParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const product = await dbCRUD.findOne(collection, data);
-
   if (!product) throw new NotFound("No article found with the provided id");
 
   requestHandler.sendResponse(res, {
@@ -112,4 +91,4 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
       });
 };
 
-export { addArticle, deleteArticle, editProduct, getArticle, getArticles };
+export { addArticle, deleteArticle, editArticle, getArticle, getArticles };

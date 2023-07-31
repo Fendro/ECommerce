@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
-import { ResponseData } from "../types";
+import { ResponseData } from "../types/ResponseData";
+import { BadRequest } from "../models/Errors";
 
 function seekParams(
   soughtParams: string[],
   params: { [key: string]: any },
   strict: boolean = true,
-): { [key: string]: any } | false {
+): { [key: string]: any } {
   const data: { [key: string]: any } = {};
   for (const soughtParam of soughtParams) {
     if (soughtParam in params) {
       data[soughtParam] = params[soughtParam];
     } else if (strict) {
-      return false;
+      throw new BadRequest("Missing parameters.", soughtParams, params);
     }
   }
 
@@ -19,16 +20,23 @@ function seekParams(
 }
 
 const searchBuilder = (req: Request): { [key: string]: any } => {
-  const { searchField, searchValue, sortBy, order, skip, limit } = req.query;
+  const { field, value, sortBy, sortField, order, skip, limit } = req.query;
 
   const find: { [key: string]: any } = {};
-  if (searchField) {
-    find[searchField.toString()] = searchValue;
+  if (field) {
+    if (!value)
+      throw new BadRequest(
+        "A search field was provided without a search value.",
+        ["value"],
+        req.query,
+      );
+
+    find[field.toString()] = value;
   }
 
   const sort: { [key: string]: any } = {};
   if (sortBy) {
-    sort[sortBy.toString()] = order;
+    sort[sortBy.toString()] = order ?? 1;
   }
 
   return {
