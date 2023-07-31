@@ -43,7 +43,7 @@ const editArticle = async (req: Request, res: Response) => {
   const article = await dbCRUD.findOne(collection, data);
   if (!article) throw new NotFound("No article found with the provided id.");
 
-  const keys = Object.keys(article);
+  const keys = Object.keys(article).filter((key) => key !== "_id");
   const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
 
   if (!fieldsToUpdate)

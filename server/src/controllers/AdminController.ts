@@ -14,7 +14,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
   const user = await dbCRUD.findOne(collection, data);
   if (!user) throw new NotFound("No user found with the provided id.");
 
-  const keys = Object.keys(user);
+  const keys = Object.keys(user).filter((key) => key !== "_id");
   const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
 
   if (!fieldsToUpdate)

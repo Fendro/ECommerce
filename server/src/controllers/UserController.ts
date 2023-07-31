@@ -22,13 +22,18 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["email", "password"], req.body);
+  const data = requestHandler.seekParams(
+    ["email", "password", "edits"],
+    req.body,
+  );
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
   if (!user) throw new Unauthorized("Credentials don't match.");
 
-  const keys = Object.keys(user);
+  const keys = Object.keys(user).filter(
+    (key) => key !== "_id" && key !== "admin",
+  );
   const fieldsToUpdate = requestHandler.seekParams(
     keys,
     req.body["edits"],
@@ -37,7 +42,6 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
-  if (fieldsToUpdate.admin) throw new Unauthorized("Nice try.");
   if (fieldsToUpdate.password)
     fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
 

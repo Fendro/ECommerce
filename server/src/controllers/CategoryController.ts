@@ -38,7 +38,7 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
   const category = await dbCRUD.findOne(collection, data);
   if (!category) throw new NotFound("No category found with the provided id.");
 
-  const keys = Object.keys(category);
+  const keys = Object.keys(category).filter((key) => key !== "_id");
   const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
 
   if (!fieldsToUpdate)
