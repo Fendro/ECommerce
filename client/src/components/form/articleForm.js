@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AnyText, ProductContainer } from '../styling';
+import { AnyText, ArticleContainer } from '../styling';
 
 export default function Product() {
 	const { id } = useParams();
 	const [fetchRes, setFetchRes] = useState("loading");
+	const [errorMsg, setErrorMsg] = useState("");
 	const [data, setData] = useState();
 
 	useEffect(() => {
@@ -18,11 +19,12 @@ export default function Product() {
 					return response.json();
 				});
 
-				console.log(json);
-
-				setFetchRes(json.statusCode);
-				if (json.statusCode === 200) {
-					setData(json.data[0]);
+				setFetchRes(json.success);
+				if (json.success) {
+					console.log(json.data);
+					setData(json.data);
+				} else {
+					setErrorMsg(json.message);
 				}
 			} catch (e) {
 				console.log(e);
@@ -32,36 +34,32 @@ export default function Product() {
 	}, []);
 
 	switch (fetchRes) {
-		case 0:
+		case "loading":
 			return (
-				<ProductContainer>
+				<ArticleContainer>
 					<AnyText text={"Product name"} width="60"></AnyText>
 					<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
-					<AnyText text={fetchRes} width="20"></AnyText>
-				</ProductContainer>
+				</ArticleContainer>
 			);
-		case 200:
+		case true:
 			return (
 				<>
-					<ProductContainer>
+					<ArticleContainer>
 						<AnyText text={data?.name ?? "default_name"} width="60"></AnyText>
 						<AnyText text={data?.description ?? "default_desc"} width="80"></AnyText>
 						<AnyText text={data?.price ?? "default_price"} width="20"></AnyText>
-					</ProductContainer>
+					</ArticleContainer>
 
 				</>
 			);
-		case 400:
-			return (
-				<ProductContainer>
-					<AnyText text={""} width="60"></AnyText>
-					<AnyText text={"There is an error from server, please wait then try again."} width="80"></AnyText>
-				</ProductContainer>
-			);
+			case false:
+				return (
+						<AnyText text={errorMsg} width="80"></AnyText>
+				);
 		default:
-			<ProductContainer>
+			<ArticleContainer>
 				<AnyText text={""} width="60"></AnyText>
 				<AnyText text={"There is an unrecognized error, good luck !"} width="80"></AnyText>
-			</ProductContainer>
+			</ArticleContainer>
 	}
 }

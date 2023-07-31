@@ -42,7 +42,7 @@ export default function Login() {
 			if (json.message === "Login succeeded.") {
 				setEmail(json.data["email"]);
 				setAdmin(json.data["admin"]);
-				navigate("/articles")
+				navigate("/articles");
 
 			} else {
 				setMessage("Wrong credentials. Please try again.");

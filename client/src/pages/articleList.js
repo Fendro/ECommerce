@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import { createGlobalStyle } from 'styled-components';
-import ProductListForm from "../components/form/productListForm";
+import ArticleListForm from "../components/form/articleListForm";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -16,7 +16,7 @@ function Article() {
 	return (
 		<>
 			<Header />
-			<ProductListForm />
+			<ArticleListForm />
 			<GlobalStyle />
 		</>
 	)

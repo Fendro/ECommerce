@@ -43,7 +43,7 @@ export const StyledLink = styled(Link)({
 });
 
 
-export function ProductContainer(props) {
+export function ArticleContainer(props) {
 	const style = {
 		marginTop: "3%",
 		marginRight: "auto",
