@@ -6,19 +6,8 @@ import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
 
-const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
-  // @ts-ignore
-  if (!req.session?.user)
-    throw new Unauthorized("This action requires authentication.");
-
-  next();
-};
-
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["email", "password"];
-  const data = requestHandler.seekParams(soughtParams, req.body);
-  if (!data) throw new BadRequest("Missing parameters", soughtParams, req.body);
-
+  const data = requestHandler.seekParams(["email", "password"], req.body);
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
@@ -33,26 +22,24 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["email", "password"];
-  const data = requestHandler.seekParams(soughtParams, req.body);
-  if (!data) throw new BadRequest("Missing parameters", soughtParams, req.body);
-
+  const data = requestHandler.seekParams(["email", "password"], req.body);
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
-
   if (!user) throw new Unauthorized("Credentials don't match.");
 
   const keys = Object.keys(user);
-  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+  const fieldsToUpdate = requestHandler.seekParams(
+    keys,
+    req.body["edits"],
+    false,
+  );
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
-
+  if (fieldsToUpdate.admin) throw new Unauthorized("Nice try.");
   if (fieldsToUpdate.password)
     fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
-
-  if (fieldsToUpdate.admin) throw new Unauthorized("Nice try.");
 
   const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
 
@@ -61,6 +48,13 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
     message: "Information edited.",
     success: true,
   });
+};
+
+const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
+  // @ts-ignore
+  if (!req.session?.user) throw new Unauthorized("Authentication required.");
+
+  next();
 };
 
 const login = async (req: Request, res: Response): Promise<void> => {
@@ -75,17 +69,13 @@ const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const soughtParams = ["email", "password"];
-  const data = requestHandler.seekParams(soughtParams, req.query);
-  if (!data)
-    throw new BadRequest("Missing parameters", soughtParams, req.query);
-
+  const data = requestHandler.seekParams(["email", "password"], req.query);
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
   if (!user) throw new Unauthorized("Invalid credentials.");
-
   delete user.password;
+
   // @ts-ignore
   req.session.user = user;
   requestHandler.sendResponse(res, {
@@ -110,13 +100,13 @@ const logout = (req: Request, res: Response): void => {
 };
 
 const register = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["username", "email", "password"];
-  const data = requestHandler.seekParams(soughtParams, req.body);
-  if (!data)
-    throw new BadRequest("Missing parameters.", soughtParams, req.body);
+  const data = requestHandler.seekParams(
+    ["username", "email", "password"],
+    req.body,
+  );
 
-  const user = await dbCRUD.find(collection, { email: data.email });
-  if (user.length) throw new Unauthorized("Email already in use.");
+  const user = await dbCRUD.findOne(collection, { email: data.email });
+  if (user) throw new Unauthorized("Email already in use.");
 
   data.password = Utils.passwordHashing(data.password);
   data.admin = false;
@@ -129,4 +119,4 @@ const register = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-export { deleteAccount, editAccount, login, logout, register };
+export { deleteAccount, editAccount, isLoggedIn, login, logout, register };

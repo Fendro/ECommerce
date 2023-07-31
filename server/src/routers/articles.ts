@@ -14,7 +14,7 @@ articleRouter.post(
 articleRouter.put(
   "/articles/:_id",
   AdminController.isAdmin,
-  catchWrapper(ArticleController.editProduct),
+  catchWrapper(ArticleController.editArticle),
 );
 articleRouter.delete(
   "/articles/:_id",

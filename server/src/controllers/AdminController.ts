@@ -8,13 +8,10 @@ import * as Utils from "../utils/usersUtils";
 const collection: string = "users";
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["_id"];
-  const data = requestHandler.seekParams(soughtParams, req.params);
-  if (!data)
-    throw new BadRequest("Missing parameters", soughtParams, req.params);
+  const data = requestHandler.seekParams(["_id"], req.params);
+  data._id = new ObjectId(data._id);
 
   const user = await dbCRUD.findOne(collection, data);
-
   if (!user) throw new NotFound("No user found with the provided id.");
 
   const keys = Object.keys(user);
@@ -22,7 +19,6 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
-
   if (fieldsToUpdate.password)
     fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
 
@@ -36,10 +32,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
-  const soughtParams = ["_id"];
-  const data = requestHandler.seekParams(soughtParams, req.params);
-  if (!data)
-    throw new BadRequest("Missing parameters", soughtParams, req.params);
+  const data = requestHandler.seekParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const user = await dbCRUD.findOne(collection, data);
@@ -78,15 +71,14 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
 
 const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
-  if (req.session.user?.admin) {
-    next();
-  } else {
+  if (!req.session.user?.admin)
     throw new ForbiddenRequest(
       "This action requires administrator privileges.",
       // @ts-ignore
       req.session.user,
     );
-  }
+
+  next();
 };
 
 export { editAccount, getUser, getUsers, isAdmin };
