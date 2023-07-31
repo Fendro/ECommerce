@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
 import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
 
 export default function Admin() {
+    const navigate = useNavigate();
+    function handleAdd(){
+        navigate('/admin/add');
+    }
     function handleDelete(email){
         fetch(`http://localhost:4242/admin/users/${email}`, {
             method: "DELETE",
@@ -13,6 +19,7 @@ export default function Admin() {
             return response.json();
         })
             .then((response) => {
+                console.log(response.message)
             if(response.statusCode === 200) {
                 window.location.reload();
             }
@@ -49,6 +56,10 @@ export default function Admin() {
             );
         case 200:
             return (
+                <>
+                <TopCenterContainer>
+                    <Button variant="outlined" color = "success" onClick={()=> handleAdd()}><PostAddRoundedIcon/></Button>
+                </TopCenterContainer>
                 <TopCenterContainer>
                     <table>
                         <tbody>
@@ -70,6 +81,7 @@ export default function Admin() {
                         </tbody>
                     </table>
                 </TopCenterContainer>
+                </>
             );
         case 400:
             return (

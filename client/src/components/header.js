@@ -16,12 +16,12 @@ function Header() {
         window.location.replace("/");
     }
     const handleProductClick = () => {
-        navigate('/product');
+        navigate('/articles');
     }
     const { admin, setAdmin } = useContext(UserContext);
     const { email, setEmail } = useContext(EmailContext);
     const navigate = useNavigate();
-    if (admin === 'true') {
+    if (admin === true) {
         return (
             <HeaderContainer>
                 <LogoImage src={Logo} alt="#" />
@@ -34,7 +34,7 @@ function Header() {
                 </Navbar>
             </HeaderContainer>
         );
-    } else if(admin === 'false') {
+    } else if(admin === false) {
         return (
             <HeaderContainer>
                 <LogoImage src={Logo} alt="#" />
