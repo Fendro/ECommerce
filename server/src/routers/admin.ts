@@ -1,27 +1,28 @@
-import { Router } from "express";
 import * as AdminController from "../controllers/AdminController";
 import * as UserController from "../controllers/UserController";
+import { catchWrapper } from "../utils/catchWrapper";
+import { Router } from "express";
 const adminRouter: Router = Router();
 
 adminRouter.get(
   "/admin/users",
   AdminController.isAdmin,
-  AdminController.getUsers,
+  catchWrapper(AdminController.getUsers),
 );
 adminRouter.get(
-  "/admin/users/:email",
+  "/admin/users/:_id",
   AdminController.isAdmin,
-  AdminController.getUser,
+  catchWrapper(AdminController.getUser),
 );
 adminRouter.put(
-  "/admin/users/:email",
+  "/admin/users/:_id",
   AdminController.isAdmin,
-  UserController.editAccount,
+  catchWrapper(AdminController.editAccount),
 );
 adminRouter.delete(
-  "/admin/users/:email",
+  "/admin/users/:_id",
   AdminController.isAdmin,
-  UserController.deleteAccount,
+  catchWrapper(UserController.deleteAccount),
 );
 
 export default adminRouter;

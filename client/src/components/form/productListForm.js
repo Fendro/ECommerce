@@ -28,7 +28,6 @@ export default function Product() {
 			}
 		})();
 	}, []);
-	console.log(fetchRes)
 	switch (fetchRes) {
 		case 0:
 			return (

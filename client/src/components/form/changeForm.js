@@ -12,7 +12,7 @@ export default function ChangeForm() {
         (async () => {
             let json;
             try {
-                json = await fetch(`http://localhost:4242/admin/users/${email}`, {
+                json = await fetch(`http://localhost:4242/auth/`, {
                     method: "GET",
                 }).then((response) => {
                     return response.json();
@@ -30,7 +30,6 @@ export default function ChangeForm() {
 
     return (
         <form>
-            {data?.map((admin,key) => (
             <CenteredContainer>
                 <FormContainer>
                     <StyledInput
@@ -39,7 +38,7 @@ export default function ChangeForm() {
                         minLength="6"
                         variant="outlined"
                         ref={inputMail}
-                        defaultValue={admin.email}
+                        // defaultValue={admin.email}
                         fullWidth
                     />
                     <StyledInput
@@ -47,7 +46,21 @@ export default function ChangeForm() {
                         variant="outlined"
                         minLength="6"
                         ref={inputUser}
-                        defaultValue={admin.username}
+                        // defaultValue={admin.username}
+                        fullWidth
+                    />
+                    <StyledInput
+                        label="Password"
+                        type="password"
+                        variant="outlined"
+                        minLength="6"
+                        fullWidth
+                    />
+                    <StyledInput
+                        label="Confirm Password"
+                        type="password"
+                        variant="outlined"
+                        minLength="6"
                         fullWidth
                     />
                     <Button
@@ -59,9 +72,17 @@ export default function ChangeForm() {
                     >
                         Change
                     </Button>
+                    <Button
+                    variant="contained"
+                    color="error"
+                    type="button"
+                    width={"100"}
+                    mb={"5"}
+                    >
+                        Delete
+                    </Button>
                 </FormContainer>
             </CenteredContainer>
-                ))}
         </form>
     );
 };

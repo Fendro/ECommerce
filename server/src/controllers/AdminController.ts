@@ -1,41 +1,66 @@
 import { NextFunction, Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
+import { BadRequest, ForbiddenRequest, NotFound } from "../models/Errors";
+import { ObjectId } from "mongodb";
+import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
 
-const editAccount = async (req: Request, res: Response): Promise<void> => {};
+const editAccount = async (req: Request, res: Response): Promise<void> => {
+  const soughtParams = ["_id"];
+  const data = requestHandler.seekParams(soughtParams, req.params);
+  if (!data)
+    throw new BadRequest("Missing parameters", soughtParams, req.params);
+
+  const user = await dbCRUD.findOne(collection, data);
+
+  if (!user) throw new NotFound("No user found with the provided id.");
+
+  const keys = Object.keys(user);
+  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+
+  if (!fieldsToUpdate)
+    throw new BadRequest("No fields to update were provided.", keys, req.body);
+
+  if (fieldsToUpdate.password)
+    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
+
+  const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
+
+  requestHandler.sendResponse(res, {
+    data: updatedUser,
+    message: "Information edited.",
+    success: true,
+  });
+};
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(req, res, ["email"]);
-  if (!data) return;
+  const soughtParams = ["_id"];
+  const data = requestHandler.seekParams(soughtParams, req.params);
+  if (!data)
+    throw new BadRequest("Missing parameters", soughtParams, req.params);
+  data._id = new ObjectId(data._id);
 
-  const user = await dbCRUD.find(collection, data);
+  const user = await dbCRUD.findOne(collection, data);
+  if (!user) throw new NotFound("No user found with the provided id.");
 
-  if (!user.length) {
-    requestHandler.sendResponse(res, {
-      message: "No user matches the requested email.",
-      statusCode: 400,
-    });
-    return;
-  }
-
-  delete user[0].password;
+  delete user.password;
 
   requestHandler.sendResponse(res, {
     data: user,
     message: "User retrieved.",
-    statusCode: 200,
+    success: true,
   });
 };
 
 const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await dbCRUD.getCollection(collection);
+  const users = await dbCRUD.find(collection, {});
 
   if (!users.length) {
     requestHandler.sendResponse(res, {
       message: "No users found.",
-      statusCode: 400,
+      success: false,
     });
     return;
   }
@@ -47,18 +72,21 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
   requestHandler.sendResponse(res, {
     data: users,
     message: "Users retrieved.",
-    statusCode: 200,
+    success: true,
   });
 };
 
 const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
-  if (req.session.user?.admin) next();
-
-  requestHandler.sendResponse(res, {
-    message: "This action requires administrator privileges.",
-    statusCode: 400,
-  });
+  if (req.session.user?.admin) {
+    next();
+  } else {
+    throw new ForbiddenRequest(
+      "This action requires administrator privileges.",
+      // @ts-ignore
+      req.session.user,
+    );
+  }
 };
 
 export { editAccount, getUser, getUsers, isAdmin };

@@ -1,188 +1,87 @@
 import config from "../configs/dbConfig";
-import { Document, ModifyResult, MongoClient, WithId } from "mongodb";
+import {
+  DeleteResult,
+  Document,
+  FindOptions,
+  InsertOneResult,
+  ModifyResult,
+  MongoClient,
+  WithId,
+} from "mongodb";
 
-async function establishConnection(): Promise<MongoClient | false> {
+async function establishConnection(): Promise<MongoClient> {
   const client: MongoClient = new MongoClient(
     `mongodb://${config.hostname}:${config.port}/${config.dbName}`,
     { monitorCommands: true },
   );
 
-  try {
-    await client.connect();
-    return client;
-  } catch (error) {
-    console.error("Connection to the database failed.", error);
-    return false;
-  }
+  return await client.connect();
 }
 
-/**
- *
- * @param rules
- */
-function logRulesNotSatisfied(rules: string[]) {
-  for (let rule of rules) {
-    console.error(rule);
-  }
-}
-
-/**
- *
- * @param collection
- */
 async function getLastInsertedDocument(
   collection: string,
 ): Promise<WithId<Document>[]> {
-  try {
-    const client = await establishConnection();
-    if (!client) return [];
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    return await db
-      .collection(collection)
-      .find({})
-      .sort({ _id: -1 })
-      .limit(1)
-      .toArray();
-  } catch (error: any) {
-    console.error("getLastInsertedDocument failed.", error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return [];
-  }
+  return await client
+    .db()
+    .collection(collection)
+    .find({})
+    .sort({ _id: -1 })
+    .limit(1)
+    .toArray();
 }
 
-/**
- * Searches the provided collection for documents containing the fields
- * and values provided.
- * @param collection The collection name.
- * @param find An object containing the fields and values to look for.
- * @returns An array containing the documents matching the search
- * parameters.
- */
 async function find(
   collection: string,
   find: object,
+  options?: FindOptions,
 ): Promise<WithId<Document>[]> {
-  try {
-    const client = await establishConnection();
-    if (!client) return [];
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    return await db.collection(collection).find(find).toArray();
-  } catch (error: any) {
-    console.error(`${collection} find action failed.`, error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return [];
-  }
+  return await client.db().collection(collection).find(find, options).toArray();
 }
 
-/**
- * Searches the provided collection for documents containing the fields
- * and values provided.
- * @param collection The collection name.
- * @returns An array containing the documents of the collection.
- */
-async function getCollection(collection: string): Promise<WithId<Document>[]> {
-  try {
-    const client = await establishConnection();
-    if (!client) return [];
+async function findOne(
+  collection: string,
+  find: object,
+): Promise<WithId<Document> | null> {
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    return await db.collection(collection).find({}).toArray();
-  } catch (error: any) {
-    console.error(`${collection} find action failed.`, error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return [];
-  }
+  return await client.db().collection(collection).findOne(find);
 }
 
-/**
- * Searches the provided collection for documents containing the fields
- * and values provided.
- * @param collection The collection name.
- * @param data An object containing the fields and values of the document.
- * @returns true on success, false on failure.
- */
-async function insert(collection: string, data: object): Promise<boolean> {
-  try {
-    const client = await establishConnection();
-    if (!client) return false;
+async function insert(
+  collection: string,
+  data: object,
+): Promise<InsertOneResult> {
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    await db.collection(collection).insertOne(data);
-    return true;
-  } catch (error: any) {
-    console.error(`${collection} insert action failed.`, error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return false;
-  }
+  return await client.db().collection(collection).insertOne(data);
 }
 
-/**
- *
- * @param collection
- * @param find
- * @param set
- */
 async function update(
   collection: string,
   find: object,
   set: object,
-): Promise<ModifyResult | false> {
-  try {
-    const client = await establishConnection();
-    if (!client) return false;
+): Promise<ModifyResult> {
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    return await db
-      .collection(collection)
-      .findOneAndUpdate(
-        { find },
-        { $set: { set } },
-        { returnDocument: "after" },
-      );
-  } catch (error: any) {
-    console.error(`${collection} update action failed.`, error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return false;
-  }
+  return await client
+    .db()
+    .collection(collection)
+    .findOneAndUpdate(find, { $set: set }, { returnDocument: "after" });
 }
 
-/**
- *
- * @param collection
- * @param find
- */
-async function remove(collection: string, find: object) {
-  try {
-    const client = await establishConnection();
-    if (!client) return false;
+async function remove(collection: string, find: object): Promise<DeleteResult> {
+  const client: MongoClient = await establishConnection();
 
-    const db = client.db();
-
-    await db.collection(collection).deleteOne(find);
-    return true;
-  } catch (error: any) {
-    console.error(`${collection} remove action failed.`, error);
-    if (error.errInfo)
-      logRulesNotSatisfied(error.errInfo.details.schemaRulesNotSatisfied);
-    return false;
-  }
+  return await client.db().collection(collection).deleteOne(find);
 }
 
 export default {
   find,
-  getCollection,
+  findOne,
   getLastInsertedDocument,
   insert,
   update,
