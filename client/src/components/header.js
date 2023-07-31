@@ -12,7 +12,20 @@ function Header() {
     const handleChangeClick = () =>{
         navigate('/change');
     }
-    const handleLogoutClick = () => {
+    const handleLogoutClick = async () => {
+        try{
+            const res = await fetch("http://localhost:4242/auth/logout",{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            })
+            console.log(await res.json())
+            window.location.replace("/");
+        }catch(error){
+            console.log(error);
+        }
         window.location.replace("/");
     }
     const handleProductClick = () => {

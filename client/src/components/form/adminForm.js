@@ -5,89 +5,105 @@ import {TopCenterContainer} from '../styling';
 import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
+import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
 
 export default function Admin() {
     const navigate = useNavigate();
-    function handleAdd(){
-        navigate('/admin/add');
+
+    function handleAdd() {
+        navigate('/admin/addArticle');
     }
-    function handleDelete(email){
+
+    function handleAddUser(){
+        navigate ('/admin/addUser')
+    }
+
+    function handleDelete(email) {
         fetch(`http://localhost:4242/admin/users/${email}`, {
             method: "DELETE",
+            credentials: "include"
         }).then((response) => {
             return response.json();
-        })
-            .then((response) => {
-                console.log(response.message)
+        }).then((response) => {
+            console.log(response.message);
             if(response.statusCode === 200) {
                 window.location.reload();
             }
-        })
+        });
     }
+
     const [fetchRes, setFetchRes] = useState(0);
     const [data, setData] = useState();
 
     useEffect(() => {
         (async () => {
-            let json;
             try {
-                json = await fetch("http://localhost:4242/admin/users", {
+                const response = await fetch("http://localhost:4242/admin/users", {
                     method: "GET",
-                }).then((response) => {
-                    return response.json();
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
                 });
-                setFetchRes(json.statusCode);
-                if (json.statusCode === 200) {
+                const json = await response.json();
+                console.log(json["success"])
+                setFetchRes(json["success"]);
+                if (json.success) {
                     setData(json.data);
                 }
-
             } catch (e) {
                 console.log(e);
             }
         })();
     }, []);
+
     switch (fetchRes) {
-        case 0:
-            return (
-                <TopCenterContainer>
-                    <h1>Loading...</h1>
-                </TopCenterContainer>
-            );
-        case 200:
+        case true:
             return (
                 <>
-                <TopCenterContainer>
-                    <Button variant="outlined" color = "success" onClick={()=> handleAdd()}><PostAddRoundedIcon/></Button>
-                </TopCenterContainer>
-                <TopCenterContainer>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <th>username</th>
-                            <th>email</th>
-                        </tr>
-                        {data?.map((admin,key) => (
-                            <tr key={key}>
-                                <td>{admin?.username ?? "default_username"}</td>
-                                <td>{admin?.email ?? "default_email"}</td>
-                                <td>
-                                    <Button variant="outlined" color = "error" onClick={() => handleDelete(admin?.email)}>
-                                        <DeleteRoundedIcon/>
-                                    </Button>
-                                </td>
+                    <TopCenterContainer>
+                        <Button variant="outlined" color="success" onClick={() => handleAdd()}>
+                            <PostAddRoundedIcon />
+                        </Button>
+                        <Button variant="outlined" color="success" onClick={()=> handleAddUser()}>
+                            <PersonAddAlt1RoundedIcon />
+                        </Button>
+                    </TopCenterContainer>
+                    <TopCenterContainer>
+                        <table>
+                            <tbody>
+                            <tr>
+                                <th>username</th>
+                                <th>email</th>
                             </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </TopCenterContainer>
+                            {data?.map((admin, key) => (
+                                <tr key={key}>
+                                    <td>{admin?.username ?? "default_username"}</td>
+                                    <td>{admin?.email ?? "default_email"}</td>
+                                    <td>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            onClick={() => handleDelete(admin?.email)}
+                                        >
+                                            <DeleteRoundedIcon />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </TopCenterContainer>
                 </>
             );
         case 400:
             return (
                 <TopCenterContainer>
-                    <h1>There is an error from server, please wait then try again.</h1>
+                    <h1>There is an error from the server, please wait then try again.</h1>
                 </TopCenterContainer>
             );
+        default:
+            return null; // Add a default case or return some other fallback component if needed
     }
 }

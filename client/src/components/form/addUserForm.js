@@ -20,7 +20,7 @@ export default function AddUser() {
         navigate("/admin")
     }
     function handleAddProduct(){
-        navigate("/admin/add")
+        navigate("/admin/addArticle")
     }
     return(
         <>
