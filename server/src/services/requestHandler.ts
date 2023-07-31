@@ -6,40 +6,56 @@ const searchBuilder = (req: Request): { [key: string]: any } => {
   const { field, value, orderBy, order, page, limit } = req.query;
 
   let find: { [key: string]: any } = {};
+  let options: { [key: string]: any } = {};
+  let sort: { [key: string]: any } = {};
+  let skip: number = 0;
 
   if (field) {
-    if (!value)
-      throw new BadRequest(
-        "A search field was provided without a search value.",
-        ["value"],
-        req.query,
-      );
+    if (!value) return {};
 
-    if (Array.isArray(field) && Array.isArray(value)) {
-      find = field.reduce(
-        (result: { [key: string]: any }, key: string, index: number) => {
-          result[key] = value[index];
-          return result;
-        },
-        {},
-      );
-    }
+    if (Array.isArray(field)) {
+      if (!Array.isArray(value) || field.length !== value.length) return {};
 
-    for (const index in find) {
-      let tmp = parseFloat(find[index]);
-      if (!isNaN(tmp)) find[index] = tmp;
+      for (const index in field) {
+        let tmp = parseFloat(value[index].toString());
+        find[field[index].toString()] = isNaN(tmp) ? value[index] : tmp;
+      }
+    } else {
+      let tmp = parseFloat(value.toString());
+      find[field.toString()] = isNaN(tmp) ? value : tmp;
     }
   }
 
-  const sort: { [key: string]: any } = {};
   if (orderBy) {
-    sort[orderBy.toString()] = order ?? 1;
+    if (!order) return {};
+
+    if (Array.isArray(orderBy)) {
+      if (!Array.isArray(order) || orderBy.length !== order.length) return {};
+
+      for (const index in orderBy) {
+        let tmp = parseFloat(order[index].toString());
+        sort[orderBy[index].toString()] = isNaN(tmp) ? order[index] : tmp;
+      }
+    } else {
+      let tmp = parseFloat(order.toString());
+      sort[orderBy.toString()] = isNaN(tmp) ? order : tmp;
+    }
+
+    options["sort"] = sort;
   }
 
-  console.log(find);
+  if (page && limit) {
+    skip = parseInt(page.toString()) * parseInt(limit.toString());
+    options["skip"] = skip;
+  }
+
+  if (limit) {
+    options["limit"] = parseInt(limit.toString());
+  }
+
   return {
     find: find,
-    options: { sort: { orderBy, order }, page, limit },
+    options: options,
   };
 };
 
