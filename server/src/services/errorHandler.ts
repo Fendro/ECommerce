@@ -9,6 +9,7 @@ import {
   Unauthorized,
 } from "../models/Errors";
 import { ResponseData } from "../types";
+import { BSONError } from "bson";
 
 export const ErrorHandler = (
   error: Error,
@@ -30,6 +31,12 @@ export const ErrorHandler = (
   }
   if (error instanceof ServiceError) {
     return res.status(503).json(error.response);
+  }
+  if (error instanceof BSONError) {
+    console.log(error);
+    return res
+      .status(503)
+      .json({ message: "Invalid BSON data format.", success: false });
   }
   if (error instanceof MongoError) {
     console.error(error);
