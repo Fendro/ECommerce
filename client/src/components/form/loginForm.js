@@ -50,9 +50,7 @@ export default function Login() {
       if (json.success) {
         setEmail(json.data["email"]);
         setAdmin(json.data["admin"]);
-        setTimeout(() => {
           navigate("/articles");
-        }, 1000);
       } else if (json.data) {
         setEmail(json.data["email"]);
         setAdmin(json.data["admin"]);

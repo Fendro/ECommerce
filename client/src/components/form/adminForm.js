@@ -18,9 +18,11 @@ export default function Admin() {
     function handleAddUser(){
         navigate ('/admin/addUser')
     }
-
-    function handleDelete(email) {
-        fetch(`http://localhost:4242/admin/users/${email}`, {
+    function test(test){
+        console.log(test);
+    }
+    function handleDelete(id) {
+        fetch(`http://localhost:4242/admin/users/${id}`, {
             method: "DELETE",
             credentials: "include"
         }).then((response) => {
@@ -85,7 +87,7 @@ export default function Admin() {
                                         <Button
                                             variant="outlined"
                                             color="error"
-                                            onClick={() => handleDelete(admin?.email)}
+                                            onClick={() => handleDelete(admin?._id)}
                                         >
                                             <DeleteRoundedIcon />
                                         </Button>
