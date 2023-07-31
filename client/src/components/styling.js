@@ -2,12 +2,14 @@ import { Box, Container, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
 
+
 export const CenteredContainer = styled(Container)({
 	display: 'flex',
 	justifyContent: 'center',
 	alignItems: 'center',
 	height: '100vh',
 });
+
 
 export const FormContainer = styled(Box)({
 	display: 'flex',
@@ -20,6 +22,7 @@ export const FormContainer = styled(Box)({
 	width: '600px',
 	height: 'auto',
 });
+
 
 export const StyledInput = styled(TextField)({
 	marginBottom: '30px',
@@ -34,9 +37,11 @@ export const StyledInput = styled(TextField)({
 	},
 });
 
+
 export const StyledLink = styled(Link)({
 	marginTop: '50px',
 });
+
 
 export function ProductContainer(props) {
 	const style = {
@@ -47,12 +52,13 @@ export function ProductContainer(props) {
 		justifyContent: 'left',
 		alignItems: 'center',
 		width: '90%',
-		flexWrap: "wrap"
+		flexWrap: "wrap",
+		backgroundColor: "#EEE0C0",
+		color: "black",
 	};
 	if (props?.link) {
 		const linkStyle = {
 			textDecoration: 'inherit',
-			color: 'inherit',
 		}
 		return (
 			<Link style={Object.assign({},style, linkStyle)} to={props.link}>
@@ -67,6 +73,7 @@ export function ProductContainer(props) {
 		);
 	}
 }
+
 
 export function AnyText(props) {
 	const style = {
@@ -85,6 +92,7 @@ export function AnyText(props) {
 	);
 }
 
+
 export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
@@ -98,6 +106,8 @@ export function AnyImage(props) {
 		<img style={style} alt={props.alt ?? "image"}></img>
 	);
 }
+
+
 export const TopCenterContainer = styled(Container)({
 	display: 'flex',
 	justifyContent: 'center',
