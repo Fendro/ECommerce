@@ -1,10 +1,18 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
 import { BadRequest, ServiceError, Unauthorized } from "../models/Errors";
 import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
+
+const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
+  // @ts-ignore
+  if (!req.session?.user)
+    throw new Unauthorized("This action requires authentication.");
+
+  next();
+};
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
   const soughtParams = ["email", "password"];
