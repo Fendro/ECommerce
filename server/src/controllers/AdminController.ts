@@ -15,8 +15,8 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
   if (!user) throw new NotFound("No user found with the provided id.");
 
   const keys = Object.keys(user).filter((key) => key !== "_id");
-  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
 
+  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
   if (fieldsToUpdate.password)
