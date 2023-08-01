@@ -1,11 +1,30 @@
 import { NextFunction, Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import { BadRequest, ForbiddenRequest, NotFound } from "../models/Errors";
+import {
+  BadRequest,
+  ForbiddenRequest,
+  NotFound,
+  ServiceError,
+} from "../models/Errors";
 import { ObjectId } from "mongodb";
 import * as Utils from "../utils/usersUtils";
 
 const collection: string = "users";
+
+const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.seekParams(["_id"], req.params);
+
+  const user = await dbCRUD.findOne(collection, data);
+  if (!user) throw new NotFound("No user found with the provided id.");
+
+  await dbCRUD.remove(collection, data);
+
+  requestHandler.sendResponse(res, {
+    message: "Account deletion succeeded.",
+    success: true,
+  });
+};
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.seekParams(["_id"], req.params);
@@ -23,9 +42,11 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
     fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
 
   const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
+  if (!(updatedUser.lastErrorObject?.updatedExisting && updatedUser.value))
+    throw new ServiceError("Database error.", updatedUser);
 
   requestHandler.sendResponse(res, {
-    data: updatedUser,
+    data: updatedUser.value,
     message: "Information edited.",
     success: true,
   });
@@ -81,4 +102,4 @@ const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   next();
 };
 
-export { editAccount, getUser, getUsers, isAdmin };
+export { deleteAccount, editAccount, getUser, getUsers, isAdmin };

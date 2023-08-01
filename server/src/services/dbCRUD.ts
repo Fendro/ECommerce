@@ -2,7 +2,6 @@ import config from "../configs/dbConfig";
 import {
   DeleteResult,
   Document,
-  FindOptions,
   InsertOneResult,
   ModifyResult,
   MongoClient,
@@ -66,11 +65,29 @@ async function update(
   set: object,
 ): Promise<ModifyResult> {
   const client: MongoClient = await establishConnection();
-
   return await client
     .db()
     .collection(collection)
     .findOneAndUpdate(find, { $set: set }, { returnDocument: "after" });
+}
+
+async function updateEach(
+  collection: string,
+  find: object[],
+  set: object,
+): Promise<ModifyResult[]> {
+  const client: MongoClient = await establishConnection();
+
+  let result = [];
+  for (const entry of find) {
+    result.push(
+      await client
+        .db()
+        .collection(collection)
+        .findOneAndUpdate(entry, { $set: set }, { returnDocument: "after" }),
+    );
+  }
+  return result;
 }
 
 async function remove(collection: string, find: object): Promise<DeleteResult> {

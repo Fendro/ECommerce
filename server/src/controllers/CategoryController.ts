@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import { BadRequest, NotFound } from "../models/Errors";
+import { BadRequest, NotFound, ServiceError } from "../models/Errors";
 import { ObjectId } from "mongodb";
 
 const collection: string = "categories";
@@ -45,9 +45,13 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
     throw new BadRequest("No fields to update were provided.", keys, req.body);
 
   const updatedCategory = await dbCRUD.update(collection, data, fieldsToUpdate);
+  if (
+    !(updatedCategory.lastErrorObject?.updatedExisting && updatedCategory.value)
+  )
+    throw new ServiceError("Database error.", updatedCategory);
 
   requestHandler.sendResponse(res, {
-    data: updatedCategory,
+    data: updatedCategory.value,
     message: "Information edited.",
     success: true,
   });

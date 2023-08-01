@@ -5,9 +5,16 @@ import cors from "cors";
 import express, { Express, Router } from "express";
 import routers from "./src/routers";
 import session from "express-session";
+import { dbInit } from "./src/services/mongoDB";
 import { ErrorHandler } from "./src/services/errorHandler";
 
 const app: Express = express();
+
+/*  Setting up database and collections  */
+dbInit().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});
 
 /*  Setting up requests encoding and permissions  */
 app.use(bodyParser.json());

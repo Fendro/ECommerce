@@ -1,6 +1,9 @@
-import { ObjectId } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
+import CRUD from "../interfaces/CRUD";
+import { getCollection } from "../services/mongoDB";
 
-export default class Article {
+export default class Article implements CRUD {
+  collection: Collection | undefined;
   name: string;
   price: number;
   description: string;
@@ -26,4 +29,20 @@ export default class Article {
     this.quantity = quantity;
     this.views = 0;
   }
+
+  create = async () => {
+    this.collection ??= await getCollection("articles");
+  };
+
+  read = async () => {
+    this.collection ??= await getCollection("articles");
+  };
+
+  update = async () => {
+    this.collection ??= await getCollection("articles");
+  };
+
+  delete = async () => {
+    this.collection ??= await getCollection("articles");
+  };
 }
