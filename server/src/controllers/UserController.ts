@@ -7,7 +7,7 @@ import * as Utils from "../utils/usersUtils";
 const collection: string = "users";
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["email", "password"], req.body);
+  const data = requestHandler.fetchParams(["email", "password"], req.body);
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
@@ -22,7 +22,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(
+  const data = requestHandler.fetchParams(
     ["email", "password", "edits"],
     req.body,
   );
@@ -38,7 +38,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
     (key) => key !== "_id" && key !== "admin",
   );
 
-  const fieldsToUpdate = requestHandler.seekParams(keys, edits, false);
+  const fieldsToUpdate = requestHandler.fetchParams(keys, edits, false);
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
   if (fieldsToUpdate.password)
@@ -74,7 +74,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
     return;
   }
 
-  const data = requestHandler.seekParams(["email", "password"], req.query);
+  const data = requestHandler.fetchParams(["email", "password"], req.query);
   data.password = Utils.passwordHashing(data.password);
 
   const user = await dbCRUD.findOne(collection, data);
@@ -105,7 +105,7 @@ const logout = (req: Request, res: Response): void => {
 };
 
 const register = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(
+  const data = requestHandler.fetchParams(
     ["username", "email", "password"],
     req.body,
   );

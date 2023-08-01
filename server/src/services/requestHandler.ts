@@ -59,7 +59,7 @@ const searchBuilder = (req: Request): { [key: string]: any } => {
   };
 };
 
-function seekParams(
+function fetchParams(
   soughtParams: string[],
   params: { [key: string]: any },
   strict: boolean = true,
@@ -82,6 +82,6 @@ function sendResponse(res: Response, data: ResponseData): void {
 
 export default {
   searchBuilder,
-  seekParams,
+  fetchParams,
   sendResponse,
 };

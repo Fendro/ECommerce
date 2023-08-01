@@ -13,7 +13,8 @@ import * as Utils from "../utils/usersUtils";
 const collection: string = "users";
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
+  data._id = new ObjectId(data._id);
 
   const user = await dbCRUD.findOne(collection, data);
   if (!user) throw new NotFound("No user found with the provided id.");
@@ -27,7 +28,7 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const user = await dbCRUD.findOne(collection, data);
@@ -35,7 +36,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 
   const keys = Object.keys(user).filter((key) => key !== "_id");
 
-  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+  const fieldsToUpdate = requestHandler.fetchParams(keys, req.body, false);
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
   if (fieldsToUpdate.password)
@@ -53,7 +54,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const user = await dbCRUD.findOne(collection, data);

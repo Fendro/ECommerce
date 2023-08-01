@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 const collection: string = "articles";
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(
+  const data = requestHandler.fetchParams(
     [
       "name",
       "price",
@@ -31,7 +31,7 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteArticle = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const article = await dbCRUD.findOne(collection, data);
@@ -46,7 +46,7 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editArticle = async (req: Request, res: Response) => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const article = await dbCRUD.findOne(collection, data);
@@ -55,7 +55,7 @@ const editArticle = async (req: Request, res: Response) => {
   const keys = Object.keys(article).filter(
     (key) => key !== "_id" && key !== "views" && key !== "searches",
   );
-  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+  const fieldsToUpdate = requestHandler.fetchParams(keys, req.body, false);
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
@@ -74,7 +74,7 @@ const editArticle = async (req: Request, res: Response) => {
 };
 
 const getArticle = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const product = await dbCRUD.findOne(collection, data);

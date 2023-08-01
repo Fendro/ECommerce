@@ -7,7 +7,7 @@ import { ObjectId } from "mongodb";
 const collection: string = "categories";
 
 const addCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["name"], req.body);
+  const data = requestHandler.fetchParams(["name"], req.body);
 
   await dbCRUD.insert(collection, data);
 
@@ -18,7 +18,7 @@ const addCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
 
   const category = await dbCRUD.findOne(collection, data);
   if (!category) throw new NotFound("No category found with the provided id.");
@@ -32,14 +32,14 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const category = await dbCRUD.findOne(collection, data);
   if (!category) throw new NotFound("No category found with the provided id.");
 
   const keys = Object.keys(category).filter((key) => key !== "_id");
-  const fieldsToUpdate = requestHandler.seekParams(keys, req.body, false);
+  const fieldsToUpdate = requestHandler.fetchParams(keys, req.body, false);
 
   if (!fieldsToUpdate)
     throw new BadRequest("No fields to update were provided.", keys, req.body);
@@ -58,7 +58,7 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.seekParams(["_id"], req.params);
+  const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
   const category = await dbCRUD.findOne(collection, data);
