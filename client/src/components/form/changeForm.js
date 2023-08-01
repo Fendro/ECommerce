@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect,useContext } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledLink, StyledInput } from '../styling';
 import { EmailContext } from '../../context/EmailContext';
+import { urlFetch } from '../../utils/urlFetch';
 export default function ChangeForm() {
     const inputMail = useRef();
     const inputUser = useRef();
@@ -12,7 +13,7 @@ export default function ChangeForm() {
         (async () => {
             let json;
             try {
-                json = await fetch(`http://localhost:4242/auth/`, {
+                json = await fetch(urlFetch("auth"), {
                     method: "GET",
                 }).then((response) => {
                     return response.json();

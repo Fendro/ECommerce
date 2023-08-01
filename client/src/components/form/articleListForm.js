@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AnyText, ArticleContainer } from '../styling';
 import { UserContext } from '../../context/UserContext';
+import { urlFetch } from '../../utils/urlFetch';
 
 export default function Product() {
 	const { admin, setAdmin } = useContext(UserContext);
@@ -13,7 +14,7 @@ export default function Product() {
 		(async () => {
 			let json;
 			try {
-				json = await fetch("http://localhost:4242/articles", {
+				json = await fetch(urlFetch("articles"), {
 					method: "GET",
 				}).then((response) => {
 					return response.json();

@@ -6,6 +6,7 @@ import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
+import { urlFetch } from "../../utils/urlFetch";
 
 export default function Admin() {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ export default function Admin() {
         (async () => {
             let json;
             try {
-                json = await fetch("http://localhost:4242/admin/users", {
+                json = await fetch(urlFetch("admin/users"), {
                     method: "GET",
                 }).then((response) => {
                     return response.json();

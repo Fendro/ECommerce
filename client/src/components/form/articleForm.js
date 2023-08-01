@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AnyText, ArticleContainer } from '../styling';
+import { AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
+import { urlFetch } from '../../utils/urlFetch';
 
 export default function Product() {
 	const { id } = useParams();
@@ -13,7 +14,7 @@ export default function Product() {
 			let json;
 			console.log(id);
 			try {
-				json = await fetch("http://localhost:4242/articles/" + id, {
+				json = await fetch(urlFetch("articles/" + id), {
 					method: "GET",
 				}).then((response) => {
 					return response.json();
@@ -46,8 +47,11 @@ export default function Product() {
 				<>
 					<ArticleContainer>
 						<AnyText text={data?.name ?? "default_name"} width="60"></AnyText>
-						<AnyText text={data?.description ?? "default_desc"} width="80"></AnyText>
+						<Linebreak />
+						<AnyImage width="30"></AnyImage>
+						<AnyText text={data?.description ?? "default_desc"} width="35"></AnyText>
 						<AnyText text={data?.price ?? "default_price"} width="20"></AnyText>
+						<AnyText text={data?.specs ?? "default_specs"} width="80"></AnyText>
 					</ArticleContainer>
 
 				</>

@@ -1,7 +1,7 @@
 import { Box, Container, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-
+import  placeh from './asset/placeholder.png';
 
 export const CenteredContainer = styled(Container)({
 	display: 'flex',
@@ -96,14 +96,18 @@ export function AnyText(props) {
 export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
-		aspectRatio: 4 / 3,
+		aspectRatio: 5 / 3,
 		borderColor: "grey",
 		border: "1px solid",
 		margin: "1px",
 		padding: "1px",
 	};
 	return (
-		<img style={style} alt={props.alt ?? "image"}></img>
+		<img style={style} alt={props.alt ?? "image"} src={
+			props.bin ? "data:image/jpeg;base64," + props.bin
+			: props.url ? props.url
+			: placeh
+		}></img>
 	);
 }
 
@@ -114,3 +118,8 @@ export const TopCenterContainer = styled(Container)({
 	alignItems: 'center',
 	width: '100%',
 });
+
+
+export function Linebreak() {
+	return <div style={{width: "100%", height: 0}} />;	
+} 
