@@ -11,6 +11,16 @@ import {
 import { ResponseData } from "../types/ResponseData";
 import { BSONError } from "bson";
 
+/**
+ * Custom error handling middleware which sends responses
+ * associated to the errors caught. Stops the server on
+ * untrusted errors.
+ * @param error
+ * @param req
+ * @param res
+ * @param next
+ * @constructor
+ */
 export const ErrorHandler = (
   error: Error,
   req: Request,

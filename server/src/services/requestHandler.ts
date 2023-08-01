@@ -59,6 +59,17 @@ const searchBuilder = (req: Request): { [key: string]: any } => {
   };
 };
 
+/**
+ * Takes an array of strings and parses the provided param
+ * object to return its attribute which match each string.
+ * @param soughtParams The array of parameters to look for.
+ * @param params The object in which to look through.
+ * @param strict Optional boolean to stop the search as soon
+ * as a sought parameter is missing from the provided object.
+ * Defaults to true.
+ * @returns An object containing the sought parameters
+ * as attributes and their retrieved matches as values.
+ */
 function fetchParams(
   soughtParams: string[],
   params: { [key: string]: any },
@@ -76,6 +87,12 @@ function fetchParams(
   return data;
 }
 
+/**
+ * Standardized response handler to send successful responses,
+ * enforcing the response format.
+ * @param res
+ * @param data
+ */
 function sendResponse(res: Response, data: ResponseData): void {
   res.status(200).json(data);
 }
