@@ -1,6 +1,6 @@
 import appConfig from "../configs/appConfig";
 import { ResponseData } from "../types/ResponseData";
-import User from "./User";
+import { User } from "../types/User";
 
 class BadRequest extends Error {
   response: { [key: string]: any };

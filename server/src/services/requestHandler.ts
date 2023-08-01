@@ -64,9 +64,9 @@ const searchBuilder = (req: Request): { [key: string]: any } => {
  * object to return its attribute which match each string.
  * @param soughtParams The array of parameters to look for.
  * @param params The object in which to look through.
- * @param strict Optional boolean to stop the search as soon
- * as a sought parameter is missing from the provided object.
- * Defaults to true.
+ * @param strict Optional boolean to throw a BadRequest error
+ * as soon as a sought parameter is missing from the provided
+ * object. Defaults to true.
  * @returns An object containing the sought parameters
  * as attributes and their retrieved matches as values.
  */
