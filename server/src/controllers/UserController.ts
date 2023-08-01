@@ -45,9 +45,11 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
     fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
 
   const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
+  if (!(updatedUser.lastErrorObject?.updatedExisting && updatedUser.value))
+    throw new ServiceError("Database error.", updatedUser);
 
   requestHandler.sendResponse(res, {
-    data: updatedUser,
+    data: updatedUser.value,
     message: "Information edited.",
     success: true,
   });
