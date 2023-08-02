@@ -6,7 +6,7 @@ module.exports = {
     properties: {
       name: {
         bsonType: "string",
-        description: "'name' must be a unique string and is required.",
+        description: "must be a unique string and is required.",
       },
     },
   },

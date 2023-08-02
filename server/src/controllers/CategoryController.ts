@@ -1,15 +1,19 @@
-import { Request, Response } from "express";
-import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import { BadRequest, NotFound, ServiceError } from "../models/Errors";
-import { ObjectId } from "mongodb";
+import { getCollection } from "../services";
+import { BadRequest, NotFound, ServiceError } from "../models";
+import { Collection, ObjectId } from "mongodb";
+import { Request, Response } from "express";
 
-const collection: string = "categories";
+const editableFields = ["name"];
+let collection: Collection;
+(async () => {
+  collection = await getCollection("categories");
+})();
 
 const addCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["name"], req.body);
+  const data = requestHandler.fetchParams(editableFields, req.body);
 
-  await dbCRUD.insert(collection, data);
+  await collection.insertOne(data);
 
   requestHandler.sendResponse(res, {
     message: "Category registered.",
@@ -19,14 +23,14 @@ const addCategory = async (req: Request, res: Response): Promise<void> => {
 
 const deleteCategory = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
+  data._id = new ObjectId(data._id);
 
-  const category = await dbCRUD.findOne(collection, data);
-  if (!category) throw new NotFound("No category found with the provided id.");
-
-  await dbCRUD.remove(collection, data);
+  const { deletedCount } = await collection.deleteOne(data);
+  if (!deletedCount)
+    throw new NotFound("No category found with the provided id");
 
   requestHandler.sendResponse(res, {
-    message: "Category deletion succeeded.",
+    message: "Category deleted.",
     success: true,
   });
 };
@@ -35,23 +39,29 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
-  const category = await dbCRUD.findOne(collection, data);
-  if (!category) throw new NotFound("No category found with the provided id.");
-
-  const keys = Object.keys(category).filter((key) => key !== "_id");
-  const fieldsToUpdate = requestHandler.fetchParams(keys, req.body, false);
-
+  const fieldsToUpdate = requestHandler.fetchParams(
+    editableFields,
+    req.body,
+    false,
+  );
   if (!fieldsToUpdate)
-    throw new BadRequest("No fields to update were provided.", keys, req.body);
+    throw new BadRequest(
+      "No fields to update were provided.",
+      editableFields,
+      req.body,
+    );
 
-  const updatedCategory = await dbCRUD.update(collection, data, fieldsToUpdate);
-  if (
-    !(updatedCategory.lastErrorObject?.updatedExisting && updatedCategory.value)
-  )
-    throw new ServiceError("Database error.", updatedCategory);
+  const category = await collection.findOneAndUpdate(
+    data,
+    {
+      $set: fieldsToUpdate,
+    },
+    { returnDocument: "after" },
+  );
+  if (!category.value) throw new ServiceError("Database error.", category);
 
   requestHandler.sendResponse(res, {
-    data: updatedCategory.value,
+    data: category.value,
     message: "Information edited.",
     success: true,
   });
@@ -61,7 +71,7 @@ const getCategory = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
-  const category = await dbCRUD.findOne(collection, data);
+  const category = await collection.findOne(data);
   if (!category) throw new NotFound("No category found with the provided id.");
 
   requestHandler.sendResponse(res, {
@@ -72,15 +82,8 @@ const getCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCategories = async (req: Request, res: Response): Promise<void> => {
-  const categories = await dbCRUD.find(collection, {});
-
-  if (!categories.length) {
-    requestHandler.sendResponse(res, {
-      message: "No Categories found.",
-      success: false,
-    });
-    return;
-  }
+  const categories = await collection.find({}).toArray();
+  if (!categories.length) throw new NotFound("No categories found.");
 
   requestHandler.sendResponse(res, {
     data: categories,

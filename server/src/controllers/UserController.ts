@@ -1,56 +1,60 @@
-import { NextFunction, Request, Response } from "express";
-import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
-import { BadRequest, ServiceError, Unauthorized } from "../models/Errors";
-import * as Utils from "../utils/usersUtils";
+import { getCollection } from "../services";
+import { passwordHashing } from "../utils";
+import { Collection } from "mongodb";
+import { BadRequest, ServiceError, Unauthorized } from "../models";
+import { NextFunction, Request, Response } from "express";
 
-const collection: string = "users";
+const editableFields = ["email", "password", "username"];
+let collection: Collection;
+(async () => {
+  collection = await getCollection("users");
+})();
 
 const deleteAccount = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["email", "password"], req.body);
-  data.password = Utils.passwordHashing(data.password);
+  data.password = passwordHashing(data.password);
 
-  const user = await dbCRUD.findOne(collection, data);
-  if (!user) throw new Unauthorized("Credentials don't match.");
-
-  await dbCRUD.remove(collection, data);
+  const { deletedCount } = await collection.deleteOne(data);
+  if (!deletedCount) throw new Unauthorized("Invalid credentials.");
 
   requestHandler.sendResponse(res, {
-    message: "Account deletion succeeded.",
+    message: "Account deleted.",
     success: true,
   });
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(
-    ["email", "password", "edits"],
-    req.body,
+  const data = requestHandler.fetchParams(["email", "password"], req.body);
+  data.password = passwordHashing(data.password);
+
+  const edits = requestHandler.fetchParams(["edits"], req.body);
+  const fieldsToUpdate = requestHandler.fetchParams(
+    editableFields,
+    edits,
+    false,
   );
-  data.password = Utils.passwordHashing(data.password);
-
-  const edits = data.edits;
-  delete data.edits;
-
-  const user = await dbCRUD.findOne(collection, data);
-  if (!user) throw new Unauthorized("Credentials don't match.");
-
-  const keys = Object.keys(user).filter(
-    (key) => key !== "_id" && key !== "admin",
-  );
-
-  const fieldsToUpdate = requestHandler.fetchParams(keys, edits, false);
   if (!fieldsToUpdate)
-    throw new BadRequest("No fields to update were provided.", keys, req.body);
+    throw new BadRequest(
+      "No fields to update were provided.",
+      editableFields,
+      edits,
+    );
   if (fieldsToUpdate.password)
-    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
+    fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
-  const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
-  if (!(updatedUser.lastErrorObject?.updatedExisting && updatedUser.value))
-    throw new ServiceError("Database error.", updatedUser);
+  const user = await collection.findOneAndUpdate(
+    data,
+    {
+      $set: fieldsToUpdate,
+    },
+    { returnDocument: "after" },
+  );
+  if (!user.value) throw new ServiceError("Database error.", user);
 
   requestHandler.sendResponse(res, {
-    data: updatedUser.value,
-    message: "Information edited.",
+    data: user.value,
+    message: "Account information edited.",
     success: true,
   });
 };
@@ -62,7 +66,11 @@ const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   next();
 };
 
-const login = async (req: Request, res: Response): Promise<void> => {
+const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   // @ts-ignore
   if (req.session.user) {
     requestHandler.sendResponse(res, {
@@ -71,13 +79,13 @@ const login = async (req: Request, res: Response): Promise<void> => {
       message: "A user is already logged in.",
       success: false,
     });
-    return;
+    next();
   }
 
   const data = requestHandler.fetchParams(["email", "password"], req.query);
-  data.password = Utils.passwordHashing(data.password);
+  data.password = passwordHashing(data.password);
 
-  const user = await dbCRUD.findOne(collection, data);
+  const user = await collection.findOne(data);
   if (!user) throw new Unauthorized("Invalid credentials.");
   delete user.password;
 
@@ -106,20 +114,20 @@ const logout = (req: Request, res: Response): void => {
 
 const register = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(
-    ["username", "email", "password"],
+    ["email", "password", "username"],
     req.body,
   );
 
-  const user = await dbCRUD.findOne(collection, { email: data.email });
+  const user = await collection.findOne({ email: data.email });
   if (user) throw new Unauthorized("Email already in use.");
 
-  data.password = Utils.passwordHashing(data.password);
+  data.password = passwordHashing(data.password);
   data.admin = false;
 
-  await dbCRUD.insert(collection, data);
+  await collection.insertOne(data);
 
   requestHandler.sendResponse(res, {
-    message: "Registration succeeded",
+    message: "Registration succeeded.",
     success: true,
   });
 };

@@ -5,8 +5,8 @@ import cors from "cors";
 import express, { Express, Router } from "express";
 import routers from "./src/routers";
 import session from "express-session";
-import { dbInit } from "./src/services/mongoDB";
-import { ErrorHandler } from "./src/services/errorHandler";
+import { dbInit } from "./src/services";
+import { ErrorHandler } from "./src/services";
 
 const app: Express = express();
 

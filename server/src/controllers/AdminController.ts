@@ -1,54 +1,78 @@
-import { NextFunction, Request, Response } from "express";
-import dbCRUD from "../services/dbCRUD";
 import requestHandler from "../services/requestHandler";
+import { getCollection } from "../services";
+import { passwordHashing } from "../utils";
 import {
   BadRequest,
   ForbiddenRequest,
   NotFound,
   ServiceError,
-} from "../models/Errors";
-import { ObjectId } from "mongodb";
-import * as Utils from "../utils/usersUtils";
+  Unauthorized,
+} from "../models";
+import { Collection, ObjectId } from "mongodb";
+import { NextFunction, Request, Response } from "express";
 
-const collection: string = "users";
+const editableFields = ["email", "password", "username"];
+let collection: Collection;
+(async () => {
+  collection = await getCollection("users");
+})();
 
-const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+const deleteAccountAsAdmin = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
+
+  // @ts-ignore
+  if (data._id === req.session.user._id)
+    throw new Unauthorized(
+      "Admin account deletion can only be done from a different admin account.",
+    );
+
   data._id = new ObjectId(data._id);
 
-  const user = await dbCRUD.findOne(collection, data);
-  if (!user) throw new NotFound("No user found with the provided id.");
-
-  await dbCRUD.remove(collection, data);
+  const { deletedCount } = await collection.deleteOne(data);
+  if (!deletedCount) throw new NotFound("No user found with the provided id.");
 
   requestHandler.sendResponse(res, {
-    message: "Account deletion succeeded.",
+    message: "Account deleted.",
     success: true,
   });
 };
 
-const editAccount = async (req: Request, res: Response): Promise<void> => {
+const editAccountAsAdmin = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
-  const user = await dbCRUD.findOne(collection, data);
-  if (!user) throw new NotFound("No user found with the provided id.");
-
-  const keys = Object.keys(user).filter((key) => key !== "_id");
-
-  const fieldsToUpdate = requestHandler.fetchParams(keys, req.body, false);
+  const fieldsToUpdate = requestHandler.fetchParams(
+    editableFields,
+    req.body,
+    false,
+  );
   if (!fieldsToUpdate)
-    throw new BadRequest("No fields to update were provided.", keys, req.body);
+    throw new BadRequest(
+      "No fields to update were provided.",
+      editableFields,
+      req.body,
+    );
   if (fieldsToUpdate.password)
-    fieldsToUpdate.password = Utils.passwordHashing(fieldsToUpdate.password);
+    fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
-  const updatedUser = await dbCRUD.update(collection, data, fieldsToUpdate);
-  if (!(updatedUser.lastErrorObject?.updatedExisting && updatedUser.value))
-    throw new ServiceError("Database error.", updatedUser);
+  const user = await collection.findOneAndUpdate(
+    data,
+    {
+      $set: fieldsToUpdate,
+    },
+    { returnDocument: "after" },
+  );
+  if (!user.value) throw new ServiceError("Database error.", user);
 
   requestHandler.sendResponse(res, {
-    data: updatedUser.value,
-    message: "Information edited.",
+    data: user.value,
+    message: "Account information edited.",
     success: true,
   });
 };
@@ -57,9 +81,8 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["_id"], req.params);
   data._id = new ObjectId(data._id);
 
-  const user = await dbCRUD.findOne(collection, data);
+  const user = await collection.findOne(data);
   if (!user) throw new NotFound("No user found with the provided id.");
-
   delete user.password;
 
   requestHandler.sendResponse(res, {
@@ -70,15 +93,9 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await dbCRUD.find(collection, {});
+  const users = await collection.find({}).toArray();
 
-  if (!users.length) {
-    requestHandler.sendResponse(res, {
-      message: "No users found.",
-      success: false,
-    });
-    return;
-  }
+  if (!users.length) throw new NotFound("No user found.");
 
   for (const user of users) {
     delete user.password;
@@ -103,4 +120,4 @@ const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   next();
 };
 
-export { deleteAccount, editAccount, getUser, getUsers, isAdmin };
+export { deleteAccountAsAdmin, editAccountAsAdmin, getUser, getUsers, isAdmin };
