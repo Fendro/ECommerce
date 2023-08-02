@@ -48,7 +48,7 @@ export default function Product() {
 					<ArticleContainer>
 						<AnyText width="60">{data?.name ?? "default_name"}</AnyText>
 						<Linebreak />
-						<AnyImage width="30" bin={data?.image ?? null}></AnyImage>
+						<AnyImage width="30" bin={data?.image?.[0] ?? null}></AnyImage>
 						<AnyDiv width="60">
 							<AnyText width="100">{data?.description ?? "default_desc"}</AnyText>
 							<AnyText width="100" color={data?.quantity > 0 ? "" : "red"}>
@@ -62,7 +62,7 @@ export default function Product() {
 								}
 								
 							</AnyText>
-							<AnyText width="50">{data?.price ?? "default_price"}</AnyText>
+							<AnyText width="50">{data?.price ?? "??? "}€</AnyText>
 						</AnyDiv>
 						<AnyText width="80">{data?.specs ?? "default_specs"}</AnyText>
 					</ArticleContainer>

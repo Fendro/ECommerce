@@ -11,6 +11,7 @@ const editableFields = [
   "name",
   "price",
   "specs",
+  "quantity",
 ];
 let collection: Collection;
 (async () => {

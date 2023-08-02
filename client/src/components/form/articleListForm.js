@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { AnyText, ArticleContainer, Linebreak } from '../styling';
+import { AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
 import { UserContext } from '../../context/UserContext';
 import { urlFetch } from '../../utils/urlFetch';
 
@@ -44,10 +44,13 @@ export default function Product() {
 				<>
 					{data?.map((article, index) => (
 						<ArticleContainer key={article._id ?? index} link={"/articles/" + article._id}>
-							<AnyText width="60">{article.name}</AnyText>
+							{article.image?.map((img, ind) => {
+								return <AnyImage width="20" bin={img[ind]}/>
+							})}
+							{!article.image ? <AnyImage width="20"/> : null}
 							<Linebreak />
-							<AnyText width="60">{article.description}</AnyText>
-							<AnyText width="20">{article.price}</AnyText>
+							<AnyText width="60">{article.name}</AnyText>
+							<AnyText width="20">{article.price}€</AnyText>
 						</ArticleContainer>
 					))}
 				</>
