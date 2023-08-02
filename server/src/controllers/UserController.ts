@@ -65,11 +65,7 @@ const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   else next();
 };
 
-const login = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): Promise<void> => {
+const login = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
   if (req.session.user) {
     requestHandler.sendResponse(res, {
@@ -78,23 +74,22 @@ const login = async (
       message: "A user is already logged in.",
       success: false,
     });
-    next();
+  } else {
+    const data = requestHandler.fetchParams(["email", "password"], req.query);
+    data.password = passwordHashing(data.password);
+
+    const user = await collection.findOne(data);
+    if (!user) throw new Unauthorized("Invalid credentials.");
+    delete user.password;
+
+    // @ts-ignore
+    req.session.user = user;
+    requestHandler.sendResponse(res, {
+      data: user,
+      message: "Login succeeded.",
+      success: true,
+    });
   }
-
-  const data = requestHandler.fetchParams(["email", "password"], req.query);
-  data.password = passwordHashing(data.password);
-
-  const user = await collection.findOne(data);
-  if (!user) throw new Unauthorized("Invalid credentials.");
-  delete user.password;
-
-  // @ts-ignore
-  req.session.user = user;
-  requestHandler.sendResponse(res, {
-    data: user,
-    message: "Login succeeded.",
-    success: true,
-  });
 };
 
 const logout = (req: Request, res: Response): void => {
