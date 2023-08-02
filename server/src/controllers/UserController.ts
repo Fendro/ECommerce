@@ -62,8 +62,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
 const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
   if (!req.session?.user) throw new Unauthorized("Authentication required.");
-
-  next();
+  else next();
 };
 
 const login = async (
