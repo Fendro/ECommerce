@@ -48,16 +48,12 @@ export default function Login() {
 			if (json.success) {
 				setEmail(json.data["email"]);
 				setAdmin(json.data["admin"]);
-				setTimeout(() => {
-					navigate("/articles");
-				}, 1000);
+					navigate("/");
 			} else if (json.data) {
 				setEmail(json.data["email"]);
 				setAdmin(json.data["admin"]);
 				setMessage(json.message);
-				setTimeout(() => {
-					navigate("/articles");
-				}, 1000);
+					navigate("/");
 			} else {
 				setMessage("Wrong credentials. Please try again.");
 			}
