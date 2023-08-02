@@ -1,6 +1,7 @@
 import { Box, Container, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
+import  placeh from './asset/placeholder.png';
 
 export const CenteredContainer = styled(Container)({
 	display: 'flex',
@@ -8,6 +9,7 @@ export const CenteredContainer = styled(Container)({
 	alignItems: 'center',
 	height: '100vh',
 });
+
 
 export const FormContainer = styled(Box)({
 	display: 'flex',
@@ -20,6 +22,7 @@ export const FormContainer = styled(Box)({
 	width: '600px',
 	height: 'auto',
 });
+
 
 export const StyledInput = styled(TextField)({
 	marginBottom: '30px',
@@ -34,58 +37,94 @@ export const StyledInput = styled(TextField)({
 	},
 });
 
+
 export const StyledLink = styled(Link)({
 	marginTop: '50px',
 });
 
-export const ProductContainer = styled(Container)({
-	marginTop: "3%",
-	display: 'flex',
-	justifyContent: 'left',
-	alignItems: 'center',
-	width: '90%',
-	flexWrap: "wrap"
-});
 
-export const ProductImage = styled(Image)({
-	width: "100%",
-});
-
-export function AnyText(props) {
+export function ArticleContainer(props) {
 	const style = {
-		width: props.width + "%",
-		borderColor: "grey",
-		border: "1px solid",
+		marginTop: "3%",
+		marginRight: "auto",
+		marginLeft: "auto",
+		display: 'flex',
+		justifyContent: 'left',
+		alignItems: 'center',
+		width: '90%',
+		flexWrap: "wrap",
+		backgroundColor: "#EEE0C0",
+		color: "black",
+	};
+	if (props?.link) {
+		const linkStyle = {
+			textDecoration: 'inherit',
+		}
+		return (
+			<Link style={Object.assign({},style, linkStyle)} to={props.link}>
+				{props.children}
+			</Link>
+		);
+	} else {
+		return (
+			<div style={style}>
+				{props.children}
+			</div>
+		);
+	}
+}
+
+
+export function AnyText({width, color, children}) {
+	const style = {
+		width: width + "%",
+		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
-	if (!props?.text)
+	if (!children)
 		return;
+	if (color)
+		style.color = color;
 	return (
 		<div style={style}>
-			{props.text}
+			{children}
 		</div>
 	);
 }
 
+
 export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
-		aspectRatio: 4/3,
-		borderColor: "grey",
-		border: "1px solid",
+		aspectRatio: 5 / 3,
+		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
-	// if (!props?.text)
-	// 	return;
 	return (
-		<img style={style} alt={props.alt}></img>
+		<img style={style} alt={props.alt ?? "image"} src={
+			props.bin ? "data:image/jpeg;base64," + props.bin
+			: props.url ? props.url
+			: placeh
+		}></img>
 	);
 }
+
+
+export function AnyDiv(props) {
+	return <div style={{width: props.width + "%"}} >{props.children}</div>;	
+}
+
+
 export const TopCenterContainer = styled(Container)({
 	display: 'flex',
 	justifyContent: 'center',
 	alignItems: 'center',
 	width: '100%',
 });
+
+
+export function Linebreak() {
+	return <div style={{width: "100%", height: 0}} />;	
+} 

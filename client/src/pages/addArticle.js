@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../components/header';
 import { createGlobalStyle } from 'styled-components';
-import AddProductForm from '../components/form/addProductForm';
+import AddArticleForm from '../components/form/addArticleForm';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -15,7 +15,7 @@ export default function admin() {
     return (
         <>
             <Header />
-            <AddProductForm />
+            <AddArticleForm />
             <GlobalStyle />
         </>
     )
