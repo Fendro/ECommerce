@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
+import { AnyDiv, AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
 import { urlFetch } from '../../utils/urlFetch';
 
 export default function Product() {
@@ -38,32 +38,44 @@ export default function Product() {
 		case "loading":
 			return (
 				<ArticleContainer>
-					<AnyText text={"Product name"} width="60"></AnyText>
-					<AnyText text={"Description is loading, please wait until server response"} width="80"></AnyText>
+					<AnyText width="60">Product name</AnyText>
+					<AnyText width="80">Description is loading, please wait until server response</AnyText>
 				</ArticleContainer>
 			);
 		case true:
 			return (
 				<>
 					<ArticleContainer>
-						<AnyText text={data?.name ?? "default_name"} width="60"></AnyText>
+						<AnyText width="60">{data?.name ?? "default_name"}</AnyText>
 						<Linebreak />
-						<AnyImage width="30"></AnyImage>
-						<AnyText text={data?.description ?? "default_desc"} width="35"></AnyText>
-						<AnyText text={data?.price ?? "default_price"} width="20"></AnyText>
-						<AnyText text={data?.specs ?? "default_specs"} width="80"></AnyText>
+						<AnyImage width="30" bin={data?.image ?? null}></AnyImage>
+						<AnyDiv width="60">
+							<AnyText width="100">{data?.description ?? "default_desc"}</AnyText>
+							<AnyText width="100" color={data?.quantity > 0 ? "" : "red"}>
+								{
+									data?.quantity === undefined
+										? "Unknown remainign quantity"
+										// eslint-disable-next-line
+										: data.quantity == 0
+											? "rupture de stock"
+											: data.quantity + ` article${data.quantity > 1 ? "s" : ""} restant${data.quantity > 1 ? "s" : ""}`
+								}
+								
+							</AnyText>
+							<AnyText width="50">{data?.price ?? "default_price"}</AnyText>
+						</AnyDiv>
+						<AnyText width="80">{data?.specs ?? "default_specs"}</AnyText>
 					</ArticleContainer>
 
 				</>
 			);
-			case false:
-				return (
-						<AnyText text={errorMsg} width="80"></AnyText>
-				);
+		case false:
+			return (
+				<AnyText width="80">{errorMsg}</AnyText>
+			);
 		default:
 			<ArticleContainer>
-				<AnyText text={""} width="60"></AnyText>
-				<AnyText text={"There is an unrecognized error, good luck !"} width="80"></AnyText>
+				<AnyText width="80">There is an unrecognized error, good luck !</AnyText>
 			</ArticleContainer>
 	}
 }

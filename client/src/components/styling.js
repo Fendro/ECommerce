@@ -75,19 +75,20 @@ export function ArticleContainer(props) {
 }
 
 
-export function AnyText(props) {
+export function AnyText({width, color, children}) {
 	const style = {
-		width: props.width + "%",
-		borderColor: "grey",
-		border: "1px solid",
+		width: width + "%",
+		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
-	if (!props?.text)
+	if (!children)
 		return;
+	if (color)
+		style.color = color;
 	return (
 		<div style={style}>
-			{props.text}
+			{children}
 		</div>
 	);
 }
@@ -97,8 +98,7 @@ export function AnyImage(props) {
 	const style = {
 		width: props.width + "%",
 		aspectRatio: 5 / 3,
-		borderColor: "grey",
-		border: "1px solid",
+		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
@@ -109,6 +109,11 @@ export function AnyImage(props) {
 			: placeh
 		}></img>
 	);
+}
+
+
+export function AnyDiv(props) {
+	return <div style={{width: props.width + "%"}} >{props.children}</div>;	
 }
 
 
