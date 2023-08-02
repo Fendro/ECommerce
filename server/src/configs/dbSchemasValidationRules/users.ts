@@ -2,7 +2,7 @@ module.exports = {
   $jsonSchema: {
     bsonType: "object",
     title: "User Object Validation",
-    required: ["login", "email", "password", "admin"],
+    required: ["admin", "email", "password", "username"],
     properties: {
       admin: {
         bsonType: "bool",
