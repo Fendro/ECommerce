@@ -1,112 +1,110 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useMemo, useState} from "react";
+import {useNavigate} from 'react-router-dom';
 import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
-import {EditRounded} from '@mui/icons-material';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
-import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
-import { urlFetch } from "../../utils/urlFetch";
+import {urlFetch} from "../../utils/urlFetch";
 
 export default function Admin() {
     const navigate = useNavigate();
+    const [fetched, setFetched] = useState(false);
+    const [data, setData] = useState([]);
+    const [reload, setReload] = useState(false);
+    // const data = useMemo(async () => {
+    //     try {
+    //         const response = fetch(urlFetch("admin/users"), {
+    //             method: "GET", headers: {
+    //                 "Content-Type": "application/json",
+    //             }, credentials: "include",
+    //         }).then((response) => {
+    //             return response.json();
+    //         }).then((json) => {
+    //             setFetchRes(json["done"]);
+    //             console.log(json);
+    //             return (json.success)
+    //                 ? json.data
+    //                 : null;
+    //         });
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }, [reload]);
 
-    function handleAdd() {
-        navigate('/admin/addArticle');
-    }
-
-    function handleAddUser(){
-        navigate ('/admin/addUser')
-    }
-    function test(test){
-        console.log(test);
-    }
-    function handleDelete(id) {
-        fetch(`http://localhost:4242/admin/users/${id}`, {
-            method: "DELETE",
-            credentials: "include"
+    useEffect(() => {
+        fetch(urlFetch("admin/users"), {
+            method: "GET", headers: {
+                "Content-Type": "application/json",
+            }, credentials: "include",
         }).then((response) => {
             return response.json();
+        }).then((json) => {
+            (json.success)
+                ? setData(json.data)
+                : setData([]);
+            setFetched(true);
+        });
+    }, [reload])
+
+    function handleDelete(id) {
+        fetch(`http://localhost:4242/admin/users/${id}`, {
+            method: "DELETE", headers: {
+                "Content-Type": "application/json",
+            }, credentials: "include"
         }).then((response) => {
-            console.log(response.message);
-            if(response.statusCode === 200) {
-                window.location.reload();
-            }
+            return response.json();
+        }).then((json) => {
+            if (json.success) {
+                setFetched(false);
+                setReload([!reload])
+            };
         });
     }
 
-    const [fetchRes, setFetchRes] = useState(0);
-    const [data, setData] = useState();
+    if (!fetched)
+        return (<h1>Récupération de la liste des utilisateurs...</h1>);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const response = await fetch(urlFetch("admin/users"), {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                });
-                const json = await response.json();
-                console.log(json["success"])
-                setFetchRes(json["success"]);
-                if (json.success) {
-                    setData(json.data);
-                }
-            } catch (e) {
-                console.log(e);
-            }
-        })();
-    }, []);
+    if (!data.length)
+        return (<h1>Pas d'utilisateurs.</h1>);
 
-    switch (fetchRes) {
-        case true:
-            return (
-                <>
-                    <TopCenterContainer>
-                        <Button variant="outlined" color="success" onClick={() => handleAdd()}>
-                            <PostAddRoundedIcon />
+    if (data.length)
+        return (<>
+        <TopCenterContainer>
+            <Button variant="outlined" color="success" onClick={() => {
+
+                navigate('/admin/addArticle');
+            }}>
+                <PostAddRoundedIcon/>
+            </Button>
+            <Button variant="outlined" color="success" onClick={() => {
+                navigate('/admin/addUser');
+            }}>
+                <PersonAddAlt1RoundedIcon/>
+            </Button>
+        </TopCenterContainer>
+        <TopCenterContainer>
+            <table>
+                <tbody>
+                <tr>
+                    <th>username</th>
+                    <th>email</th>
+                </tr>
+                {data?.map((admin, key) => (<tr key={key}>
+                    <td>{admin?.username ?? "default_username"}</td>
+                    <td>{admin?.email ?? "default_email"}</td>
+                    <td>
+                        <Button
+                            variant="outlined"
+                            color="error"
+                            onClick={() => handleDelete(admin?._id)}
+                        >
+                            <DeleteRoundedIcon/>
                         </Button>
-                        <Button variant="outlined" color="success" onClick={()=> handleAddUser()}>
-                            <PersonAddAlt1RoundedIcon />
-                        </Button>
-                    </TopCenterContainer>
-                    <TopCenterContainer>
-                        <table>
-                            <tbody>
-                            <tr>
-                                <th>username</th>
-                                <th>email</th>
-                            </tr>
-                            {data?.map((admin, key) => (
-                                <tr key={key}>
-                                    <td>{admin?.username ?? "default_username"}</td>
-                                    <td>{admin?.email ?? "default_email"}</td>
-                                    <td>
-                                        <Button
-                                            variant="outlined"
-                                            color="error"
-                                            onClick={() => handleDelete(admin?._id)}
-                                        >
-                                            <DeleteRoundedIcon />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    </TopCenterContainer>
-                </>
-            );
-        case 400:
-            return (
-                <TopCenterContainer>
-                    <h1>There is an error from the server, please wait then try again.</h1>
-                </TopCenterContainer>
-            );
-        default:
-            return null; // Add a default case or return some other fallback component if needed
-    }
+                    </td>
+                </tr>))}
+                </tbody>
+            </table>
+        </TopCenterContainer>
+    </>)
 }
