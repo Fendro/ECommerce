@@ -110,14 +110,15 @@ const getUsers = async (req: Request, res: Response): Promise<void> => {
 
 const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
-  if (!req.session.user?.admin)
+  if (!req.session.user?.admin) {
     throw new ForbiddenRequest(
       "This action requires administrator privileges.",
       // @ts-ignore
       req.session.user,
     );
-
-  next();
+  } else {
+    next();
+  }
 };
 
 export { deleteAccountAsAdmin, editAccountAsAdmin, getUser, getUsers, isAdmin };
