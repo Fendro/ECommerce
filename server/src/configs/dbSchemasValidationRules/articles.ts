@@ -3,10 +3,12 @@ module.exports = {
     bsonType: "object",
     title: "Article Object Validation",
     required: [
+      "categories",
       "description",
       "images",
       "name",
       "price",
+      "quantity",
       "searches",
       "specs",
       "views",
@@ -37,6 +39,10 @@ module.exports = {
         description: "must be a string and is required",
       },
       price: {
+        bsonType: ["double", "int", "long"],
+        description: "must be a number and is required",
+      },
+      quantity: {
         bsonType: ["double", "int", "long"],
         description: "must be a number and is required",
       },

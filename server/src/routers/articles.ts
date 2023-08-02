@@ -1,9 +1,15 @@
-import * as ArticleController from "../controllers/ArticleController";
-import * as AdminController from "../controllers/AdminController";
-import { catchWrapper } from "../utils/catchWrapper";
+import { catchWrapper } from "../utils";
 import { Router } from "express";
+import * as AdminController from "../controllers/AdminController";
+import * as ArticleController from "../controllers/ArticleController";
+
 const articleRouter: Router = Router();
 
+articleRouter.delete(
+  "/articles/:_id",
+  AdminController.isAdmin,
+  catchWrapper(ArticleController.deleteArticle),
+);
 articleRouter.get("/articles", catchWrapper(ArticleController.getArticles));
 articleRouter.get("/articles/:_id", catchWrapper(ArticleController.getArticle));
 articleRouter.post(
@@ -15,11 +21,6 @@ articleRouter.put(
   "/articles/:_id",
   AdminController.isAdmin,
   catchWrapper(ArticleController.editArticle),
-);
-articleRouter.delete(
-  "/articles/:_id",
-  AdminController.isAdmin,
-  catchWrapper(ArticleController.deleteArticle),
 );
 
 export default articleRouter;

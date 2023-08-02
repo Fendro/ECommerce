@@ -5,8 +5,6 @@ const sha1 = require("sha1");
  * @param password The password.
  * @returns The hashed password.
  */
-function passwordHashing(password: string): string {
+export const passwordHashing = (password: string): string => {
   return sha1(password);
-}
-
-export { passwordHashing };
+};

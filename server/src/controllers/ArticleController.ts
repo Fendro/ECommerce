@@ -1,7 +1,6 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services/mongoDB";
-import { Article } from "../types/Article";
-import { BadRequest, NotFound, ServiceError } from "../models/Errors";
+import { getCollection } from "../services";
+import { BadRequest, NotFound, ServiceError } from "../models";
 import { Collection, ObjectId } from "mongodb";
 import { Request, Response } from "express";
 
@@ -23,7 +22,7 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
   data.views = 0;
   data.searches = 0;
 
-  await collection.insertOne(data as Article);
+  await collection.insertOne(data);
 
   requestHandler.sendResponse(res, {
     message: "Article registered.",
@@ -100,17 +99,17 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
   const products = await collection.find(search.find, search.options).toArray();
   if (!products.length) throw new NotFound("No article found.");
 
-  await collection.updateMany(
-    search.find,
-    { $inc: { searches: 1 } },
-    search.options,
-  );
-
   requestHandler.sendResponse(res, {
     data: products,
     message: "Articles retrieved.",
     success: true,
   });
+
+  await collection.updateMany(
+    search.find,
+    { $inc: { searches: 1 } },
+    search.options,
+  );
 };
 
 export { addArticle, deleteArticle, editArticle, getArticle, getArticles };

@@ -1,13 +1,14 @@
 import { ObjectId } from "mongodb";
 
 export type Article = {
+  _id?: ObjectId;
+  categories: string[];
+  description: string;
+  images: string[];
   name: string;
   price: number;
-  description: string;
-  pictures: string[];
-  specs: string[];
   quantity: number;
-  views?: number;
   searches?: number;
-  _id?: ObjectId;
+  specs: string[];
+  views?: number;
 };

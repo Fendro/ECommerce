@@ -1,8 +1,14 @@
-import * as AdminController from "../controllers/AdminController";
-import { catchWrapper } from "../utils/catchWrapper";
+import { catchWrapper } from "../utils";
 import { Router } from "express";
+import * as AdminController from "../controllers/AdminController";
+
 const adminRouter: Router = Router();
 
+adminRouter.delete(
+  "/admin/users/:_id",
+  AdminController.isAdmin,
+  catchWrapper(AdminController.deleteAccountAsAdmin),
+);
 adminRouter.get(
   "/admin/users",
   AdminController.isAdmin,
@@ -16,12 +22,7 @@ adminRouter.get(
 adminRouter.put(
   "/admin/users/:_id",
   AdminController.isAdmin,
-  catchWrapper(AdminController.editAccount),
-);
-adminRouter.delete(
-  "/admin/users/:_id",
-  AdminController.isAdmin,
-  catchWrapper(AdminController.deleteAccount),
+  catchWrapper(AdminController.editAccountAsAdmin),
 );
 
 export default adminRouter;
