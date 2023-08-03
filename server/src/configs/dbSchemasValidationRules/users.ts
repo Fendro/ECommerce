@@ -20,9 +20,10 @@ module.exports = {
       },
       username: {
         bsonType: "string",
-        minLength: 5,
+        minLength: 2,
         maxLength: 20,
-        description: "must be a unique string and is required.",
+        description:
+          "must be a string from 2 to 20 characters and is required.",
       },
     },
   },
