@@ -17,7 +17,6 @@ export default function Login() {
 	const inputMail = useRef();
 	const inputPsw = useRef();
 	const { admin, setAdmin } = useContext(UserContext);
-	const { email, setEmail } = useContext(EmailContext);
 	const navigate = useNavigate();
 
 	const handleSubmit = async (e) => {
@@ -46,11 +45,9 @@ export default function Login() {
 			);
 			const json = await res.json();
 			if (json.success) {
-				setEmail(json.data["email"]);
 				setAdmin(json.data["admin"]);
 					navigate("/");
 			} else if (json.data) {
-				setEmail(json.data["email"]);
 				setAdmin(json.data["admin"]);
 				setMessage(json.message);
 					navigate("/");

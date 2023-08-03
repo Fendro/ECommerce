@@ -4,6 +4,7 @@ import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
 import {urlFetch} from "../../utils/urlFetch";
 
@@ -12,26 +13,6 @@ export default function Admin() {
     const [fetched, setFetched] = useState(false);
     const [data, setData] = useState([]);
     const [reload, setReload] = useState(false);
-    // const data = useMemo(async () => {
-    //     try {
-    //         const response = fetch(urlFetch("admin/users"), {
-    //             method: "GET", headers: {
-    //                 "Content-Type": "application/json",
-    //             }, credentials: "include",
-    //         }).then((response) => {
-    //             return response.json();
-    //         }).then((json) => {
-    //             setFetchRes(json["done"]);
-    //             console.log(json);
-    //             return (json.success)
-    //                 ? json.data
-    //                 : null;
-    //         });
-    //     } catch (e) {
-    //         console.log(e);
-    //     }
-    // }, [reload]);
-
     useEffect(() => {
         fetch(urlFetch("admin/users"), {
             method: "GET", headers: {
@@ -46,7 +27,10 @@ export default function Admin() {
             setFetched(true);
         });
     }, [reload])
-
+    function handleEdit(id) {
+        // redirect to edit page of user with user id in URL.
+        navigate(`/admin/change/${id}`);
+    }
     function handleDelete(id) {
         fetch(`http://localhost:4242/admin/users/${id}`, {
             method: "DELETE", headers: {
@@ -100,6 +84,12 @@ export default function Admin() {
                             onClick={() => handleDelete(admin?._id)}
                         >
                             <DeleteRoundedIcon/>
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="primary"
+                            onClick={()=>handleEdit(admin?._id)}>
+                            <EditRoundedIcon/>
                         </Button>
                     </td>
                 </tr>))}

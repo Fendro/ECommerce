@@ -9,6 +9,7 @@ import Admin from "./pages/admin";
 import Change from "./pages/changer";
 import AddArticle from "./pages/addArticle";
 import AddUser from "./pages/addUser"
+import AdminChange from "./pages/adminChange";
 
 const AppRouter = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouter = () => {
         <Route path="/change" element={<Change />} />
         <Route path="/admin/addArticle" element={<AddArticle />} />
         <Route path="/admin/addUser" element={<AddUser />} />
+        <Route path="/admin/change/:id" element={<AdminChange />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>
