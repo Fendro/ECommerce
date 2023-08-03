@@ -20,7 +20,7 @@ module.exports = {
         items: {
           bsonType: "string",
         },
-        minItems: 1,
+        minItems: 0,
       },
       description: {
         bsonType: "string",
@@ -32,7 +32,7 @@ module.exports = {
         items: {
           bsonType: "string",
         },
-        minItems: 1,
+        minItems: 0,
       },
       name: {
         bsonType: "string",

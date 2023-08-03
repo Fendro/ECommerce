@@ -41,7 +41,9 @@ app.use(
 
 /*  Starting the server  */
 app.listen(config.port, config.hostname, () => {
-  console.log(`Server is running at '${config.hostname}:${config.port}'.`);
+  console.log(
+    `Server is running at 'http://${config.hostname}:${config.port}'.`,
+  );
 });
 
 app.on("error", (error) => {
@@ -53,4 +55,5 @@ for (const router in routers) {
   app.use("/", routers[router] as Router);
 }
 
+/*  Setting error handler up at the end of the stack  */
 app.use(ErrorHandler);

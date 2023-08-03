@@ -1,6 +1,6 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { BadRequest, NotFound, ServiceError } from "../models";
+import { NotFound, ServiceError } from "../models";
 import { Collection, ObjectId } from "mongodb";
 import { Request, Response } from "express";
 
@@ -27,7 +27,7 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
 
   const { deletedCount } = await collection.deleteOne(data);
   if (!deletedCount)
-    throw new NotFound("No category found with the provided id");
+    throw new NotFound("No category found with the provided id.");
 
   requestHandler.sendResponse(res, {
     message: "Category deleted.",
@@ -44,12 +44,6 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
     req.body,
     false,
   );
-  if (!fieldsToUpdate)
-    throw new BadRequest(
-      "No fields to update were provided.",
-      editableFields,
-      req.body,
-    );
 
   const category = await collection.findOneAndUpdate(
     data,

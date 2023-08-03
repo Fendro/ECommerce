@@ -2,7 +2,6 @@ import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
 import { passwordHashing } from "../utils";
 import {
-  BadRequest,
   ForbiddenRequest,
   NotFound,
   ServiceError,
@@ -11,7 +10,7 @@ import {
 import { Collection, ObjectId } from "mongodb";
 import { NextFunction, Request, Response } from "express";
 
-const editableFields = ["email", "password", "username"];
+const editableFields = ["admin", "email", "password", "username"];
 let collection: Collection;
 (async () => {
   collection = await getCollection("users");
@@ -52,12 +51,6 @@ const editAccountAsAdmin = async (
     req.body,
     false,
   );
-  if (!fieldsToUpdate)
-    throw new BadRequest(
-      "No fields to update were provided.",
-      editableFields,
-      req.body,
-    );
   if (fieldsToUpdate.password)
     fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
@@ -69,6 +62,7 @@ const editAccountAsAdmin = async (
     { returnDocument: "after" },
   );
   if (!user.value) throw new ServiceError("Database error.", user);
+  delete user.value.password;
 
   requestHandler.sendResponse(res, {
     data: user.value,

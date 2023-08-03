@@ -2,7 +2,7 @@ import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
 import { passwordHashing } from "../utils";
 import { Collection } from "mongodb";
-import { BadRequest, ServiceError, Unauthorized } from "../models";
+import { ServiceError, Unauthorized } from "../models";
 import { NextFunction, Request, Response } from "express";
 
 const editableFields = ["email", "password", "username"];
@@ -25,21 +25,20 @@ const deleteAccount = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editAccount = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["email", "password"], req.body);
+  const data = requestHandler.fetchParams(
+    ["email", "password", "edits"],
+    req.body,
+  );
   data.password = passwordHashing(data.password);
 
-  const edits = requestHandler.fetchParams(["edits"], req.body);
+  const edits = requestHandler.fetchParams(editableFields, data.edits, false);
+  delete data.edits;
+
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
     edits,
     false,
   );
-  if (!fieldsToUpdate)
-    throw new BadRequest(
-      "No fields to update were provided.",
-      editableFields,
-      edits,
-    );
   if (fieldsToUpdate.password)
     fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
@@ -51,6 +50,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
     { returnDocument: "after" },
   );
   if (!user.value) throw new ServiceError("Database error.", user);
+  delete user.value.password;
 
   requestHandler.sendResponse(res, {
     data: user.value,

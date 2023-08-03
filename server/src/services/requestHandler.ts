@@ -84,6 +84,13 @@ function fetchParams(
     }
   }
 
+  if (!Object.keys(data).length)
+    throw new BadRequest(
+      "No fields to update where provided.",
+      soughtParams,
+      params,
+    );
+
   return data;
 }
 
