@@ -5,14 +5,14 @@ const development = {
   port: 27017,
   hostname: "localhost",
   dbName: "Ecommerce",
-  collections: ["articles", "categories", "users"],
+  collections: ["articles", "categories", "orders", "users"],
 };
 
 const production = {
   port: 27017,
   hostname: "localhost",
   dbName: "Ecommerce",
-  collections: ["articles", "categories", "users"],
+  collections: ["articles", "categories", "orders", "users"],
 };
 
 const config = {

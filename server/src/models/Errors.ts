@@ -2,7 +2,8 @@ import appConfig from "../configs/appConfig";
 import { ResponseData, User } from "../types";
 
 class BadRequest extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
+  status = 400;
 
   constructor(
     message: string,
@@ -24,8 +25,28 @@ class BadRequest extends Error {
   }
 }
 
+class FailedDependency extends Error {
+  response: ResponseData;
+  status = 424;
+
+  constructor(message: string, dependency: any) {
+    super();
+    this.response = {
+      message: message,
+      success: false,
+    };
+    if (appConfig.env === "development") {
+      this.response.dev = {
+        dependency: dependency,
+        stack: this.stack,
+      };
+    }
+  }
+}
+
 class ForbiddenRequest extends Error {
   response: ResponseData;
+  status = 403;
 
   constructor(message: string, user: User) {
     super();
@@ -44,6 +65,7 @@ class ForbiddenRequest extends Error {
 
 class NotFound extends Error {
   response: ResponseData;
+  status = 404;
 
   constructor(message: string) {
     super();
@@ -60,7 +82,8 @@ class NotFound extends Error {
 }
 
 class ServiceError extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
+  status = 503;
 
   constructor(message: string, error: unknown) {
     super();
@@ -78,7 +101,8 @@ class ServiceError extends Error {
 }
 
 class Unauthorized extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
+  status = 401;
 
   constructor(message: string) {
     super();
@@ -94,4 +118,11 @@ class Unauthorized extends Error {
   }
 }
 
-export { BadRequest, ForbiddenRequest, NotFound, ServiceError, Unauthorized };
+export {
+  BadRequest,
+  FailedDependency,
+  ForbiddenRequest,
+  NotFound,
+  ServiceError,
+  Unauthorized,
+};

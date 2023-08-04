@@ -1,26 +1,29 @@
 import { catchWrapper } from "../utils";
+import { isAdmin } from "../controllers/AdminController";
 import { Router } from "express";
-import * as AdminController from "../controllers/AdminController";
 import * as ArticleController from "../controllers/ArticleController";
 
-const articleRouter: Router = Router();
+const articlesRouter: Router = Router();
 
-articleRouter.delete(
+articlesRouter.delete(
   "/articles/:_id",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(ArticleController.deleteArticle),
 );
-articleRouter.get("/articles", catchWrapper(ArticleController.getArticles));
-articleRouter.get("/articles/:_id", catchWrapper(ArticleController.getArticle));
-articleRouter.post(
+articlesRouter.get("/articles", catchWrapper(ArticleController.getArticles));
+articlesRouter.get(
+  "/articles/:_id",
+  catchWrapper(ArticleController.getArticle),
+);
+articlesRouter.post(
   "/articles/",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(ArticleController.addArticle),
 );
-articleRouter.put(
+articlesRouter.put(
   "/articles/:_id",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(ArticleController.editArticle),
 );
 
-export default articleRouter;
+export default articlesRouter;

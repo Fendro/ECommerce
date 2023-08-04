@@ -1,37 +1,31 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { passwordHashing } from "../utils";
+import { AdminModel } from "../models";
 import {
   ForbiddenRequest,
   NotFound,
   ServiceError,
   Unauthorized,
 } from "../models";
-import { Collection, ObjectId } from "mongodb";
 import { NextFunction, Request, Response } from "express";
 
 const editableFields = ["admin", "email", "password", "username"];
-let collection: Collection;
+let model: AdminModel;
 (async () => {
-  collection = await getCollection("users");
+  model = new AdminModel(await getCollection("users"));
 })();
 
-const deleteAccountAsAdmin = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
+const deleteUser = async (req: Request, res: Response): Promise<void> => {
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   // @ts-ignore
-  if (data._id === req.session.user._id)
+  if (_id === req.session.user._id)
     throw new Unauthorized(
       "Admin account deletion can only be done from a different admin account.",
     );
 
-  data._id = new ObjectId(data._id);
-
-  const { deletedCount } = await collection.deleteOne(data);
-  if (!deletedCount) throw new NotFound("No user found with the provided id.");
+  if (!(await model.deleteUser(_id)))
+    throw new NotFound("No user found with the provided id.");
 
   requestHandler.sendResponse(res, {
     message: "Account deleted.",
@@ -39,30 +33,17 @@ const deleteAccountAsAdmin = async (
   });
 };
 
-const editAccountAsAdmin = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+const editUser = async (req: Request, res: Response): Promise<void> => {
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
     req.body,
     false,
   );
-  if (fieldsToUpdate.password)
-    fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
-  const user = await collection.findOneAndUpdate(
-    data,
-    {
-      $set: fieldsToUpdate,
-    },
-    { returnDocument: "after" },
-  );
+  const user = await model.editUser(_id, fieldsToUpdate);
   if (!user.value) throw new ServiceError("Database error.", user);
-  delete user.value.password;
 
   requestHandler.sendResponse(res, {
     data: user.value,
@@ -72,12 +53,10 @@ const editAccountAsAdmin = async (
 };
 
 const getUser = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const user = await collection.findOne(data);
+  const user = await model.getUser(_id);
   if (!user) throw new NotFound("No user found with the provided id.");
-  delete user.password;
 
   requestHandler.sendResponse(res, {
     data: user,
@@ -87,13 +66,8 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const users = await collection.find({}).toArray();
-
+  const users = await model.getUsers();
   if (!users.length) throw new NotFound("No user found.");
-
-  for (const user of users) {
-    delete user.password;
-  }
 
   requestHandler.sendResponse(res, {
     data: users,
@@ -115,4 +89,4 @@ const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   }
 };
 
-export { deleteAccountAsAdmin, editAccountAsAdmin, getUser, getUsers, isAdmin };
+export { deleteUser, editUser, getUser, getUsers, isAdmin };

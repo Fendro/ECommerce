@@ -19,7 +19,9 @@ module.exports = {
         description: "must be an array of strings.",
         items: {
           bsonType: "string",
+          description: "must be a unique string.",
         },
+        uniqueItems: true,
         minItems: 0,
       },
       description: {
@@ -35,6 +37,7 @@ module.exports = {
         description: "must be an array of strings and is required.",
         items: {
           bsonType: "string",
+          description: "must be a string.",
         },
         minItems: 0,
       },
@@ -59,6 +62,7 @@ module.exports = {
         description: "must be an array of strings and is required.",
         items: {
           bsonType: "string",
+          description: "must be a string.",
         },
         minItems: 0,
       },

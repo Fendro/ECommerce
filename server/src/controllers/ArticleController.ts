@@ -1,7 +1,6 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { NotFound, ServiceError } from "../models";
-import { Collection, ObjectId } from "mongodb";
+import { ArticleModel, NotFound, ServiceError } from "../models";
 import { Request, Response } from "express";
 
 const editableFields = [
@@ -10,19 +9,18 @@ const editableFields = [
   "images",
   "name",
   "price",
+  "quantity",
   "specs",
 ];
-let collection: Collection;
+let model: ArticleModel;
 (async () => {
-  collection = await getCollection("articles");
+  model = new ArticleModel(await getCollection("articles"));
 })();
 
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(editableFields, req.body);
-  data.views = 0;
-  data.searches = 0;
 
-  await collection.insertOne(data);
+  await model.addArticle(data);
 
   requestHandler.sendResponse(res, {
     message: "Article registered.",
@@ -31,11 +29,9 @@ const addArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteArticle = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const { deletedCount } = await collection.deleteOne(data);
-  if (!deletedCount)
+  if (!(await model.deleteArticle(_id)))
     throw new NotFound("No article found with the provided id.");
 
   requestHandler.sendResponse(res, {
@@ -45,8 +41,7 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editArticle = async (req: Request, res: Response) => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
@@ -54,13 +49,7 @@ const editArticle = async (req: Request, res: Response) => {
     false,
   );
 
-  const article = await collection.findOneAndUpdate(
-    data,
-    {
-      $set: fieldsToUpdate,
-    },
-    { returnDocument: "after" },
-  );
+  const article = await model.editArticle(_id, fieldsToUpdate);
   if (!article.value) throw new ServiceError("Database error.", article);
 
   requestHandler.sendResponse(res, {
@@ -71,12 +60,9 @@ const editArticle = async (req: Request, res: Response) => {
 };
 
 const getArticle = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const article = await collection.findOneAndUpdate(data, {
-    $inc: { views: 1 },
-  });
+  const article = await model.getArticle(_id);
   if (!article.value)
     throw new NotFound("No article found with the provided id.");
 
@@ -90,7 +76,7 @@ const getArticle = async (req: Request, res: Response): Promise<void> => {
 const getArticles = async (req: Request, res: Response): Promise<void> => {
   const search = requestHandler.searchBuilder(req);
 
-  const products = await collection.find(search.find, search.options).toArray();
+  const products = await model.getArticles(search.find, search.options);
   if (!products.length) throw new NotFound("No article found.");
 
   requestHandler.sendResponse(res, {
@@ -98,12 +84,6 @@ const getArticles = async (req: Request, res: Response): Promise<void> => {
     message: "Articles retrieved.",
     success: true,
   });
-
-  await collection.updateMany(
-    search.find,
-    { $inc: { searches: 1 } },
-    search.options,
-  );
 };
 
 export { addArticle, deleteArticle, editArticle, getArticle, getArticles };
