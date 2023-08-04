@@ -94,6 +94,13 @@ const fetchParams = (
   return data;
 };
 
+/**
+ * Standardized response handler to send failure responses,
+ * enforcing the response format.
+ * @param res
+ * @param errStatus
+ * @param data
+ */
 const sendError = (
   res: Response,
   errStatus: number,

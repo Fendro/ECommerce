@@ -22,7 +22,7 @@ export class CategoryModel {
 
   deleteCategory = async (_id: string): Promise<number> => {
     const { deletedCount } = await this.collection.deleteOne({
-      _id: new ObjectId(_id),
+      _id: ObjectId.createFromHexString(_id),
     });
 
     return deletedCount;
@@ -33,7 +33,7 @@ export class CategoryModel {
     fieldsToUpdate: { [key: string]: any },
   ): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { _id: ObjectId.createFromHexString(_id) },
       {
         $set: fieldsToUpdate,
       },
@@ -42,7 +42,9 @@ export class CategoryModel {
   };
 
   getCategory = async (_id: string): Promise<WithId<Document> | null> => {
-    return await this.collection.findOne({ _id: new ObjectId(_id) });
+    return await this.collection.findOne({
+      _id: ObjectId.createFromHexString(_id),
+    });
   };
 
   getCategories = async (): Promise<WithId<Document>[]> => {

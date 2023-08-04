@@ -9,6 +9,7 @@ const editableFields = [
   "images",
   "name",
   "price",
+  "quantity",
   "specs",
 ];
 let model: ArticleModel;

@@ -10,7 +10,7 @@ export class AdminModel {
 
   deleteUser = async (_id: string): Promise<number> => {
     const { deletedCount } = await this.collection.deleteOne({
-      _id: new ObjectId(_id),
+      _id: ObjectId.createFromHexString(_id),
     });
 
     return deletedCount;
@@ -24,7 +24,7 @@ export class AdminModel {
       fieldsToUpdate.password = passwordHashing(fieldsToUpdate.password);
 
     const user = await this.collection.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { _id: ObjectId.createFromHexString(_id) },
       {
         $set: fieldsToUpdate,
       },
@@ -35,8 +35,22 @@ export class AdminModel {
     return user;
   };
 
-  getUser = async (_id: string): Promise<WithId<Document> | null> => {
-    const user = await this.collection.findOne({ _id: new ObjectId(_id) });
+  getUser = async (_id: string): Promise<Document | null> => {
+    const user = await this.collection
+      .aggregate([
+        {
+          $match: { _id: ObjectId.createFromHexString(_id) },
+        },
+        {
+          $lookup: {
+            from: "orders",
+            localField: "_id",
+            foreignField: "user",
+            as: "orders",
+          },
+        },
+      ])
+      .next();
     if (user) delete user.password;
 
     return user;

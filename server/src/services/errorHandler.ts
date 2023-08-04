@@ -2,6 +2,7 @@ import appConfig from "../configs/appConfig";
 import requestHandler from "./requestHandler";
 import {
   BadRequest,
+  FailedDependency,
   ForbiddenRequest,
   NotFound,
   ServiceError,
@@ -28,20 +29,15 @@ export const ErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (error instanceof BadRequest) {
-    return requestHandler.sendError(res, 400, error.response);
-  }
-  if (error instanceof Unauthorized) {
-    return requestHandler.sendError(res, 401, error.response);
-  }
-  if (error instanceof ForbiddenRequest) {
-    return requestHandler.sendError(res, 403, error.response);
-  }
-  if (error instanceof NotFound) {
-    return requestHandler.sendError(res, 404, error.response);
-  }
-  if (error instanceof ServiceError) {
-    return requestHandler.sendError(res, 503, error.response);
+  if (
+    error instanceof BadRequest ||
+    error instanceof ForbiddenRequest ||
+    error instanceof FailedDependency ||
+    error instanceof NotFound ||
+    error instanceof ServiceError ||
+    error instanceof Unauthorized
+  ) {
+    return requestHandler.sendError(res, error.status, error.response);
   }
   if (error instanceof BSONError) {
     const response: ResponseData = {

@@ -27,7 +27,7 @@ export class ArticleModel {
 
   deleteArticle = async (_id: string): Promise<number> => {
     const { deletedCount } = await this.collection.deleteOne({
-      _id: new ObjectId(_id),
+      _id: ObjectId.createFromHexString(_id),
     });
 
     return deletedCount;
@@ -38,7 +38,7 @@ export class ArticleModel {
     fieldsToUpdate: { [key: string]: any },
   ): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { _id: ObjectId.createFromHexString(_id) },
       {
         $set: fieldsToUpdate,
       },
@@ -48,15 +48,23 @@ export class ArticleModel {
 
   getArticle = async (_id: string): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: new ObjectId(_id) },
+      { _id: ObjectId.createFromHexString(_id) },
       { $inc: { views: 1 } },
+      // { projection: { views: 0, searches: 0 } },
     );
   };
 
   getArticles = async (
     filter: Filter<Document>,
-    options?: FindOptions,
+    options: FindOptions,
   ): Promise<WithId<Document>[]> => {
+    // options.projection = {
+    //   categories: 0,
+    //   quantity: 0,
+    //   specs: 0,
+    //   views: 0,
+    //   searches: 0,
+    // };
     const articles = await this.collection.find(filter, options).toArray();
 
     if (Object.keys(filter)) {
