@@ -1,38 +1,39 @@
-import React, { useState, useRef } from "react";
-import { Button } from "@mui/material";
+import React, { useState, useRef, useContext } from "react";
+import { Button, Switch, FormControlLabel } from "@mui/material";
 import { CenteredContainer, FormContainer, StyledInput } from "../styling";
+import { UserContext } from "../../context/UserContext";
+import { EmailContext } from "../../context/EmailContext";
 import { useParams, useNavigate } from "react-router-dom";
 import { urlFetch } from "../../utils/urlFetch";
 
 export default function EditUser() {
     const { id } = useParams();
+    const { admin, setAdmin } = useContext(UserContext);
+    const { email, setEmail } = useContext(EmailContext);
     const [message, setMessage] = useState("");
-    const inputCurrentEmail = useRef();
     const inputMail = useRef();
     const inputPsw = useRef();
-    const currentPsw = useRef();
+    const adminSwitch = useRef();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const currentEmail = inputCurrentEmail.current.children[1].children[0].value;
-        const currentPassword = currentPsw.current.children[1].children[0].value;
         const newEmail = inputMail.current.children[1].children[0].value;
         const newPassword = inputPsw.current.children[1].children[0].value;
-
-        const edits = {};
+        const newAdmin = adminSwitch.current.checked;
+        const updateData = {};
         if (newEmail) {
-            edits.email = newEmail;
+            updateData.email = newEmail;
         }
         if (newPassword) {
-            edits.password = newPassword;
+            updateData.password = newPassword;
         }
-
-        const updateData = { email: currentEmail, password: currentPassword, edits: edits };
-        console.log(updateData)
+        updateData.admin = newAdmin;
+        console.log(JSON.stringify(updateData));
+        console.log(id)
 
         try {
-            const res = await fetch(`http://localhost:4242/auth`, {
+            const res = await fetch(`http://localhost:4242/admin/users/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -42,8 +43,10 @@ export default function EditUser() {
             });
             const json = await res.json();
             if (json.success) {
+                setEmail(json.data["email"]);
+                setAdmin(json.data["admin"]);
                 setMessage("User data updated successfully.");
-                navigate("/");
+                navigate("/admin");
             } else {
                 setMessage("Failed to update user data.");
             }
@@ -59,22 +62,6 @@ export default function EditUser() {
                 <FormContainer>
                     <div>{message}</div>
                     <StyledInput
-                        label="Current Email"
-                        type="email"
-                        minLength="6"
-                        variant="outlined"
-                        ref={inputCurrentEmail}
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="Current Password"
-                        type="password"
-                        minLength="6"
-                        variant="outlined"
-                        ref={currentPsw}
-                        fullWidth
-                    />
-                    <StyledInput
                         label="New Email"
                         type="email"
                         minLength="6"
@@ -89,6 +76,16 @@ export default function EditUser() {
                         minLength="6"
                         ref={inputPsw}
                         fullWidth
+                    />
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                inputRef={adminSwitch}
+                                defaultChecked={admin}
+                                color="primary"
+                            />
+                        }
+                        label="Admin"
                     />
                     <Button
                         variant="contained"

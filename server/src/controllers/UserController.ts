@@ -41,6 +41,7 @@ const editUser = async (req: Request, res: Response): Promise<void> => {
   const user = await model.editUser(data, fieldsToUpdate);
   if (!user.value) throw new ServiceError("Database error.", user);
 
+  console.log(req.body. user);
   requestHandler.sendResponse(res, {
     data: user.value,
     message: "Account information edited.",
