@@ -52,6 +52,7 @@ const editAccount = async (req: Request, res: Response): Promise<void> => {
   if (!user.value) throw new ServiceError("Database error.", user);
   delete user.value.password;
 
+  console.log(req.body. user);
   requestHandler.sendResponse(res, {
     data: user.value,
     message: "Account information edited.",

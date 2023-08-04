@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { UserContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import { urlFetch } from "../utils/urlFetch";
+import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 function Header() {
     const { admin, setAdmin } = useContext(UserContext);
     const navigate = useNavigate();
@@ -19,6 +20,9 @@ function Header() {
     const handleProductClick = () => {
         navigate('/');
     };
+    const handleCartClick = () => {
+        navigate('/cart');
+    }
 
     const handleLogoutClick = async () => {
         try {
@@ -61,6 +65,7 @@ function Header() {
                 <LogoImage src={Logo} alt="#" />
                 <h1>ADMIN</h1>
                 <Navbar>
+                    <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
                     <NavItem onClick={handleAdminClick}>Admin</NavItem>
                     <NavItem onClick={handleChangeClick}>Change</NavItem>
                     <NavItem onClick={handleProductClick}>Products</NavItem>
