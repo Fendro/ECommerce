@@ -1,0 +1,8 @@
+{
+  "name": "ecommerce",
+  "version": "1.0.0",
+  "dependencies": {
+    "@mui/material": "^5.14.2",
+    "react-router-dom": "^6.14.2"
+  }
+}
