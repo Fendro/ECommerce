@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect,  useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
@@ -28,7 +28,6 @@ export default function Admin() {
         });
     }, [reload])
     function handleEdit(id) {
-        // redirect to edit page of user with user id in URL.
         navigate(`/admin/change/${id}`);
     }
     function handleDelete(id) {

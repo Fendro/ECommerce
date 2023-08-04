@@ -59,7 +59,7 @@ function Header() {
         }
     }
     checkUser();
-    if (admin == true){
+    if (admin === true){
         return (
             <HeaderContainer>
                 <LogoImage src={Logo} alt="#" />
