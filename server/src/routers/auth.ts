@@ -9,7 +9,7 @@ authRouter.delete(
   UserController.isLoggedIn,
   catchWrapper(UserController.deleteUser),
 );
-authRouter.get("/auth", catchWrapper(UserController.login));
+authRouter.post("/auth/login", catchWrapper(UserController.login));
 authRouter.post("/auth", catchWrapper(UserController.register));
 authRouter.post("/auth/logout", UserController.logout);
 authRouter.put(

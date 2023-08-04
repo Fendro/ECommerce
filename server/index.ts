@@ -32,7 +32,11 @@ app.use(
 app.use(cookieParser());
 app.use(
   session({
-    cookie: { maxAge: config.users.session.cookie.maxAge },
+    cookie: {
+      maxAge: config.users.session.cookie.maxAge,
+      sameSite: true,
+      secure: "auto",
+    },
     saveUninitialized: true,
     secret: "Ecommerce",
     resave: true,

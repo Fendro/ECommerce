@@ -64,7 +64,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
       success: false,
     });
   } else {
-    const data = requestHandler.fetchParams(["email", "password"], req.query);
+    const data = requestHandler.fetchParams(["email", "password"], req.body);
 
     const user = await model.getUser(data);
     if (!user) throw new Unauthorized("Invalid credentials.");
