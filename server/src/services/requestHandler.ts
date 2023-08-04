@@ -70,11 +70,11 @@ const searchBuilder = (req: Request): { [key: string]: any } => {
  * @returns An object containing the sought parameters
  * as attributes and their retrieved matches as values.
  */
-function fetchParams(
+const fetchParams = (
   soughtParams: string[],
   params: { [key: string]: any },
   strict: boolean = true,
-): { [key: string]: any } {
+): { [key: string]: any } => {
   const data: { [key: string]: any } = {};
   for (const soughtParam of soughtParams) {
     if (soughtParam in params) {
@@ -86,13 +86,21 @@ function fetchParams(
 
   if (!Object.keys(data).length)
     throw new BadRequest(
-      "No fields to update where provided.",
+      "No field to update was provided.",
       soughtParams,
       params,
     );
 
   return data;
-}
+};
+
+const sendError = (
+  res: Response,
+  errStatus: number,
+  data: ResponseData,
+): void => {
+  res.status(errStatus).json(data);
+};
 
 /**
  * Standardized response handler to send successful responses,
@@ -100,12 +108,13 @@ function fetchParams(
  * @param res
  * @param data
  */
-function sendResponse(res: Response, data: ResponseData): void {
+const sendResponse = (res: Response, data: ResponseData): void => {
   res.status(200).json(data);
-}
+};
 
 export default {
   searchBuilder,
   fetchParams,
+  sendError,
   sendResponse,
 };

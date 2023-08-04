@@ -7,7 +7,7 @@ const adminRouter: Router = Router();
 adminRouter.delete(
   "/admin/users/:_id",
   AdminController.isAdmin,
-  catchWrapper(AdminController.deleteAccountAsAdmin),
+  catchWrapper(AdminController.deleteUser),
 );
 adminRouter.get(
   "/admin/users",
@@ -22,7 +22,7 @@ adminRouter.get(
 adminRouter.put(
   "/admin/users/:_id",
   AdminController.isAdmin,
-  catchWrapper(AdminController.editAccountAsAdmin),
+  catchWrapper(AdminController.editUser),
 );
 
 export default adminRouter;

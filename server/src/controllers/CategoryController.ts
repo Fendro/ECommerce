@@ -1,19 +1,18 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { NotFound, ServiceError } from "../models";
-import { Collection, ObjectId } from "mongodb";
+import { CategoryModel, NotFound, ServiceError } from "../models";
 import { Request, Response } from "express";
 
 const editableFields = ["name"];
-let collection: Collection;
+let model: CategoryModel;
 (async () => {
-  collection = await getCollection("categories");
+  model = new CategoryModel(await getCollection("categories"));
 })();
 
 const addCategory = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(editableFields, req.body);
 
-  await collection.insertOne(data);
+  await model.addCategory(data);
 
   requestHandler.sendResponse(res, {
     message: "Category registered.",
@@ -22,11 +21,9 @@ const addCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const { deletedCount } = await collection.deleteOne(data);
-  if (!deletedCount)
+  if (!(await model.deleteCategory(_id)))
     throw new NotFound("No category found with the provided id.");
 
   requestHandler.sendResponse(res, {
@@ -36,8 +33,7 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
@@ -45,27 +41,20 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
     false,
   );
 
-  const category = await collection.findOneAndUpdate(
-    data,
-    {
-      $set: fieldsToUpdate,
-    },
-    { returnDocument: "after" },
-  );
+  const category = await model.editCategory(_id, fieldsToUpdate);
   if (!category.value) throw new ServiceError("Database error.", category);
 
   requestHandler.sendResponse(res, {
     data: category.value,
-    message: "Information edited.",
+    message: "Category edited.",
     success: true,
   });
 };
 
 const getCategory = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["_id"], req.params);
-  data._id = new ObjectId(data._id);
+  const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const category = await collection.findOne(data);
+  const category = await model.getCategory(_id);
   if (!category) throw new NotFound("No category found with the provided id.");
 
   requestHandler.sendResponse(res, {
@@ -76,7 +65,7 @@ const getCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCategories = async (req: Request, res: Response): Promise<void> => {
-  const categories = await collection.find({}).toArray();
+  const categories = await model.getCategories();
   if (!categories.length) throw new NotFound("No categories found.");
 
   requestHandler.sendResponse(res, {

@@ -1,4 +1,5 @@
 import appConfig from "../configs/appConfig";
+import requestHandler from "./requestHandler";
 import {
   BadRequest,
   ForbiddenRequest,
@@ -28,33 +29,25 @@ export const ErrorHandler = (
   next: NextFunction,
 ) => {
   if (error instanceof BadRequest) {
-    return res.status(400).json(error.response);
+    return requestHandler.sendError(res, 400, error.response);
   }
   if (error instanceof Unauthorized) {
-    return res.status(401).json(error.response);
+    return requestHandler.sendError(res, 401, error.response);
   }
   if (error instanceof ForbiddenRequest) {
-    return res.status(403).json(error.response);
+    return requestHandler.sendError(res, 403, error.response);
   }
   if (error instanceof NotFound) {
-    return res.status(404).json(error.response);
+    return requestHandler.sendError(res, 404, error.response);
   }
   if (error instanceof ServiceError) {
-    return res.status(503).json(error.response);
+    return requestHandler.sendError(res, 503, error.response);
   }
   if (error instanceof BSONError) {
-    console.log(error);
-    return res
-      .status(503)
-      .json({ message: "Invalid BSON data format.", success: false });
-  }
-  if (error instanceof MongoError) {
-    console.error(error);
     const response: ResponseData = {
-      message: "Database error.",
+      message: "Invalid data format.",
       success: false,
     };
-
     if (appConfig.env === "development") {
       response.dev = {
         error: error,
@@ -62,10 +55,28 @@ export const ErrorHandler = (
       };
     }
 
-    return res.status(503).json(response);
+    return requestHandler.sendError(res, 503, response);
+  }
+  if (error instanceof MongoError) {
+    console.error(error);
+    const response: ResponseData = {
+      message: "Database error.",
+      success: false,
+    };
+    if (appConfig.env === "development") {
+      response.dev = {
+        error: error,
+        stack: error.stack,
+      };
+    }
+
+    return requestHandler.sendError(res, 503, response);
   }
 
-  res.status(500).json("Internal Server Error.");
+  requestHandler.sendError(res, 503, {
+    message: "Internal Server Error.",
+    success: false,
+  });
   console.error(error);
   process.exit(1);
 };

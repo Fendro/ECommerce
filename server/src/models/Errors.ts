@@ -2,7 +2,7 @@ import appConfig from "../configs/appConfig";
 import { ResponseData, User } from "../types";
 
 class BadRequest extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
 
   constructor(
     message: string,
@@ -60,7 +60,7 @@ class NotFound extends Error {
 }
 
 class ServiceError extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
 
   constructor(message: string, error: unknown) {
     super();
@@ -78,7 +78,7 @@ class ServiceError extends Error {
 }
 
 class Unauthorized extends Error {
-  response: { [key: string]: any };
+  response: ResponseData;
 
   constructor(message: string) {
     super();
