@@ -63,7 +63,7 @@ export const ErrorHandler = (
   if (error instanceof BSONError) {
     response.message = "Invalid BSON data format.";
     outgoingResponse(req, response);
-    return requestHandler.sendError(res, 503, response);
+    return requestHandler.sendError(res, 400, response);
   }
   if (error instanceof MongoError) {
     console.error(error);

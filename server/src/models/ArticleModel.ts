@@ -67,7 +67,7 @@ export class ArticleModel {
     // };
     const articles = await this.collection.find(filter, options).toArray();
 
-    if (Object.keys(filter)) {
+    if (typeof filter === "object" && Object.keys(filter)) {
       await this.collection.updateMany(filter, { $inc: { searches: 1 } });
     }
 
