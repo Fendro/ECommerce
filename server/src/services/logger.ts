@@ -37,11 +37,7 @@ const incomingRequest = (
   next();
 };
 
-const outgoingResponse = (
-  req: Request,
-  data: ResponseData,
-  stack?: string,
-): void => {
+const outgoingResponse = (req: Request, data: ResponseData): void => {
   // @ts-ignore
   req.logger.times.responseTime = new Date();
   // @ts-ignore
@@ -54,9 +50,6 @@ const outgoingResponse = (
 
   // @ts-ignore
   req.logger.response.data = data;
-  if (stack)
-    // @ts-ignore
-    req.logger.response.stack = stack;
 
   if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
@@ -79,9 +72,9 @@ const outgoingResponse = (
   // @ts-ignore
   log.push(req.logger);
 
-  fs.writeFile(logPath, JSON.stringify(log, null, 2), (writeErr) => {
-    if (writeErr) {
-      console.error("Error writing the log file:", writeErr);
+  fs.writeFile(logPath, JSON.stringify(log, null, 2), (error) => {
+    if (error) {
+      console.error("Error writing the log file:", error);
     }
   });
 };

@@ -42,7 +42,7 @@
   "nodemonConfig": {
     "ignore": [
       "requests logs/*",
-      "logs/*"
+      "server logs/*"
     ]
   }
 }

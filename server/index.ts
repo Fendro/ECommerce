@@ -18,7 +18,10 @@ dbInit().catch((error: unknown) => {
   process.exit(1);
 });
 
-/*  Setting up requests encoding and permissions  */
+/*  Mounting request information logger at the beginning of the stack  */
+app.use(incomingRequest);
+
+/*  Setting up requests parsers and permissions  */
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
@@ -53,9 +56,6 @@ app.use(
     message: "You can't make any more requests at the moment. Try again later",
   }),
 );
-
-/*  Mounting request information logger at the beginning of the stack  */
-app.use(incomingRequest);
 
 /*  Setting routes up  */
 for (const router in routers) {
