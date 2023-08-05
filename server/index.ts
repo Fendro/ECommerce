@@ -8,7 +8,7 @@ import routers from "./src/routers";
 import session from "express-session";
 import { dbInit } from "./src/services";
 import { ErrorHandler } from "./src/services";
-import { incomingRequest } from "./src/services/logger";
+import { incomingRequest } from "./src/services/";
 
 const app: Express = express();
 
