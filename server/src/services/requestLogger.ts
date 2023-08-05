@@ -2,7 +2,7 @@ import fs from "fs";
 import { NextFunction, Request, Response } from "express";
 import { ResponseData } from "../types";
 
-const directory = "./logs";
+const logDirectory = "./logs";
 
 const incomingRequest = (
   req: Request,
@@ -49,7 +49,8 @@ const outgoingResponse = (
     // @ts-ignore
     new Date(req.logger.times.responseTime).getMilliseconds() -
     // @ts-ignore
-    new Date(req.logger.times.responseTime).getMilliseconds();
+    new Date(req.logger.times.responseTime).getMilliseconds() +
+    "ms";
 
   // @ts-ignore
   req.logger.response.data = data;
@@ -57,36 +58,30 @@ const outgoingResponse = (
     // @ts-ignore
     req.logger.response.stack = stack;
 
-  // @ts-ignore
-  const filename = req.logger.times.responseTime.toDateString() + ".json";
-  fs.access(`${directory}/${filename}`, (error) => {
-    if (!error) {
-      fs.readFile(`${directory}/${filename}`, "utf8", (error, data) => {
-        if (error) {
-          console.error("Logger reading failure:", error);
-        } else {
-          const content = data.trim();
-          const comma = content ? "," : "";
+  if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory);
+  }
 
-          fs.appendFile(
-            `${directory}/${filename}`,
-            // @ts-ignore
-            comma + JSON.stringify(req.logger, null, 2),
-            (error) => {
-              if (error) console.error("Logger append failure:", error);
-            },
-          );
-        }
-      });
-    } else {
-      fs.writeFile(
-        `${directory}/${filename}`,
-        // @ts-ignore
-        JSON.stringify(req.logger, null, 2),
-        (error) => {
-          if (error) console.error("Logger write failure:", error);
-        },
-      );
+  // @ts-ignore
+  const logFilename = req.logger.times.responseTime.toDateString() + ".json";
+  const logPath = `${logDirectory}/${logFilename}`;
+
+  let log: {}[] = [];
+  if (fs.existsSync(logPath)) {
+    const existingLogFileContent = fs.readFileSync(logPath, "utf8");
+    try {
+      log = JSON.parse(existingLogFileContent);
+    } catch (error) {
+      console.error("Error parsing existing log file content:", error);
+    }
+  }
+
+  // @ts-ignore
+  log.push(req.logger);
+
+  fs.writeFile(logPath, JSON.stringify(log, null, 2), (writeErr) => {
+    if (writeErr) {
+      console.error("Error writing the log file:", writeErr);
     }
   });
 };
