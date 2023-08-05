@@ -2,7 +2,7 @@ import fs from "fs";
 import { NextFunction, Request, Response } from "express";
 import { ResponseData } from "../types";
 
-const logDirectory = "./logs";
+const logDirectory = "./requests logs";
 
 const incomingRequest = (
   req: Request,

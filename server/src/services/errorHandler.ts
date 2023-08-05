@@ -12,7 +12,7 @@ import { BSONError } from "bson";
 import { MongoError } from "mongodb";
 import { NextFunction, Request, Response } from "express";
 import { ResponseData } from "../types";
-import { outgoingResponse } from "./requestLogger";
+import { outgoingResponse } from "./logger";
 
 /**
  * Custom error handling middleware which sends responses
@@ -52,7 +52,7 @@ export const ErrorHandler = (
         stack: error.stack,
       };
     }
-
+    outgoingResponse(req, response);
     return requestHandler.sendError(res, 503, response);
   }
   if (error instanceof MongoError) {
@@ -67,14 +67,20 @@ export const ErrorHandler = (
         stack: error.stack,
       };
     }
-
+    outgoingResponse(req, response);
     return requestHandler.sendError(res, 503, response);
   }
-
-  requestHandler.sendError(res, 503, {
+  const response: ResponseData = {
     message: "Internal Server Error.",
     success: false,
-  });
+  };
+
+  requestHandler.sendError(res, 503, response);
+
+  // @ts-ignore
+  response.error = error;
+
+  outgoingResponse(req, response);
   console.error(error);
   process.exit(1);
 };
