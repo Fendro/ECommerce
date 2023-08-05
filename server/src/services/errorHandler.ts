@@ -12,6 +12,7 @@ import { BSONError } from "bson";
 import { MongoError } from "mongodb";
 import { NextFunction, Request, Response } from "express";
 import { ResponseData } from "../types";
+import { outgoingResponse } from "./requestLogger";
 
 /**
  * Custom error handling middleware which sends responses
@@ -37,6 +38,7 @@ export const ErrorHandler = (
     error instanceof ServiceError ||
     error instanceof Unauthorized
   ) {
+    outgoingResponse(req, error.response);
     return requestHandler.sendError(res, error.status, error.response);
   }
   if (error instanceof BSONError) {
