@@ -75,6 +75,9 @@ const fetchParams = (
   params: { [key: string]: any },
   strict: boolean = true,
 ): { [key: string]: any } => {
+  if (!params)
+    throw new BadRequest("No parameters received.", soughtParams, params);
+
   const data: { [key: string]: any } = {};
   for (const soughtParam of soughtParams) {
     if (soughtParam in params) {

@@ -43,7 +43,6 @@ const doesArticleExist = async (
 
 const editImages = async (req: Request, res: Response): Promise<void> => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
-
   const { images } = requestHandler.fetchParams(["images"], req.body, false);
 
   const category = await model.editImages(_id, images);

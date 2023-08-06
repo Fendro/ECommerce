@@ -1,3 +1,4 @@
+import bodyParser from "body-parser";
 import config from "./src/configs/appConfig";
 import cors from "cors";
 import express, { Express, Router } from "express";
@@ -11,7 +12,8 @@ const app: Express = express();
 /*  Mounting request information logger at the beginning of the stack  */
 app.use(incomingRequest);
 
-/*  Setting up permissions  */
+/*  Setting up requests parsers and permissions  */
+app.use(bodyParser.json());
 app.use(
   cors({
     origin: ["http://localhost:3000", "http://localhost:4242"],
@@ -30,7 +32,7 @@ app.use(
   }),
 );
 
-// app.use("/images", express.static(`${__dirname}/images`));
+app.use("/images", express.static(`${__dirname}/images`));
 
 /*  Setting routes up  */
 for (const router in routers) {

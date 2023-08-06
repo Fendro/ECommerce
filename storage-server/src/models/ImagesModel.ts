@@ -43,7 +43,7 @@ export class ImagesModel {
     const files: string[] = fs.readdirSync(`images/${_id}`);
 
     const images: string[] = files.map((filename): string => {
-      return `${url}/images/${_id}/${filename}`;
+      return `${url}/${filename}`;
     });
 
     return await this.collection.findOneAndUpdate(

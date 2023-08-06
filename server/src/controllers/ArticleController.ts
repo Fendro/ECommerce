@@ -1,3 +1,4 @@
+import axios from "axios";
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
 import { ArticleModel, NotFound, ServiceError } from "../models";
@@ -34,6 +35,10 @@ const deleteArticle = async (req: Request, res: Response): Promise<void> => {
   if (!(await model.deleteArticle(_id)))
     throw new NotFound("No article found with the provided id.");
 
+  axios.delete(`http://localhost:8484/images/${_id}`).catch(() => {
+    console.error("Remote storage server error.");
+  });
+
   requestHandler.sendResponse(res, {
     message: "Article deleted.",
     success: true,
@@ -51,6 +56,19 @@ const editArticle = async (req: Request, res: Response) => {
 
   const article = await model.editArticle(_id, fieldsToUpdate);
   if (!article.value) throw new ServiceError("Database error.", article);
+
+  if ("images" in fieldsToUpdate) {
+    const images = article.value.images.map((image: string) =>
+      image.split("/").pop(),
+    );
+    axios
+      .put(`http://localhost:8484/images/${article.value._id}`, {
+        images: images,
+      })
+      .catch(() => {
+        console.error("Remote storage server error.");
+      });
+  }
 
   requestHandler.sendResponse(res, {
     data: article.value,

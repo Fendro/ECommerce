@@ -12,8 +12,8 @@ const storage = multer.diskStorage({
     cb(
       null,
       `${
-        sha1(file.originalname).substring(0, 5) +
-        sha1(new Date().toDateString())
+        sha1(file.originalname).substring(0, 10) +
+        sha1(new Date().toString().substring(0, 10))
       }.${fileType}`,
     );
   },
