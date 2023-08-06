@@ -13,7 +13,7 @@ imagesRouter.post(
   "/images/:_id",
   catchWrapper(CategoryController.doesArticleExist),
   upload.array("images"),
-  CategoryController.imagesStored,
+  catchWrapper(CategoryController.imagesStored),
 );
 imagesRouter.put("/images/:_id", catchWrapper(CategoryController.editImages));
 

@@ -8,25 +8,28 @@ export class ImagesModel {
     this.collection = collection;
   }
 
-  deleteImages = async (_id: string): Promise<number> => {
-    const { deletedCount } = await this.collection.deleteOne({
-      _id: ObjectId.createFromHexString(_id),
-    });
+  deleteImages = async (_id: string): Promise<boolean> => {
+    const directory = `./images/${_id}`;
+    if (!fs.existsSync(directory)) return false;
 
-    return deletedCount;
+    fs.rmSync(directory, { recursive: true, force: true });
+
+    return true;
   };
 
   editImages = async (
     _id: string,
-    fieldsToUpdate: { [key: string]: any },
-  ): Promise<ModifyResult> => {
-    return await this.collection.findOneAndUpdate(
-      { _id: ObjectId.createFromHexString(_id) },
-      {
-        $set: fieldsToUpdate,
-      },
-      { returnDocument: "after" },
-    );
+    imagesToKeep: string[],
+  ): Promise<boolean> => {
+    const directory = `./images/${_id}`;
+    if (!fs.existsSync(directory)) return false;
+
+    const files: string[] = fs.readdirSync(`images/${_id}`);
+    for (const file of files) {
+      if (!imagesToKeep.includes(file)) fs.rmSync(`${directory}/${file}`);
+    }
+
+    return true;
   };
 
   getArticle = async (_id: string): Promise<WithId<Document> | null> => {
@@ -48,6 +51,7 @@ export class ImagesModel {
       {
         $set: { images: images },
       },
+      { returnDocument: "after" },
     );
   };
 }

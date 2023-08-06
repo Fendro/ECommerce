@@ -30,7 +30,7 @@ app.use(
   }),
 );
 
-app.use("/images", express.static(`${__dirname}/images`));
+// app.use("/images", express.static(`${__dirname}/images`));
 
 /*  Setting routes up  */
 for (const router in routers) {

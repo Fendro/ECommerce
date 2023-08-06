@@ -32,7 +32,6 @@ const doesArticleExist = async (
   next: NextFunction,
 ): Promise<void> => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
-
   if (!(await model.getArticle(_id)))
     throw new FailedDependency("No article found with the provided id.");
 
@@ -45,25 +44,26 @@ const doesArticleExist = async (
 const editImages = async (req: Request, res: Response): Promise<void> => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  const fieldsToUpdate = requestHandler.fetchParams(["names"], req.body, false);
+  const { images } = requestHandler.fetchParams(["images"], req.body, false);
 
-  const category = await model.editImages(_id, fieldsToUpdate);
-  if (!category.value) throw new ServiceError("Database error.", category);
+  const category = await model.editImages(_id, images);
+  if (!category) throw new ServiceError("Database error.", category);
 
   requestHandler.sendResponse(res, {
-    data: category.value,
     message: "Images edited.",
     success: true,
   });
 };
 
-const imagesStored = (req: Request, res: Response) => {
+const imagesStored = async (req: Request, res: Response) => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
-  model.updateArticle(_id);
+  const article = await model.updateArticle(_id);
+  if (!article.value) throw new ServiceError("Database error", article);
 
   requestHandler.sendResponse(res, {
-    message: "Images stored.",
+    data: article.value,
+    message: "Images stored and article updated.",
     success: true,
   });
 };

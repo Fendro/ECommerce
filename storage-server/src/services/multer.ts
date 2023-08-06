@@ -9,7 +9,13 @@ const storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const fileType = file.mimetype.split("/")[1];
-    cb(null, `${sha1(file.originalname)}.${fileType}`);
+    cb(
+      null,
+      `${
+        sha1(file.originalname).substring(0, 5) +
+        sha1(new Date().toDateString())
+      }.${fileType}`,
+    );
   },
 });
 
