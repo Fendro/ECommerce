@@ -87,6 +87,7 @@ function Header() {
     } else {
         return (
             <HeaderContainer>
+                <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
                 <LogoImage src={Logo} alt="#" />
             </HeaderContainer>
         );
@@ -95,7 +96,6 @@ function Header() {
 
 export default Header;
 
-// Styled Components
 const HeaderContainer = styled.div`
   background-color: darkorange;
   padding: 5px;
