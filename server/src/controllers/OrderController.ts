@@ -1,6 +1,12 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { NotFound, OrderModel, ServiceError, Unauthorized } from "../models";
+import {
+  BadRequest,
+  NotFound,
+  OrderModel,
+  ServiceError,
+  Unauthorized,
+} from "../models";
 import { Request, Response } from "express";
 
 const editableFields = ["state"];
@@ -9,11 +15,12 @@ let model: OrderModel;
   model = new OrderModel(
     await getCollection("orders"),
     await getCollection("articles"),
+    await getCollection("packages"),
   );
 })();
 
 const addOrder = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["user", "articles"], req.body);
+  const data = requestHandler.fetchParams(["user", "packages"], req.body);
 
   await model.addOrder(data);
 

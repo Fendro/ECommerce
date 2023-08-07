@@ -5,19 +5,39 @@ import {
   ModifyResult,
   ObjectId,
 } from "mongodb";
-import { FailedDependency } from "./Errors";
+import { BadRequest, FailedDependency } from "./Errors";
 
 export class OrderModel {
   collection: Collection;
   articlesCollection: Collection;
+  packageCollection: Collection;
 
-  constructor(collection: Collection, articlesCollection: Collection) {
+  constructor(
+    collection: Collection,
+    articlesCollection: Collection,
+    packageCollection: Collection,
+  ) {
     this.collection = collection;
     this.articlesCollection = articlesCollection;
+    this.packageCollection = packageCollection;
   }
+
+  private arePackagesProper = (orderPackages: { [key: string]: any }[]) => {
+    for (const orderPackage of orderPackages) {
+      if (!("articles" in orderPackage) || !orderPackage["articles"].length)
+        throw new BadRequest(
+          "Received malformed package object, make sure the order is properly built and each package contains an articles array of at least one value.",
+          ["articles"],
+          orderPackages,
+        );
+    }
+  };
 
   addOrder = async (data: { [key: string]: any }): Promise<InsertOneResult> => {
     data.user = ObjectId.createFromHexString(data.user);
+
+    this.arePackagesProper(data.packages);
+
     for (const index in data.articles) {
       data.articles[index].article = ObjectId.createFromHexString(
         data.articles[index].article,
@@ -36,7 +56,7 @@ export class OrderModel {
       data.articles[index].unitPriceOnOrder = article.price;
     }
     data.orderDate = new Date();
-    data.state = "pending";
+    data.payment = "pending";
 
     return await this.collection.insertOne(data);
   };
