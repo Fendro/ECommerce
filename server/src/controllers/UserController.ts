@@ -126,7 +126,16 @@ const register = async (req: Request, res: Response): Promise<void> => {
 
 const registerGuest = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(
-    ["address", "city", "country", "firstname", "name", "phone", "zip"],
+    [
+      "address",
+      "city",
+      "country",
+      "email",
+      "firstname",
+      "lastname",
+      "phone",
+      "zip",
+    ],
     req.body,
   );
 

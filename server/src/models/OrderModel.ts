@@ -112,42 +112,33 @@ export class OrderModel {
             from: "articles",
             localField: "packages.articles.article_id",
             foreignField: "_id",
-            as: "packages.articles.article",
+            as: "articles",
           },
         },
         {
           $project: {
-            "packages.articles.article.categories": 0,
-            "packages.articles.article.price": 0,
-            "packages.articles.article.quantity": 0,
-            "packages.articles.article.searches": 0,
-            "packages.articles.article.specs": 0,
-            "packages.articles.article.views": 0,
+            "articles.categories": 0,
+            "articles.price": 0,
+            "articles.quantity": 0,
+            "articles.searches": 0,
+            "articles.specs": 0,
+            "articles.views": 0,
           },
         },
         {
           $group: {
-            _id: {
-              _id: "$_id",
-              packageId: "$packages._id",
-            },
-            orderDate: { $first: "$orderDate" },
-            payment: { $first: "$payment" },
-            package: { $first: "$packages" },
-            articles: { $push: "$packages.articles.article" },
-          },
-        },
-        {
-          $group: {
-            _id: "$_id._id",
+            _id: "$_id",
+            user_id: { $first: "$user_id" },
             orderDate: { $first: "$orderDate" },
             payment: { $first: "$payment" },
             packages: {
               $push: {
-                id: "$_id.packageId",
-                shippingMethod: "$package.shippingMethod",
-                shippingStatus: "$package.shippingStatus",
+                id: "$packages._id",
+                shippingMethod: "$packages.shippingMethod",
+                shippingStatus: "$packages.shippingStatus",
                 articles: "$articles",
+                quantities: "$packages.articles.quantity",
+                unitPriceOnOrder: "$packages.articles.unitPriceOnOrder",
               },
             },
           },
@@ -157,47 +148,58 @@ export class OrderModel {
   };
 
   getOrders = async (_id: string): Promise<Document[]> => {
-    return await this.collection
+    return this.collection
       .aggregate([
         {
-          $match: { user: ObjectId.createFromHexString(_id) },
+          $match: {
+            user_id: ObjectId.createFromHexString(_id),
+          },
         },
         {
-          $unwind: "$articles",
+          $lookup: {
+            from: "packages",
+            localField: "packages_id",
+            foreignField: "_id",
+            as: "packages",
+          },
+        },
+        {
+          $unwind: "$packages",
         },
         {
           $lookup: {
             from: "articles",
-            localField: "articles.article",
+            localField: "packages.articles.article_id",
             foreignField: "_id",
-            as: "articles.article",
-          },
-        },
-        {
-          $unwind: "$articles.article",
-        },
-        {
-          $addFields: {
-            "articles.article.quantity": "$articles.quantity",
-            "articles.article.unitPriceOnOrder": "$articles.unitPriceOnOrder",
-            "articles.article.orderDate": "$articles.orderDate",
+            as: "articles",
           },
         },
         {
           $project: {
-            "articles.article.categories": 0,
-            "articles.article.specs": 0,
-            "articles.article.views": 0,
-            "articles.article.searches": 0,
+            "articles.categories": 0,
+            "articles.price": 0,
+            "articles.quantity": 0,
+            "articles.searches": 0,
+            "articles.specs": 0,
+            "articles.views": 0,
           },
         },
         {
           $group: {
             _id: "$_id",
-            user: { $first: "$user" },
-            articles: { $push: "$articles.article" },
+            user_id: { $first: "$user_id" },
             orderDate: { $first: "$orderDate" },
-            state: { $first: "$state" },
+            payment: { $first: "$payment" },
+            packages: {
+              $push: {
+                id: "$packages._id",
+                shippingMethod: "$packages.shippingMethod",
+                shippingStatus: "$packages.shippingStatus",
+                articles: "$articles",
+                quantities: "$packages.articles.quantity",
+                unitPriceOnOrder: "$packages.articles.unitPriceOnOrder",
+              },
+            },
           },
         },
       ])

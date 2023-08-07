@@ -6,14 +6,15 @@ module.exports = {
     properties: {
       user_id: {
         bsonType: "objectId",
-        description: "must be an existing user's id and is required.",
+        description: "must reference a users document and is required.",
       },
       packages_id: {
         bsonType: "array",
-        description: "must be an array of packages' id and is required.",
+        description:
+          "must be an array of packages' id containing at least one item.",
         items: {
           bsonType: "objectId",
-          description: "must be a package id.",
+          description: "must reference a packages document.",
         },
         minItems: 1,
       },
@@ -23,7 +24,7 @@ module.exports = {
       },
       state: {
         bsonType: "string",
-        enum: ["failed", "pending", "accepted"],
+        enum: ["failed", "pending", "confirmed", "paid"],
         description: "must be a string out of the enumerated values.",
       },
     },

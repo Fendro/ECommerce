@@ -5,12 +5,13 @@ module.exports = {
     required: ["articles", "shippingMethod", "shippingStatus"],
     properties: {
       articles: {
-        bsonType: "object",
-        description: "must be an existing object and is required.",
+        bsonType: "array",
+        description: "must be an array and is required.",
+        required: ["article", "quantity", "unitPriceOnOrder"],
         properties: {
           article: {
             bsonType: "objectId",
-            description: "must be an existing object id and is required.",
+            description: "must reference an articles document and is required.",
           },
           quantity: {
             bsonType: ["int", "long"],
