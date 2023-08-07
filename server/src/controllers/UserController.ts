@@ -4,10 +4,22 @@ import { ServiceError, Unauthorized } from "../models";
 import { NextFunction, Request, Response } from "express";
 import { UserModel } from "../models";
 
-const editableFields = ["email", "password", "username"];
+const editableFields = [
+  "addresses",
+  "cards",
+  "email",
+  "firstname",
+  "name",
+  "password",
+  "phone",
+  "username",
+];
 let model: UserModel;
 (async () => {
-  model = new UserModel(await getCollection("users"));
+  model = new UserModel(
+    await getCollection("users"),
+    await getCollection("guests"),
+  );
 })();
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
@@ -41,7 +53,7 @@ const editUser = async (req: Request, res: Response): Promise<void> => {
   const user = await model.editUser(data, fieldsToUpdate);
   if (!user.value) throw new ServiceError("Database error.", user);
 
-  console.log(req.body. user);
+  console.log(req.body.user);
   requestHandler.sendResponse(res, {
     data: user.value,
     message: "Account information edited.",
@@ -112,4 +124,36 @@ const register = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-export { deleteUser, editUser, isLoggedIn, login, logout, register };
+const registerGuest = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.fetchParams(
+    [
+      "address",
+      "city",
+      "country",
+      "email",
+      "firstname",
+      "lastname",
+      "phone",
+      "zip",
+    ],
+    req.body,
+  );
+
+  const { insertedId } = await model.addGuest(data);
+
+  requestHandler.sendResponse(res, {
+    data: { user_id: insertedId },
+    message: "Registration succeeded.",
+    success: true,
+  });
+};
+
+export {
+  deleteUser,
+  editUser,
+  isLoggedIn,
+  login,
+  logout,
+  register,
+  registerGuest,
+};

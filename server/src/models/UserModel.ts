@@ -9,10 +9,16 @@ import {
 
 export class UserModel {
   collection: Collection;
+  guestCollection: Collection;
 
-  constructor(collection: Collection) {
+  constructor(collection: Collection, guestCollection: Collection) {
     this.collection = collection;
+    this.guestCollection = guestCollection;
   }
+
+  addGuest = async (data: { [key: string]: any }): Promise<InsertOneResult> => {
+    return await this.guestCollection.insertOne(data);
+  };
 
   addUser = async (data: { [key: string]: any }): Promise<InsertOneResult> => {
     data.password = passwordHashing(data.password);

@@ -9,11 +9,12 @@ let model: OrderModel;
   model = new OrderModel(
     await getCollection("orders"),
     await getCollection("articles"),
+    await getCollection("packages"),
   );
 })();
 
 const addOrder = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["user", "articles"], req.body);
+  const data = requestHandler.fetchParams(["user_id", "packages"], req.body);
 
   await model.addOrder(data);
 

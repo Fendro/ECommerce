@@ -23,9 +23,9 @@ const incomingRequest = (
   };
   const server = {
     method: req.method,
-    "req.body": req.body,
-    "req.params": req.params,
-    "req.query": req.query,
+    body: req.body,
+    params: req.params,
+    query: req.query,
     session: req.session,
     url: req.url,
   };

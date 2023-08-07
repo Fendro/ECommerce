@@ -16,7 +16,7 @@ module.exports = {
     properties: {
       categories: {
         bsonType: "array",
-        description: "must be an array of strings.",
+        description: "must be an array of strings and is required.",
         items: {
           bsonType: "string",
           description: "must be a unique string.",
@@ -30,7 +30,7 @@ module.exports = {
       },
       featured: {
         bsonType: "bool",
-        description: "must be a boolean",
+        description: "must be a boolean.",
       },
       images: {
         bsonType: "array",
