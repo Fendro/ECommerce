@@ -8,7 +8,9 @@ import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
 function Header() {
     const { admin, setAdmin } = useContext(UserContext);
     const navigate = useNavigate();
-
+    const handleLoginClick= () => {
+        navigate('/login');
+    }
     const handleAdminClick = () => {
         navigate('/admin');
     };
@@ -86,7 +88,10 @@ function Header() {
         return (
             <HeaderContainer>
                 <LogoImage src={Logo} alt="#" />
+                <Navbar>
                 <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
+                <NavItem onClick={handleLoginClick}>Login</NavItem>
+                </Navbar>
             </HeaderContainer>
         );
     }
@@ -94,7 +99,6 @@ function Header() {
 
 export default Header;
 
-// Styled Components
 const HeaderContainer = styled.div`
   background-color: darkorange;
   padding: 5px;
