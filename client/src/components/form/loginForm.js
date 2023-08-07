@@ -35,11 +35,15 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch(urlFetch("auth/login", { email, password }), {
+      const res = await fetch(urlFetch("auth/login"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
         credentials: "include",
       });
       const json = await res.json();
@@ -60,51 +64,51 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CenteredContainer>
-        <FormContainer>
-          <div>{message}</div>
-          <StyledInput
-            label="Email or username"
-            type="email"
-            minLength="6"
-            variant="outlined"
-            ref={inputMail}
-            fullWidth
-          />
-          <StyledInput
-            label="Password"
-            type="password"
-            variant="outlined"
-            minLength="6"
-            ref={inputPsw}
-            fullWidth
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            width={"100"}
-            mb={"5"}
-          >
-            Login
-          </Button>
-          <label>
-            <input
-              type="checkbox"
-              name="remember"
-              value="true"
-              style={{ marginTop: "10px" }}
-            />{" "}
-            Remember me
-          </label>
-          <div className="link" style={{ marginTop: "20px" }}>
-            <StyledLink to={{ pathname: "/register" }}>
-              Create an account?
-            </StyledLink>
-          </div>
-        </FormContainer>
-      </CenteredContainer>
-    </form>
+      <form onSubmit={handleSubmit}>
+        <CenteredContainer>
+          <FormContainer>
+            <div>{message}</div>
+            <StyledInput
+                label="Email or username"
+                type="email"
+                minLength="6"
+                variant="outlined"
+                ref={inputMail}
+                fullWidth
+            />
+            <StyledInput
+                label="Password"
+                type="password"
+                variant="outlined"
+                minLength="6"
+                ref={inputPsw}
+                fullWidth
+            />
+            <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                width={"100"}
+                mb={"5"}
+            >
+              Login
+            </Button>
+            <label>
+              <input
+                  type="checkbox"
+                  name="remember"
+                  value="true"
+                  style={{ marginTop: "10px" }}
+              />{" "}
+              Remember me
+            </label>
+            <div className="link" style={{ marginTop: "20px" }}>
+              <StyledLink to={{ pathname: "/register" }}>
+                Create an account?
+              </StyledLink>
+            </div>
+          </FormContainer>
+        </CenteredContainer>
+      </form>
   );
 }
