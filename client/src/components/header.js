@@ -87,8 +87,8 @@ function Header() {
     } else {
         return (
             <HeaderContainer>
-                <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
                 <LogoImage src={Logo} alt="#" />
+                <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
             </HeaderContainer>
         );
     }
@@ -102,7 +102,7 @@ const HeaderContainer = styled.div`
   display: flex;
   align-items: center;
   height: 100px;
-  justify-content: space-between; /* Размещение элементов по краям контейнера */
+  justify-content: space-between;
 `;
 
 const LogoImage = styled.img`
