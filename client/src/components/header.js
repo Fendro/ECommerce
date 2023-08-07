@@ -35,7 +35,6 @@ function Header() {
             });
             window.location.replace("/login");
         } catch (error) {
-            console.log(error);
         }
     };
     const checkUser = async () =>{
@@ -55,7 +54,6 @@ function Header() {
                 admin = false;
             }
         } catch (error) {
-            console.log(" ");
         }
     }
     checkUser();
@@ -88,6 +86,7 @@ function Header() {
         return (
             <HeaderContainer>
                 <LogoImage src={Logo} alt="#" />
+                <NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon/></NavItem>
             </HeaderContainer>
         );
     }

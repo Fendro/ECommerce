@@ -12,8 +12,8 @@ export default function CartForm() {
     const { check, setCheck } = useContext(CheckContext);
     const checkUser = async () =>{
         try {
-            const res = await fetch(urlFetch("auth"), {
-                    method: "GET",
+            const res = await fetch(urlFetch("auth/login"), {
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -21,18 +21,15 @@ export default function CartForm() {
                 },
             );
             const json = await res.json();
-            console.log(json.message);
-            if (json.message =="A user is already logged in."){
+            if (json.message == "A user is already logged in."){
                 setCheck(true);
             }else{
                 setCheck(false);
             }
         } catch (error) {
-            console.log(" ");
         }
     }
     checkUser();
-    console.log(check)
     if (check === true){
         return (
             <>
