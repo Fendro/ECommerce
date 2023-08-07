@@ -1,15 +1,56 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { TopCenterContainer } from '../styling';
 import ReactModal from 'react-modal';
-
+import { urlFetch } from "../../utils/urlFetch";
+import { CheckContext } from '../../context/CheckContext';
 ReactModal.setAppElement('body');
-
 export default function CartForm() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const { check, setCheck } = useContext(CheckContext);
+    const checkUser = async () =>{
+        try {
+            const res = await fetch(urlFetch("auth"), {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                },
+            );
+            const json = await res.json();
+            console.log(json.message);
+            if (json.message =="A user is already logged in."){
+                setCheck(true);
+            }else{
+                setCheck(false);
+            }
+        } catch (error) {
+            console.log(" ");
+        }
+    }
+    checkUser();
+    console.log(check)
+    if (check === true){
+        return (
+            <>
+                <TopCenterContainer>
+                    <h1>##List of articles##</h1>
+                </TopCenterContainer>
+                <TopCenterContainer>
+                    <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={() => navigate("/delivery")}>
+                        Order
+                    </Button>
+                </TopCenterContainer>
 
+            </>
+        )
+    }
     return (
         <>
             <TopCenterContainer>
@@ -53,7 +94,7 @@ export default function CartForm() {
                         variant="outlined"
                         color="success"
                         onClick={() => {
-                            console.log("ok as guest")
+                            navigate("/delivery");
                         }}>
                         Continuer en tant qu'invité
                     </Button>
@@ -62,7 +103,7 @@ export default function CartForm() {
                         variant="outlined"
                         color="success"
                         onClick={() => {
-                            console.log("ok as login")
+                            navigate("/login");
                         }}>
                         Se connecter
                     </Button>

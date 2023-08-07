@@ -55,7 +55,6 @@ function Header() {
                 admin = false;
             }
         } catch (error) {
-            console.log(" ");
         }
     }
     checkUser();
