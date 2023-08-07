@@ -1,70 +1,97 @@
-import React, { useContext } from 'react';
-import Logo from './asset/logo.png';
-import styled from 'styled-components';
-import { UserContext } from '../context/UserContext';
-import { EmailContext } from '../context/EmailContext';
-import { useNavigate } from 'react-router-dom';
-
+import React, { useContext } from "react";
+import Logo from "./asset/logo.png";
+import styled from "styled-components";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
+import { urlFetch } from "../utils/urlFetch";
+import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 function Header() {
-    const handleAdminClick = () => {
-        navigate('/admin');
-    };
-    const handleChangeClick = () =>{
-        navigate('/change');
+  const { admin, setAdmin } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const handleAdminClick = () => {
+    navigate("/admin");
+  };
+
+  const handleChangeClick = () => {
+    navigate("/change");
+  };
+
+  const handleProductClick = () => {
+    navigate("/");
+  };
+  const handleCartClick = () => {
+    navigate("/cart");
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      const res = await fetch("http://localhost:4242/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      window.location.replace("/login");
+    } catch (error) {
+      console.log(error);
     }
-    const handleLogoutClick = async () => {
-        try{
-            const res = await fetch("http://localhost:4242/auth/logout",{
-                method: "POST",
-                headers:{
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            })
-            console.log(await res.json())
-            window.location.replace("/");
-        }catch(error){
-            console.log(error);
-        }
-        window.location.replace("/");
+  };
+  const checkUser = async () => {
+    try {
+      const res = await fetch(urlFetch("auth/login"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const json = await res.json();
+      if (json.data.admin) {
+        setAdmin(true);
+      } else {
+        admin = false;
+      }
+    } catch (error) {
+      console.log(" ");
     }
-    const handleProductClick = () => {
-        navigate('/articles');
-    }
-    const { admin, setAdmin } = useContext(UserContext);
-    const { email, setEmail } = useContext(EmailContext);
-    const navigate = useNavigate();
-    if (admin === true) {
-        return (
-            <HeaderContainer>
-                <LogoImage src={Logo} alt="#" />
-                <h1>ADMIN</h1>
-                <Navbar>
-                    <NavItem onClick={handleAdminClick}>Admin</NavItem>
-                    <NavItem onClick={handleChangeClick}>Change</NavItem>
-                    <NavItem onClick={handleProductClick}>Products</NavItem>
-                    <NavItem onClick={handleLogoutClick}>Logout</NavItem>
-                </Navbar>
-            </HeaderContainer>
-        );
-    } else if(admin === false) {
-        return (
-            <HeaderContainer>
-                <LogoImage src={Logo} alt="#" />
-                <Navbar>
-                    <NavItem>Link 1</NavItem>
-                    <NavItem>Link 2</NavItem>
-                    <NavItem>Link 3</NavItem>
-                </Navbar>
-            </HeaderContainer>
-        );
-    }else{
-        return (
-            <HeaderContainer>
-                <LogoImage src={Logo} alt="#" />
-            </HeaderContainer>
-        );
-    }
+  };
+  checkUser();
+  if (admin === true) {
+    return (
+      <HeaderContainer>
+        <LogoImage src={Logo} alt="#" />
+        <h1>ADMIN</h1>
+        <Navbar>
+          <NavItem onClick={handleCartClick}>
+            <ShoppingCartRoundedIcon />
+          </NavItem>
+          <NavItem onClick={handleAdminClick}>Admin</NavItem>
+          <NavItem onClick={handleChangeClick}>Change</NavItem>
+          <NavItem onClick={handleProductClick}>Products</NavItem>
+          <NavItem onClick={handleLogoutClick}>Logout</NavItem>
+        </Navbar>
+      </HeaderContainer>
+    );
+  } else if (admin === false) {
+    return (
+      <HeaderContainer>
+        <LogoImage src={Logo} alt="#" />
+        <Navbar>
+          <NavItem>Products</NavItem>
+          <NavItem>Change</NavItem>
+          <NavItem onClick={handleLogoutClick}>Logout</NavItem>
+        </Navbar>
+      </HeaderContainer>
+    );
+  } else {
+    return (
+      <HeaderContainer>
+        <LogoImage src={Logo} alt="#" />
+      </HeaderContainer>
+    );
+  }
 }
 
 export default Header;

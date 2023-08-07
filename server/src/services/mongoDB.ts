@@ -17,6 +17,7 @@ const connect = async (): Promise<MongoClient> => {
 
 const dbInit = async () => {
   const client = await connect();
+  console.log(`Connected to database '${config.dbName}'.`);
   await setCollections(client);
 };
 
@@ -39,10 +40,18 @@ const setCollections = async (client: MongoClient) => {
   const collectionsNames = collections.map((collections) => collections.name);
   for (const collection of config.collections) {
     if (!collectionsNames.includes(collection)) {
+      console.log(`Collection '${collection}' does not exist. Creating it...`);
       const rules = require(`../configs/dbSchemasValidationRules/${collection}`);
       await client.db().createCollection(collection, {
         validator: rules,
       });
+      if (collection === "categories") {
+        await client
+          .db()
+          .collection(collection)
+          .createIndex({ name: "text" }, { unique: true });
+      }
+      console.log(`Created collection '${collection}'.`);
     }
   }
 };

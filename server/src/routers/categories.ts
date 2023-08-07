@@ -1,26 +1,32 @@
 import { catchWrapper } from "../utils";
+import { isAdmin } from "../controllers/AdminController";
 import { Router } from "express";
-import * as AdminController from "../controllers/AdminController";
 import * as CategoryController from "../controllers/CategoryController";
 
-const catRouter: Router = Router();
+const categoriesRouter: Router = Router();
 
-catRouter.delete(
+categoriesRouter.delete(
   "/categories/:_id",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(CategoryController.deleteCategory),
 );
-catRouter.get("/categories", catchWrapper(CategoryController.getCategories));
-catRouter.get("/categories/:_id", catchWrapper(CategoryController.getCategory));
-catRouter.post(
+categoriesRouter.get(
+  "/categories",
+  catchWrapper(CategoryController.getCategories),
+);
+categoriesRouter.get(
+  "/categories/:_id",
+  catchWrapper(CategoryController.getCategory),
+);
+categoriesRouter.post(
   "/categories/",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(CategoryController.addCategory),
 );
-catRouter.put(
+categoriesRouter.put(
   "/categories/:_id",
-  AdminController.isAdmin,
+  isAdmin,
   catchWrapper(CategoryController.editCategory),
 );
 
-export default catRouter;
+export default categoriesRouter;

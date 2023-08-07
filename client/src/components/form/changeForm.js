@@ -1,67 +1,93 @@
-import React, { useState, useRef, useEffect,useContext } from 'react';
-import { Button } from '@mui/material';
-import { CenteredContainer, FormContainer, StyledLink, StyledInput } from '../styling';
-import { EmailContext } from '../../context/EmailContext';
-import { urlFetch } from '../../utils/urlFetch';
-export default function ChangeForm() {
-    const inputMail = useRef();
-    const inputUser = useRef();
-    const [fetchRes, setFetchRes] = useState(0);
-    const [data, setData] = useState([]);
-    const { email, setEmail } = useContext(EmailContext);
-    useEffect(() => {
-        (async () => {
-            let json;
-            try {
-                json = await fetch(urlFetch("auth"), {
-                    method: "GET",
-                }).then((response) => {
-                    return response.json();
-                });
-                setFetchRes(json.statusCode);
-                if (json.statusCode === 200) {
-                    setData(json.data);
-                }
+import React, { useState, useRef } from "react";
+import { Button } from "@mui/material";
+import { CenteredContainer, FormContainer, StyledInput } from "../styling";
+import { useParams, useNavigate } from "react-router-dom";
+import { urlFetch } from "../../utils/urlFetch";
 
-            } catch (e) {
-                console.log(e);
+export default function EditUser() {
+    const { id } = useParams();
+    const [message, setMessage] = useState("");
+    const inputCurrentEmail = useRef();
+    const inputMail = useRef();
+    const inputPsw = useRef();
+    const currentPsw = useRef();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const currentEmail = inputCurrentEmail.current.children[1].children[0].value;
+        const currentPassword = currentPsw.current.children[1].children[0].value;
+        const newEmail = inputMail.current.children[1].children[0].value;
+        const newPassword = inputPsw.current.children[1].children[0].value;
+
+        const edits = {};
+        if (newEmail) {
+            edits.email = newEmail;
+        }
+        if (newPassword) {
+            edits.password = newPassword;
+        }
+
+        const updateData = { email: currentEmail, password: currentPassword, edits: edits };
+        console.log(updateData)
+
+        try {
+            const res = await fetch(`http://localhost:4242/auth`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify(updateData),
+            });
+            const json = await res.json();
+            if (json.success) {
+                setMessage("User data updated successfully.");
+                navigate("/");
+            } else {
+                setMessage("Failed to update user data.");
             }
-        })();
-    }, []);
+        } catch (error) {
+            console.log("Error:", error);
+            setMessage("An error occurred while updating user data.");
+        }
+    };
 
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <CenteredContainer>
                 <FormContainer>
+                    <div>{message}</div>
                     <StyledInput
-                        label="Email"
+                        label="Current Email"
+                        type="email"
+                        minLength="6"
+                        variant="outlined"
+                        ref={inputCurrentEmail}
+                        fullWidth
+                    />
+                    <StyledInput
+                        label="Current Password"
+                        type="password"
+                        minLength="6"
+                        variant="outlined"
+                        ref={currentPsw}
+                        fullWidth
+                    />
+                    <StyledInput
+                        label="New Email"
                         type="email"
                         minLength="6"
                         variant="outlined"
                         ref={inputMail}
-                        // defaultValue={admin.email}
                         fullWidth
                     />
                     <StyledInput
-                        label="Username"
-                        variant="outlined"
-                        minLength="6"
-                        ref={inputUser}
-                        // defaultValue={admin.username}
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="Password"
+                        label="New Password"
                         type="password"
                         variant="outlined"
                         minLength="6"
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="Confirm Password"
-                        type="password"
-                        variant="outlined"
-                        minLength="6"
+                        ref={inputPsw}
                         fullWidth
                     />
                     <Button
@@ -71,19 +97,10 @@ export default function ChangeForm() {
                         width={"100"}
                         mb={"5"}
                     >
-                        Change
-                    </Button>
-                    <Button
-                    variant="contained"
-                    color="error"
-                    type="button"
-                    width={"100"}
-                    mb={"5"}
-                    >
-                        Delete
+                        Update User
                     </Button>
                 </FormContainer>
             </CenteredContainer>
         </form>
     );
-};
+}

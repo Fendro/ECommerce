@@ -7,15 +7,15 @@ const authRouter: Router = Router();
 authRouter.delete(
   "/auth",
   UserController.isLoggedIn,
-  catchWrapper(UserController.deleteAccount),
+  catchWrapper(UserController.deleteUser),
 );
-authRouter.get("/auth", catchWrapper(UserController.login));
+authRouter.post("/auth/login", catchWrapper(UserController.login));
 authRouter.post("/auth", catchWrapper(UserController.register));
 authRouter.post("/auth/logout", UserController.logout);
 authRouter.put(
   "/auth",
   UserController.isLoggedIn,
-  catchWrapper(UserController.editAccount),
+  catchWrapper(UserController.editUser),
 );
 
 authRouter.post("/auth/logout", UserController.logout);

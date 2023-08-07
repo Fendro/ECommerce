@@ -40,7 +40,7 @@ export default function Register() {
 					password: password,
 				}),
 			});
-			window.location.replace("/");
+			window.location.replace("/login");
 		} catch {
 			setMessage("Couldn't find server. Please wait and try again.");
 		}
@@ -85,7 +85,7 @@ export default function Register() {
 						Register
 					</Button>
 					<div className="link" style={{ marginTop: "20px" }}>
-						<StyledLink to={{ pathname: "/" }}>
+						<StyledLink to={{ pathname: "/login" }}>
 							Already have an account?
 						</StyledLink>
 					</div>

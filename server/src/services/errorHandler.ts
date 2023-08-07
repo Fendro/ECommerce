@@ -1,6 +1,10 @@
 import appConfig from "../configs/appConfig";
+import fs from "fs";
+import requestHandler from "./requestHandler";
+import { outgoingResponse } from "./logger";
 import {
   BadRequest,
+  FailedDependency,
   ForbiddenRequest,
   NotFound,
   ServiceError,
@@ -27,45 +31,67 @@ export const ErrorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  if (error instanceof BadRequest) {
-    return res.status(400).json(error.response);
+  if (
+    error instanceof BadRequest ||
+    error instanceof ForbiddenRequest ||
+    error instanceof FailedDependency ||
+    error instanceof NotFound ||
+    error instanceof ServiceError ||
+    error instanceof Unauthorized
+  ) {
+    outgoingResponse(req, error.response);
+    return requestHandler.sendError(res, error.status, error.response);
   }
-  if (error instanceof Unauthorized) {
-    return res.status(401).json(error.response);
+
+  const response: ResponseData = {
+    message: "",
+    success: false,
+  };
+
+  if (appConfig.env === "development") {
+    response.dev = {
+      error: error,
+      stack: error.stack,
+    };
   }
-  if (error instanceof ForbiddenRequest) {
-    return res.status(403).json(error.response);
-  }
-  if (error instanceof NotFound) {
-    return res.status(404).json(error.response);
-  }
-  if (error instanceof ServiceError) {
-    return res.status(503).json(error.response);
+
+  if ("status" in error && error.status === 400 && "body" in error) {
+    response.message = error.message;
+    outgoingResponse(req, response);
+    return requestHandler.sendError(res, 400, response);
   }
   if (error instanceof BSONError) {
-    console.log(error);
-    return res
-      .status(503)
-      .json({ message: "Invalid BSON data format.", success: false });
+    response.message = "Invalid BSON data format.";
+    outgoingResponse(req, response);
+    return requestHandler.sendError(res, 400, response);
   }
   if (error instanceof MongoError) {
     console.error(error);
-    const response: ResponseData = {
-      message: "Database error.",
-      success: false,
-    };
-
-    if (appConfig.env === "development") {
-      response.dev = {
-        error: error,
-        stack: error.stack,
-      };
-    }
-
-    return res.status(503).json(response);
+    response.message = "Database error.";
+    outgoingResponse(req, response);
+    return requestHandler.sendError(res, 503, response);
   }
 
-  res.status(500).json("Internal Server Error.");
-  console.error(error);
-  process.exit(1);
+  response.message = "Internal Server Error.";
+  requestHandler.sendError(res, 500, response);
+  response.dev ??= {
+    error: error,
+    stack: error.stack,
+  };
+
+  if (!fs.existsSync("./server logs")) {
+    fs.mkdirSync("./server logs");
+  }
+
+  fs.writeFile(
+    `./server logs/${new Date()}.json`,
+    JSON.stringify(response, null, 2),
+    (writeError) => {
+      if (writeError)
+        console.error("Could not log server error to file report.", writeError);
+
+      console.error(error);
+      process.exit(1);
+    },
+  );
 };

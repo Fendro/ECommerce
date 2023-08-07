@@ -9,6 +9,8 @@ import Admin from "./pages/admin";
 import Change from "./pages/changer";
 import AddArticle from "./pages/addArticle";
 import AddUser from "./pages/addUser"
+import AdminChange from "./pages/adminChange";
+import ShoppingCart from "./pages/Shopcart";
 
 const AppRouter = () => {
   return (
@@ -23,6 +25,8 @@ const AppRouter = () => {
         <Route path="/change" element={<Change />} />
         <Route path="/admin/addArticle" element={<AddArticle />} />
         <Route path="/admin/addUser" element={<AddUser />} />
+        <Route path="/admin/change/:id" element={<AdminChange />} />
+        <Route path="/cart" element={<ShoppingCart />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

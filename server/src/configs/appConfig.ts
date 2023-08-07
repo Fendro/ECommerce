@@ -12,6 +12,10 @@ const development = {
       },
     },
   },
+  rateLimit: {
+    max: 100,
+    windowMs: 10000,
+  },
 };
 
 const production = {
@@ -24,6 +28,10 @@ const production = {
         maxAge: 1000 * 60 * 60 * 24 * 2,
       },
     },
+  },
+  rateLimit: {
+    max: 10,
+    windowMs: 10000,
   },
 };
 
