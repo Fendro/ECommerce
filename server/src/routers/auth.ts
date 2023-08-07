@@ -11,6 +11,7 @@ authRouter.delete(
 );
 authRouter.post("/auth/login", catchWrapper(UserController.login));
 authRouter.post("/auth", catchWrapper(UserController.register));
+authRouter.post("/auth/guest", catchWrapper(UserController.registerGuest));
 authRouter.post("/auth/logout", UserController.logout);
 authRouter.put(
   "/auth",

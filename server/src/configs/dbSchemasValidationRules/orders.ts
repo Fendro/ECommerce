@@ -1,35 +1,19 @@
 module.exports = {
   $jsonSchema: {
     bsonType: "object",
-    title: "Orders Object Validation",
-    required: ["user", "articles", "orderDate"],
+    title: "Order Object Validation",
+    required: ["user_id", "packages_id", "orderDate"],
     properties: {
-      user: {
-        bsonType: ["objectId", "object"],
-        description:
-          "must be an existing user's id or an object containing a guest's information.",
+      user_id: {
+        bsonType: "objectId",
+        description: "must be an existing user's id and is required.",
       },
-      articles: {
+      packages_id: {
         bsonType: "array",
-        description: "must be an array of objects and is required.",
+        description: "must be an array of packages' id and is required.",
         items: {
-          bsonType: "object",
-          description: "must be an object and is required.",
-          required: ["article", "quantity", "unitPriceOnOrder"],
-          properties: {
-            article: {
-              bsonType: "objectId",
-              description: "must be an existing article's id and is required.",
-            },
-            quantity: {
-              bsonType: ["int", "long"],
-              description: "must be an integer and is required.",
-            },
-            unitPriceOnOrder: {
-              bsonType: ["double", "int", "long"],
-              description: "must be an integer and is required.",
-            },
-          },
+          bsonType: "objectId",
+          description: "must be a package id.",
         },
         minItems: 1,
       },

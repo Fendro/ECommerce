@@ -34,29 +34,43 @@ export class OrderModel {
   };
 
   addOrder = async (data: { [key: string]: any }): Promise<InsertOneResult> => {
-    data.user = ObjectId.createFromHexString(data.user);
+    data.user_id = ObjectId.createFromHexString(data.user_id);
 
     this.arePackagesProper(data.packages);
 
-    for (const index in data.articles) {
-      data.articles[index].article = ObjectId.createFromHexString(
-        data.articles[index].article,
+    for (const pIndex in data.packages) {
+      for (const aIndex in data.packages[pIndex].articles) {
+        data.packages[pIndex].articles[aIndex].article_id =
+          ObjectId.createFromHexString(
+            data.packages[pIndex].articles[aIndex].article_id,
+          );
+
+        const article = await this.articlesCollection.findOne(
+          data.packages[pIndex].articles[aIndex].article_id,
+          {
+            projection: { price: 1 },
+          },
+        );
+
+        if (!article)
+          throw new FailedDependency("Article not found.", {
+            failed: data.packages[pIndex].articles[aIndex].article,
+            payload: data,
+          });
+
+        data.packages[pIndex].articles[aIndex].unitPriceOnOrder = article.price;
+      }
+
+      data.packages[pIndex].shippingStatus = "waiting for payment";
+      const { insertedId } = await this.packageCollection.insertOne(
+        data.packages[pIndex],
       );
-      const article = await this.articlesCollection.findOne(
-        data.articles[index].article,
-        {
-          projection: { price: 1 },
-        },
-      );
-      if (!article)
-        throw new FailedDependency("Article not found.", {
-          failed: data.articles[index].article,
-          payload: data,
-        });
-      data.articles[index].unitPriceOnOrder = article.price;
+      data.packages[pIndex] = insertedId;
     }
+    data.packages_id = data.packages;
     data.orderDate = new Date();
     data.payment = "pending";
+    delete data.packages;
 
     return await this.collection.insertOne(data);
   };
@@ -75,47 +89,67 @@ export class OrderModel {
   };
 
   getOrder = async (_id: string): Promise<Document | null> => {
-    return await this.collection
+    return this.collection
       .aggregate([
         {
-          $match: { _id: ObjectId.createFromHexString(_id) },
+          $match: {
+            _id: ObjectId.createFromHexString(_id),
+          },
         },
         {
-          $unwind: "$articles",
+          $lookup: {
+            from: "packages",
+            localField: "packages_id",
+            foreignField: "_id",
+            as: "packages",
+          },
+        },
+        {
+          $unwind: "$packages",
         },
         {
           $lookup: {
             from: "articles",
-            localField: "articles.article",
+            localField: "packages.articles.article_id",
             foreignField: "_id",
-            as: "articles.article",
-          },
-        },
-        {
-          $unwind: "$articles.article",
-        },
-        {
-          $addFields: {
-            "articles.article.quantity": "$articles.quantity",
-            "articles.article.unitPriceOnOrder": "$articles.unitPriceOnOrder",
-            "articles.article.orderDate": "$articles.orderDate",
+            as: "packages.articles.article",
           },
         },
         {
           $project: {
-            "articles.article.categories": 0,
-            "articles.article.specs": 0,
-            "articles.article.views": 0,
-            "articles.article.searches": 0,
+            "packages.articles.article.categories": 0,
+            "packages.articles.article.price": 0,
+            "packages.articles.article.quantity": 0,
+            "packages.articles.article.searches": 0,
+            "packages.articles.article.specs": 0,
+            "packages.articles.article.views": 0,
           },
         },
         {
           $group: {
-            _id: "$_id",
-            user: { $first: "$user" },
-            articles: { $push: "$articles.article" },
+            _id: {
+              _id: "$_id",
+              packageId: "$packages._id",
+            },
             orderDate: { $first: "$orderDate" },
-            state: { $first: "$state" },
+            payment: { $first: "$payment" },
+            package: { $first: "$packages" },
+            articles: { $push: "$packages.articles.article" },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id._id",
+            orderDate: { $first: "$orderDate" },
+            payment: { $first: "$payment" },
+            packages: {
+              $push: {
+                id: "$_id.packageId",
+                shippingMethod: "$package.shippingMethod",
+                shippingStatus: "$package.shippingStatus",
+                articles: "$articles",
+              },
+            },
           },
         },
       ])
