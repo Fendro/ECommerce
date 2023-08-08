@@ -22,9 +22,10 @@ let model: ArticleModel;
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(editableFields, req.body);
 
-  await model.addArticle(data);
+  const { insertedId } = await model.addArticle(data);
 
   requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
     message: "Article registered.",
     success: true,
   });
