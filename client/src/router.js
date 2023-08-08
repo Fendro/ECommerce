@@ -12,6 +12,7 @@ import AddUser from "./pages/addUser"
 import AdminChange from "./pages/adminChange";
 import ShoppingCart from "./pages/Shopcart";
 import Delivery from "./pages/delivery";
+import Final from "./pages/finalPage";
 
 const AppRouter = () => {
   return (
@@ -29,6 +30,7 @@ const AppRouter = () => {
         <Route path="/admin/change/:id" element={<AdminChange />} />
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/delivery" element={<Delivery />} />
+        <Route path="/final" element={<Final />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Router>

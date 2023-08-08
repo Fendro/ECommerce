@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
-import {UserContext}  from '../../context/UserContext';
 import { EmailContext } from '../../context/EmailContext';
 import { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,23 +8,57 @@ import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import {TopCenterContainer} from '../styling';
 import { urlFetch } from '../../utils/urlFetch';
+import { IdContext } from '../../context/IdContext';
+
 
 
 export default function AddUser() {
+    const { id, setId } = useContext(IdContext);
     const navigate = useNavigate();
     const inputMail = useRef();
     const inputName = useRef();
     const inputPhone = useRef();
     const inputAddress = useRef();
+    const inputLastname = useRef();
+    const inputCountry = useRef();
+    const inputCity = useRef();
+    const inputZipcode = useRef();
     const [message, setMessage] = useState("");
     const handleSubmit = async (e) => {
         e.preventDefault();
         const email = inputMail.current.children[1].children[0].value;
-        const name = inputName.current.children[1].children[0].value;
+        const firstname = inputName.current.children[1].children[0].value;
+        const lastname = inputLastname.current.children[1].children[0].value;
         const phone = inputPhone.current.children[1].children[0].value;
         const address = inputAddress.current.children[1].children[0].value;
-        console.log(email, name, phone, address);
+        const country = inputCountry.current.children[1].children[0].value;
+        const city = inputCity.current.children[1].children[0].value;
+        const zipcode = inputZipcode.current.children[1].children[0].value;
+
+            fetch("http://localhost:4242/auth/guest", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    firstname: firstname,
+                    lastname: lastname,
+                    phone: phone,
+                    address: address,
+                    country: country,
+                    city: city,
+                    zip: zipcode,
+                }),
+            }).then((res) => {
+                return res.json()
+            }).then((data) => {
+                setId(data.data.user_id)
+                navigate("/final");
+            });
+
     };
+    console.log(id);
     return(
         <>
             <form onSubmit={handleSubmit}>
@@ -42,11 +75,20 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Name"
+                            label="Firstname"
                             type="text"
                             variant="outlined"
                             minLength="6"
                             ref={inputName}
+                            fullWidth
+                            requered
+                        />
+                        <StyledInput
+                            label="Lastname"
+                            type="text"
+                            variant="outlined"
+                            minLength="6"
+                            ref={inputLastname}
                             fullWidth
                             requered
                         />
@@ -65,6 +107,33 @@ export default function AddUser() {
                             variant="outlined"
                             minLength="6"
                             ref={inputAddress}
+                            fullWidth
+                            requered
+                        />
+                        <StyledInput
+                            label="Country"
+                            type="text"
+                            variant="outlined"
+                            minLength="6"
+                            ref={inputCountry}
+                            fullWidth
+                            requered
+                        />
+                        <StyledInput
+                            label="City"
+                            type="text"
+                            variant="outlined"
+                            minLength="6"
+                            ref={inputCity}
+                            fullWidth
+                            requered
+                        />
+                        <StyledInput
+                            label="Zipcode"
+                            type="text"
+                            variant="outlined"
+                            minLength="6"
+                            ref={inputZipcode}
                             fullWidth
                             requered
                         />
