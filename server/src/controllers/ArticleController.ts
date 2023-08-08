@@ -12,6 +12,7 @@ const editableFields = [
   "price",
   "quantity",
   "specs",
+  "quantity",
 ];
 let model: ArticleModel;
 (async () => {

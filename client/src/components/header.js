@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import Logo from './asset/logo.png';
-import styled from 'styled-components';
-import { UserContext } from '../context/UserContext';
-import { useNavigate } from 'react-router-dom';
-import { urlFetch } from "../utils/urlFetch";
-import ShoppingCartRoundedIcon from '@mui/icons-material/ShoppingCartRounded';
+import React, { useContext } from "react";
+import Logo from "./asset/logo.png";
+import styled from "styled-components";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
+import { serverURL } from "../utils/serverURL";
+import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 function Header() {
     const { admin, setAdmin } = useContext(UserContext);
     const navigate = useNavigate();
@@ -26,37 +26,37 @@ function Header() {
         navigate('/cart');
     }
 
-    const handleLogoutClick = async () => {
-        try {
-            const res = await fetch("http://localhost:4242/auth/logout", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: "include",
-            });
-            window.location.replace("/login");
-        } catch (error) {
-        }
-    };
-    const checkUser = async () =>{
-        try {
-            const res = await fetch(urlFetch("auth/login"), {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: "include",
-                },
-            );
-            const json = await res.json();
-            if (json.data.admin){
-            setAdmin(true);
-            }else{
-                admin = false;
-            }
-        } catch (error) {
-        }
+  const handleLogoutClick = async () => {
+    try {
+      const res = await fetch("http://localhost:4242/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      window.location.replace("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const checkUser = async () => {
+    try {
+      const res = await fetch(serverURL("auth/login"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      const json = await res.json();
+      if (json.data.admin) {
+        setAdmin(true);
+      } else {
+        admin = false;
+      }
+    } catch (error) {
+      console.log(" ");
     }
     checkUser();
     if (admin === true){

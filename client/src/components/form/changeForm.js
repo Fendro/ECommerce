@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Button } from "@mui/material";
 import { CenteredContainer, FormContainer, StyledInput } from "../styling";
 import { useParams, useNavigate } from "react-router-dom";
-import { urlFetch } from "../../utils/urlFetch";
+import { serverURL } from "../../utils/serverURL";
 
 export default function EditUser() {
     const { id } = useParams();

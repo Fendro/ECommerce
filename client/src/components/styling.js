@@ -1,7 +1,7 @@
 import { Box, Container, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
-import  placeh from './asset/placeholder.png';
+import placeh from './asset/placeholder.png';
 
 export const CenteredContainer = styled(Container)({
 	display: 'flex',
@@ -43,7 +43,7 @@ export const StyledLink = styled(Link)({
 });
 
 
-export function ArticleContainer(props) {
+export function ArticleContainer({ link, children }) {
 	const style = {
 		marginTop: "3%",
 		marginRight: "auto",
@@ -56,36 +56,37 @@ export function ArticleContainer(props) {
 		backgroundColor: "#EEE0C0",
 		color: "black",
 	};
-	if (props?.link) {
+	if (link) {
 		const linkStyle = {
 			textDecoration: 'inherit',
 		}
 		return (
-			<Link style={Object.assign({},style, linkStyle)} to={props.link}>
-				{props.children}
+			<Link style={Object.assign({}, style, linkStyle)} to={link}>
+				{children}
 			</Link>
 		);
 	} else {
 		return (
 			<div style={style}>
-				{props.children}
+				{children}
 			</div>
 		);
 	}
 }
 
 
-export function AnyText({width, color, children}) {
+export function AnyText({ width, color, children }) {
+	if (!children)
+		return;
+
 	const style = {
-		width: width + "%",
+		width: width ? width - 1 + "%" : "99%",
+		color: color ? color : "inherited",
 		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
-	if (!children)
-		return;
-	if (color)
-		style.color = color;
+
 	return (
 		<div style={style}>
 			{children}
@@ -94,26 +95,22 @@ export function AnyText({width, color, children}) {
 }
 
 
-export function AnyImage(props) {
+export function AnyImage({ width, url, alt }) {
 	const style = {
-		width: props.width + "%",
+		width: width ? width - 1 + "%" : "99%",
 		aspectRatio: 5 / 3,
 		border: "1px solid grey",
 		margin: "1px",
 		padding: "1px",
 	};
 	return (
-		<img style={style} alt={props.alt ?? "image"} src={
-			props.bin ? "data:image/jpeg;base64," + props.bin
-			: props.url ? props.url
-			: placeh
-		}></img>
+		<img style={style} alt={alt ?? "image"} src={url ?? placeh}></img>
 	);
 }
 
 
-export function AnyDiv(props) {
-	return <div style={{width: props.width + "%"}} >{props.children}</div>;	
+export function AnyDiv({ width, children }) {
+	return <div style={{ width: width + "%" }} >{children}</div>;
 }
 
 
@@ -126,5 +123,8 @@ export const TopCenterContainer = styled(Container)({
 
 
 export function Linebreak() {
-	return <div style={{width: "100%", height: 0}} />;	
-} 
+	return <div style={{ width: "100%", height: 0 }} />;
+}
+
+
+
