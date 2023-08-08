@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import {TopCenterContainer} from '../styling';
-import { urlFetch } from '../../utils/urlFetch';
+import { serverURL } from '../../utils/serverURL';
 
 
 export default function AddUser() {
@@ -80,7 +80,6 @@ export default function AddUser() {
                     </FormContainer>
                 </CenteredContainer>
             </form>
-            );
         </>
     )
 }

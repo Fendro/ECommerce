@@ -30,7 +30,7 @@ export default function AddArticle() {
 	function getImageFromLocal(e) {
 		e.preventDefault();
 
-		var file = inputImage.current.firstChild.firstChild.files?.[0];
+		var file = inputImage.current.children[0].children[0].files?.[0];
 		if (!file)
 			return;
 

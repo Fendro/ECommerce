@@ -32,7 +32,7 @@ export default function EditUser() {
         console.log(updateData)
 
         try {
-            const res = await fetch(`http://localhost:4242/auth`, {
+            const res = await fetch(serverURL("auth"), {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
