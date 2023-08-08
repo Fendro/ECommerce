@@ -12,6 +12,7 @@ function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(user);
     if (Object.keys(user).length) return;
 
     axios
@@ -25,7 +26,7 @@ function Header() {
           setUser(data.data);
         }
       })
-      .catch((error) => {});
+      .catch(() => {});
   }, []);
 
   const handleLogoClick = () => {
@@ -55,12 +56,12 @@ function Header() {
         if (data.success) setUser({});
       })
       .catch((error) => {
-        console.error(error.data);
+        console.error(error.response.data);
       });
     navigate("/");
   };
 
-  if (user.admin) {
+  if (user.admin === true) {
     return (
       <HeaderContainer>
         <LogoImage src={Logo} alt="Logo Trinity" onClick={handleLogoClick} />

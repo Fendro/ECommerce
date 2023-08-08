@@ -41,8 +41,8 @@ export default function EditUser() {
         }
       })
       .catch((error) => {
-        setMessage(error.message);
-        console.error(error);
+        setMessage(error.response.data.message);
+        console.error(error.response.data);
       });
   };
 

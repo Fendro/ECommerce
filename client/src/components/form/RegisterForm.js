@@ -53,6 +53,7 @@ export default function Register() {
       })
       .catch((error) => {
         setMessage(error.response.data.message);
+        console.error(error.response.data);
       });
   };
 

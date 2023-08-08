@@ -15,7 +15,7 @@ export default function Login() {
         console.log(response);
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error.response.data);
       });
   }, []);
 

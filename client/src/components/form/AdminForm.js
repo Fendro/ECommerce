@@ -19,7 +19,7 @@ export default function Admin() {
     setFetched(false);
 
     axios
-      .get(serverURL(`admin/users/`))
+      .get(serverURL(`admin/users/`), { withCredentials: true })
       .then((response) => {
         const { data } = response;
 
@@ -29,9 +29,9 @@ export default function Admin() {
         }
       })
       .catch((error) => {
-        console.error(error);
         setData([]);
         setFetched(true);
+        console.error(error.response.data);
       });
   }, [reload]);
 
