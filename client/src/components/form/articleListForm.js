@@ -20,13 +20,13 @@ export default function Product() {
                 });
                 setFetchRes(json.success);
                 if (json.success) {
-                    console.log(json.data);
+                    // console.log(json.data);
                     setData(json.data);
                 } else {
                     setErrorMsg(json.message);
                 }
             } catch (e) {
-                console.log(e);
+                // console.log(e);
             }
         })();
     }, []);

@@ -1,13 +1,14 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import Logo from "./asset/logo.png";
 import styled from "styled-components";
-import {UserContext} from "../context/UserContext";
 import {useNavigate} from "react-router-dom";
 import {serverURL} from "../utils/serverURL";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
+import axios from "axios";
+import {TestContext} from "../context/TestContext";
 
 function Header() {
-    const {admin, setAdmin} = useContext(UserContext);
+    const {test, setTest} = useContext(TestContext);
     const navigate = useNavigate();
     const handleLoginClick = () => {
         navigate('/login');
@@ -15,11 +16,9 @@ function Header() {
     const handleAdminClick = () => {
         navigate('/admin');
     };
-
     const handleChangeClick = () => {
         navigate('/change');
     };
-
     const handleProductClick = () => {
         navigate('/articles');
     };
@@ -38,24 +37,24 @@ function Header() {
         } catch (error) {
         }
     };
-    const checkUser = async () => {
-        try {
-            const res = await fetch(serverURL("auth/login"), {
-                method: "POST", headers: {
-                    "Content-Type": "application/json",
-                }, credentials: "include",
-            },);
-            const json = await res.json();
-            if (json.data.admin) {
-                setAdmin(true);
-            } else {
-                admin = false;
+    useEffect(() => {
+        if (Object.keys(test).length) return;
+
+        axios.post(serverURL("auth/login"), {}, {withCredentials: true}).then((response) => {
+            const {data} = response;
+
+            if (data.success) {
+                setTest(data.data);
+            } else if (data.data) {
+                setTest(data.data);
             }
-        } catch (error) {
-        }
-    }
-    checkUser();
-    if (admin === true) {
+
+            console.log(test);
+        }).catch((error) => {
+        });
+    }, []);
+
+    if (test.admin) {
         return (<HeaderContainer>
             <LogoImage src={Logo} alt="#"/>
             <h1>ADMIN</h1>
@@ -67,7 +66,7 @@ function Header() {
                 <NavItem onClick={handleLogoutClick}>Logout</NavItem>
             </Navbar>
         </HeaderContainer>);
-    } else if (admin === false) {
+    } else if (test.admin === false) {
         return (<HeaderContainer>
             <LogoImage src={Logo} alt="#"/>
             <Navbar>

@@ -1,15 +1,16 @@
 import React, {useContext, useRef, useState} from "react";
 import {Button} from "@mui/material";
 import {CenteredContainer, FormContainer, StyledInput, StyledLink,} from "../styling";
-import {UserContext} from "../../context/UserContext";
 import {useNavigate} from "react-router-dom";
 import {serverURL} from "../../utils/serverURL";
+import axios from "axios";
+import {TestContext} from "../../context/TestContext";
 
 export default function Login() {
     const [message, setMessage] = useState("");
     const inputMail = useRef();
     const inputPsw = useRef();
-    const {admin, setAdmin} = useContext(UserContext);
+    const {test, setTest} = useContext(TestContext);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -25,29 +26,21 @@ export default function Login() {
             return;
         }
 
-        try {
-            const res = await fetch(serverURL("auth/login"), {
-                method: "POST", headers: {
-                    "Content-Type": "application/json",
-                }, body: JSON.stringify({
-                    email: email, password: password,
-                }), credentials: "include",
-            });
-            const json = await res.json();
-            if (json.success) {
-                setAdmin(json.data["admin"]);
-                navigate("/");
-            } else if (json.data) {
-                setAdmin(json.data["admin"]);
-                setMessage(json.message);
-                navigate("/");
-            } else {
-                setMessage("Wrong credentials. Please try again.");
+        axios.post(serverURL("auth/login"), {
+            email: email, password: password,
+        }, {withCredentials: true}).then((response) => {
+            const {data} = response;
+            if (data.success) {
+                setTest(data.data);
+                setMessage(data.message);
+
+                setTimeout(() => {
+                    navigate("/");
+                }, 500);
             }
-        } catch (error) {
-            console.log("not ok", error);
-            setMessage("Wrong credentials. Please try again.");
-        }
+        }).catch((error) => {
+            setMessage(error.response.data.message);
+        });
     };
 
     return (<form onSubmit={handleSubmit}>
