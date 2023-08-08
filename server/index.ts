@@ -6,7 +6,7 @@ import express, { Express, Router } from "express";
 import rateLimiter from "express-rate-limit";
 import routers from "./src/routers";
 import session from "express-session";
-import { dbInit } from "./src/services";
+import { dbInit, logParsedPayloads } from "./src/services";
 import { ErrorHandler } from "./src/services";
 import { incomingRequest } from "./src/services/";
 
@@ -47,6 +47,8 @@ app.use(
     resave: true,
   }),
 );
+
+app.use(logParsedPayloads);
 
 /*  Setting up the rate limiter  */
 app.use(
