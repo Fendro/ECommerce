@@ -7,27 +7,27 @@ import { isAdmin } from "../controllers/AdminController";
 const countriesRouter: Router = Router();
 
 countriesRouter.put(
-  "/orders/:_id",
+  "/countries/:_id",
   isAdmin,
   catchWrapper(CountryController.deleteCountry),
 );
 countriesRouter.get(
-  "/orders",
+  "/countries",
   isLoggedIn,
   catchWrapper(CountryController.getCountries),
 );
 countriesRouter.get(
-  "/orders/:_id",
+  "/countries/:_id",
   isLoggedIn,
   catchWrapper(CountryController.getCountry),
 );
 countriesRouter.post(
-  "/orders",
+  "/countries",
   isAdmin,
   catchWrapper(CountryController.addCountry),
 );
 countriesRouter.put(
-  "/orders/:_id",
+  "/countries/:_id",
   isAdmin,
   catchWrapper(CountryController.editCountry),
 );
