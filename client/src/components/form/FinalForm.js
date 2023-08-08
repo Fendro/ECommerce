@@ -5,14 +5,13 @@ import { UserContext } from "../../context/UserContext";
 
 export default function Login() {
   const { user } = useContext(UserContext);
-  console.log(user);
 
   useEffect(() => {
-    console.log(requestData);
     axios
       .post(serverURL("/orders"), requestData)
       .then((response) => {
-        console.log(response);
+        const { data } = response;
+        console.log(data);
       })
       .catch((error) => {
         console.error(error.response.data);
@@ -20,7 +19,7 @@ export default function Login() {
   }, []);
 
   const requestData = {
-    user_id: "64d1fde0d5ec9a84f07dfde8",
+    user_id: user._id,
     packages: {
       articles: [
         {

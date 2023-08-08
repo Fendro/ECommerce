@@ -38,7 +38,7 @@ export default function AddUser() {
         const { data } = response;
 
         if (data.success) {
-          setUser({ id: data.data.user_id });
+          setUser({ _id: data.data._id });
           navigate("/final");
         }
       })

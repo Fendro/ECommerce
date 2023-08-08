@@ -20,12 +20,14 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const email = inputMail.current.children[1].children[0].value;
-    const password = inputPsw.current.children[1].children[0].value;
+    const formData = {
+      email: inputMail.current.children[1].children[0].value,
+      password: inputPsw.current.children[1].children[0].value,
+    };
     let error_msg = "";
-    if (email.length < 6)
+    if (formData.email.length < 6)
       error_msg += "Email must be at least 6 characters long";
-    if (password.length < 6)
+    if (formData.password.length < 6)
       error_msg += "Password must be at least 6 characters long";
 
     if (error_msg.length) {
@@ -34,14 +36,7 @@ export default function Login() {
     }
 
     axios
-      .post(
-        serverURL("auth/login"),
-        {
-          email: email,
-          password: password,
-        },
-        { withCredentials: true },
-      )
+      .post(serverURL("auth/login"), formData, { withCredentials: true })
       .then((response) => {
         const { data } = response;
         if (data.success) {

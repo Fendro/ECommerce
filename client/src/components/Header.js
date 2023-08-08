@@ -12,7 +12,6 @@ function Header() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(user);
     if (Object.keys(user).length) return;
 
     axios

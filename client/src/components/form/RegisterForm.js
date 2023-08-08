@@ -40,7 +40,7 @@ export default function Register() {
     }
 
     axios
-      .post(serverURL("auth"), formData, { withCredentials: true })
+      .post(serverURL("auth"), formData)
       .then((response) => {
         const { data } = response;
         if (data.success) {
