@@ -20,7 +20,7 @@ function Header() {
 	};
 
 	const handleProductClick = () => {
-		navigate('/');
+		navigate('/articles');
 	};
 	const handleCartClick = () => {
 		navigate('/cart');
@@ -78,8 +78,9 @@ function Header() {
 			<HeaderContainer>
 				<LogoImage src={Logo} alt="#" />
 				<Navbar>
-					<NavItem>Products</NavItem>
-					<NavItem>Change</NavItem>
+					<NavItem onClick={handleCartClick}><ShoppingCartRoundedIcon /></NavItem>
+					<NavItem onClick={handleChangeClick}>Change</NavItem>
+					<NavItem onClick={handleProductClick}>Products</NavItem>
 					<NavItem onClick={handleLogoutClick}>Logout</NavItem>
 				</Navbar>
 			</HeaderContainer>
