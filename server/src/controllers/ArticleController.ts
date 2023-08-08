@@ -49,7 +49,7 @@ const editArticle = async (req: Request, res: Response) => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
-    editableFields,
+    [...editableFields, "featured"],
     req.body,
     false,
   );
