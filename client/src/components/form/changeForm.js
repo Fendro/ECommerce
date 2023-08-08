@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Button } from "@mui/material";
 import { CenteredContainer, FormContainer, StyledInput } from "../styling";
 import { useParams, useNavigate } from "react-router-dom";
-import { urlFetch } from "../../utils/urlFetch";
+import { serverURL } from "../../utils/serverURL";
 
 export default function EditUser() {
     const { id } = useParams();
@@ -32,7 +32,7 @@ export default function EditUser() {
         console.log(updateData)
 
         try {
-            const res = await fetch(`http://localhost:4242/auth`, {
+            const res = await fetch(serverURL("auth"), {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

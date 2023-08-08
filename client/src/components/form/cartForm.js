@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { TopCenterContainer } from '../styling';
 import ReactModal from 'react-modal';
-import { urlFetch } from "../../utils/urlFetch";
+import { serverURL } from "../../utils/serverURL";
 import { CheckContext } from '../../context/CheckContext';
 ReactModal.setAppElement('body');
 
@@ -24,7 +24,7 @@ export default function CartForm() {
 
     const checkUser = async () => {
         try {
-            const res = await fetch(urlFetch("auth/login"), {
+            const res = await fetch(serverURL("auth/login"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

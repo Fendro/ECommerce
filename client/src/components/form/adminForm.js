@@ -6,7 +6,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
-import {urlFetch} from "../../utils/urlFetch";
+import {serverURL} from "../../utils/serverURL";
 
 export default function Admin() {
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ export default function Admin() {
     const [data, setData] = useState([]);
     const [reload, setReload] = useState(false);
     useEffect(() => {
-        fetch(urlFetch("admin/users"), {
+        fetch(serverURL("admin/users"), {
             method: "GET", headers: {
                 "Content-Type": "application/json",
             }, credentials: "include",

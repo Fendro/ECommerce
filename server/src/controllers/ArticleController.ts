@@ -12,6 +12,7 @@ const editableFields = [
   "price",
   "quantity",
   "specs",
+  "quantity",
 ];
 let model: ArticleModel;
 (async () => {
@@ -21,9 +22,10 @@ let model: ArticleModel;
 const addArticle = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(editableFields, req.body);
 
-  await model.addArticle(data);
+  const { insertedId } = await model.addArticle(data);
 
   requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
     message: "Article registered.",
     success: true,
   });
@@ -49,7 +51,7 @@ const editArticle = async (req: Request, res: Response) => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
-    editableFields,
+    [...editableFields, "featured"],
     req.body,
     false,
   );

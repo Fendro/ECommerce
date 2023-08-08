@@ -10,7 +10,7 @@ import { UserContext } from "../../context/UserContext";
 import { EmailContext } from "../../context/EmailContext";
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { urlFetch } from "../../utils/urlFetch";
+import { serverURL } from "../../utils/serverURL";
 
 export default function Login() {
   const [message, setMessage] = useState("");
@@ -35,15 +35,15 @@ export default function Login() {
     }
 
     try {
-      const res = await fetch(urlFetch("auth/login"), {
+      const res = await fetch(serverURL("auth/login"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+		body: JSON.stringify({
+			email: email,
+			password: password,
+		}),
         credentials: "include",
       });
       const json = await res.json();
