@@ -33,7 +33,7 @@ export default function EditUser() {
         console.log(id)
 
         try {
-            const res = await fetch(`http://localhost:4242/admin/users/${id}`, {
+            const res = await fetch(serverURL(`admin/users/${id}`), {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
