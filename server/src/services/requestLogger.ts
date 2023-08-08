@@ -19,7 +19,6 @@ const incomingRequest = (
   const server = {
     url: req.url,
     method: req.method,
-    session: req.session,
   };
   const response = {};
   const times = {
@@ -43,6 +42,8 @@ const logParsedPayloads = (
   req.logger.server.params = req.params;
   // @ts-ignore
   req.logger.server.query = req.query;
+  // @ts-ignore
+  req.logger.server.session = req.session;
 
   next();
 };
