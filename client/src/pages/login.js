@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
-import { createGlobalStyle } from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 import LoginForm from "../components/form/loginForm";
 
 const GlobalStyle = createGlobalStyle`
@@ -13,13 +13,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Login() {
-	return (
-		<>
-			<Header />
-			<LoginForm />
-			<GlobalStyle />
-		</>
-	)
+    return (<>
+        <Header/>
+        <LoginForm/>
+        <GlobalStyle/>
+    </>)
 }
 
 export default Login;

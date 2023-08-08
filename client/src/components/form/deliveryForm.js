@@ -1,18 +1,12 @@
-import React, { useState, useRef } from 'react';
-import { Button } from '@mui/material';
-import { CenteredContainer, FormContainer, StyledInput, StyledLink } from '../styling';
-import { EmailContext } from '../../context/EmailContext';
-import { useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
-import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
-import {TopCenterContainer} from '../styling';
-import { IdContext } from '../../context/IdContext';
-
+import React, {useContext, useRef, useState} from 'react';
+import {Button} from '@mui/material';
+import {CenteredContainer, FormContainer, StyledInput} from '../styling';
+import {useNavigate} from 'react-router-dom';
+import {IdContext} from '../../context/IdContext';
 
 
 export default function AddUser() {
-    const { id, setId } = useContext(IdContext);
+    const {id, setId} = useContext(IdContext);
     const navigate = useNavigate();
     const inputMail = useRef();
     const inputName = useRef();
@@ -34,31 +28,31 @@ export default function AddUser() {
         const city = inputCity.current.children[1].children[0].value;
         const zipcode = inputZipcode.current.children[1].children[0].value;
 
-            fetch("http://localhost:4242/auth/guest", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email: email,
-                    firstname: firstname,
-                    lastname: lastname,
-                    phone: phone,
-                    address: address,
-                    country: country,
-                    city: city,
-                    zip: zipcode,
-                }),
-            }).then((res) => {
-                return res.json()
-            }).then((data) => {
-                setId(data.data.user_id)
-                navigate("/final");
-            });
+        fetch("http://localhost:4242/auth/guest", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: email,
+                firstname: firstname,
+                lastname: lastname,
+                phone: phone,
+                address: address,
+                country: country,
+                city: city,
+                zip: zipcode,
+            }),
+        }).then((res) => {
+            return res.json()
+        }).then((data) => {
+            setId(data.data.user_id)
+            navigate("/final");
+        });
 
     };
     console.log(id);
-    return(
+    return (
         <>
             <form onSubmit={handleSubmit}>
                 <CenteredContainer>

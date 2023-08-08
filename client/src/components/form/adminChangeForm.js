@@ -1,15 +1,14 @@
-import React, { useState, useRef, useContext } from "react";
-import { Button, Switch, FormControlLabel } from "@mui/material";
-import { CenteredContainer, FormContainer, StyledInput } from "../styling";
-import { UserContext } from "../../context/UserContext";
-import { EmailContext } from "../../context/EmailContext";
-import { useParams, useNavigate } from "react-router-dom";
-import { serverURL } from "../../utils/serverURL";
+import React, {useContext, useRef, useState} from "react";
+import {Button, FormControlLabel, Switch} from "@mui/material";
+import {CenteredContainer, FormContainer, StyledInput} from "../styling";
+import {UserContext} from "../../context/UserContext";
+import {EmailContext} from "../../context/EmailContext";
+import {useNavigate, useParams} from "react-router-dom";
 
 export default function EditUser() {
-    const { id } = useParams();
-    const { admin, setAdmin } = useContext(UserContext);
-    const { email, setEmail } = useContext(EmailContext);
+    const {id} = useParams();
+    const {admin, setAdmin} = useContext(UserContext);
+    const {email, setEmail} = useContext(EmailContext);
     const [message, setMessage] = useState("");
     const inputMail = useRef();
     const inputPsw = useRef();

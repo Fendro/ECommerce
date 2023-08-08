@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../components/header";
-import { createGlobalStyle } from "styled-components";
+import {createGlobalStyle} from "styled-components";
 import DeliveryForm from "../components/form/deliveryForm";
+
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -11,11 +12,9 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 export default function delivery() {
-    return(
-        <>
-            <Header />
-            <DeliveryForm/>
-            <GlobalStyle />
-        </>
-    )
+    return (<>
+        <Header/>
+        <DeliveryForm/>
+        <GlobalStyle/>
+    </>)
 }

@@ -1,8 +1,8 @@
-import { useEffect, useContext } from "react";
-import { IdContext } from "../../context/IdContext";
+import {useContext, useEffect} from "react";
+import {IdContext} from "../../context/IdContext";
 
 export default function Login() {
-    const { id, setId } = useContext(IdContext);
+    const {id, setId} = useContext(IdContext);
     console.log(id);
 
     const requestData = {
@@ -19,6 +19,7 @@ export default function Login() {
         ],
     };
     console.log(requestData);
+
 
     const requestOptions = {
         method: 'POST',

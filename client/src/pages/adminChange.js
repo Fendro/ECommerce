@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
-import { createGlobalStyle } from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 import AdminChangeForm from '../components/form/adminChangeForm';
 
 const GlobalStyle = createGlobalStyle`
@@ -12,11 +12,9 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 export default function adminChange() {
-    return (
-        <>
-            <Header />
-            <AdminChangeForm />
-            <GlobalStyle />
-        </>
-    )
+    return (<>
+        <Header/>
+        <AdminChangeForm/>
+        <GlobalStyle/>
+    </>)
 }

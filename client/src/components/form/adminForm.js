@@ -1,4 +1,4 @@
-import React, {useEffect,  useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import {Button} from '@mui/material';
 import {TopCenterContainer} from '../styling';
@@ -27,9 +27,11 @@ export default function Admin() {
             setFetched(true);
         });
     }, [reload])
+
     function handleEdit(id) {
         navigate(`/admin/change/${id}`);
     }
+
     function handleDelete(id) {
         fetch(`http://localhost:4242/admin/users/${id}`, {
             method: "DELETE", headers: {
@@ -41,7 +43,7 @@ export default function Admin() {
             if (json.success) {
                 setFetched(false);
                 setReload([!reload])
-            };
+            }
         });
     }
 
@@ -53,47 +55,47 @@ export default function Admin() {
 
     if (data.length)
         return (<>
-        <TopCenterContainer>
-            <Button variant="outlined" color="success" onClick={() => {
+            <TopCenterContainer>
+                <Button variant="outlined" color="success" onClick={() => {
 
-                navigate('/admin/addArticle');
-            }}>
-                <PostAddRoundedIcon/>
-            </Button>
-            <Button variant="outlined" color="success" onClick={() => {
-                navigate('/admin/addUser');
-            }}>
-                <PersonAddAlt1RoundedIcon/>
-            </Button>
-        </TopCenterContainer>
-        <TopCenterContainer>
-            <table>
-                <tbody>
-                <tr>
-                    <th>username</th>
-                    <th>email</th>
-                </tr>
-                {data?.map((admin, key) => (<tr key={key}>
-                    <td>{admin?.username ?? "default_username"}</td>
-                    <td>{admin?.email ?? "default_email"}</td>
-                    <td>
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            onClick={() => handleDelete(admin?._id)}
-                        >
-                            <DeleteRoundedIcon/>
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="primary"
-                            onClick={()=>handleEdit(admin?._id)}>
-                            <EditRoundedIcon/>
-                        </Button>
-                    </td>
-                </tr>))}
-                </tbody>
-            </table>
-        </TopCenterContainer>
-    </>)
+                    navigate('/admin/addArticle');
+                }}>
+                    <PostAddRoundedIcon/>
+                </Button>
+                <Button variant="outlined" color="success" onClick={() => {
+                    navigate('/admin/addUser');
+                }}>
+                    <PersonAddAlt1RoundedIcon/>
+                </Button>
+            </TopCenterContainer>
+            <TopCenterContainer>
+                <table>
+                    <tbody>
+                    <tr>
+                        <th>username</th>
+                        <th>email</th>
+                    </tr>
+                    {data?.map((admin, key) => (<tr key={key}>
+                        <td>{admin?.username ?? "default_username"}</td>
+                        <td>{admin?.email ?? "default_email"}</td>
+                        <td>
+                            <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleDelete(admin?._id)}
+                            >
+                                <DeleteRoundedIcon/>
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                onClick={() => handleEdit(admin?._id)}>
+                                <EditRoundedIcon/>
+                            </Button>
+                        </td>
+                    </tr>))}
+                    </tbody>
+                </table>
+            </TopCenterContainer>
+        </>)
 }

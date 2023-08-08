@@ -1,7 +1,6 @@
-
-import { createContext, useContext, useState } from 'react';
+import {createContext} from 'react';
 
 export const IdContext = createContext({
-    Id: "",
-    setId: () => {},
+    Id: "", setId: () => {
+    },
 });

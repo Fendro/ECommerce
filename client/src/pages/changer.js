@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "../components/header";
-import { createGlobalStyle } from "styled-components";
+import {createGlobalStyle} from "styled-components";
 import ChangeForm from "../components/form/changeForm";
+
 const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
@@ -11,11 +12,10 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 export default function changer() {
-    return(
-        <>
-            <Header />
-            <ChangeForm />
-            <GlobalStyle />
-        </>
-    )
+    return (<>
+        <Header/>
+        <ChangeForm/>
+        <GlobalStyle/>
+    </>)
+
 }

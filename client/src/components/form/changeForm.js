@@ -1,11 +1,10 @@
-import React, { useState, useRef } from "react";
-import { Button } from "@mui/material";
-import { CenteredContainer, FormContainer, StyledInput } from "../styling";
-import { useParams, useNavigate } from "react-router-dom";
-import { serverURL } from "../../utils/serverURL";
+import React, {useRef, useState} from "react";
+import {Button} from "@mui/material";
+import {CenteredContainer, FormContainer, StyledInput} from "../styling";
+import {useNavigate} from "react-router-dom";
+import {serverURL} from "../../utils/serverURL";
 
 export default function EditUser() {
-    const { id } = useParams();
     const [message, setMessage] = useState("");
     const inputCurrentEmail = useRef();
     const inputMail = useRef();
@@ -28,17 +27,14 @@ export default function EditUser() {
             edits.password = newPassword;
         }
 
-        const updateData = { email: currentEmail, password: currentPassword, edits: edits };
+        const updateData = {email: currentEmail, password: currentPassword, edits: edits};
         console.log(updateData)
 
         try {
             const res = await fetch(serverURL("auth"), {
-                method: "PUT",
-                headers: {
+                method: "PUT", headers: {
                     "Content-Type": "application/json",
-                },
-                credentials: "include",
-                body: JSON.stringify(updateData),
+                }, credentials: "include", body: JSON.stringify(updateData),
             });
             const json = await res.json();
             if (json.success) {
@@ -53,54 +49,52 @@ export default function EditUser() {
         }
     };
 
-    return (
-        <form onSubmit={handleSubmit}>
-            <CenteredContainer>
-                <FormContainer>
-                    <div>{message}</div>
-                    <StyledInput
-                        label="Current Email"
-                        type="email"
-                        minLength="6"
-                        variant="outlined"
-                        ref={inputCurrentEmail}
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="Current Password"
-                        type="password"
-                        minLength="6"
-                        variant="outlined"
-                        ref={currentPsw}
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="New Email"
-                        type="email"
-                        minLength="6"
-                        variant="outlined"
-                        ref={inputMail}
-                        fullWidth
-                    />
-                    <StyledInput
-                        label="New Password"
-                        type="password"
-                        variant="outlined"
-                        minLength="6"
-                        ref={inputPsw}
-                        fullWidth
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        type="submit"
-                        width={"100"}
-                        mb={"5"}
-                    >
-                        Update User
-                    </Button>
-                </FormContainer>
-            </CenteredContainer>
-        </form>
-    );
+    return (<form onSubmit={handleSubmit}>
+        <CenteredContainer>
+            <FormContainer>
+                <div>{message}</div>
+                <StyledInput
+                    label="Current Email"
+                    type="email"
+                    minLength="6"
+                    variant="outlined"
+                    ref={inputCurrentEmail}
+                    fullWidth
+                />
+                <StyledInput
+                    label="Current Password"
+                    type="password"
+                    minLength="6"
+                    variant="outlined"
+                    ref={currentPsw}
+                    fullWidth
+                />
+                <StyledInput
+                    label="New Email"
+                    type="email"
+                    minLength="6"
+                    variant="outlined"
+                    ref={inputMail}
+                    fullWidth
+                />
+                <StyledInput
+                    label="New Password"
+                    type="password"
+                    variant="outlined"
+                    minLength="6"
+                    ref={inputPsw}
+                    fullWidth
+                />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    width={"100"}
+                    mb={"5"}
+                >
+                    Update User
+                </Button>
+            </FormContainer>
+        </CenteredContainer>
+    </form>);
 }

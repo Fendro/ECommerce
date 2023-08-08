@@ -1,7 +1,6 @@
-
-import { createContext} from 'react';
+import {createContext} from 'react';
 
 export const CheckContext = createContext({
-    check: "",
-    setCheckl: () => {},
+    check: "", setCheckl: () => {
+    },
 });

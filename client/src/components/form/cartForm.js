@@ -1,22 +1,23 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
-import { TopCenterContainer } from '../styling';
+import React, {useContext, useEffect, useState} from "react";
+import {useNavigate} from 'react-router-dom';
+import {Button} from '@mui/material';
+import {TopCenterContainer} from '../styling';
 import ReactModal from 'react-modal';
-import { serverURL } from "../../utils/serverURL";
-import { CheckContext } from '../../context/CheckContext';
+import {serverURL} from "../../utils/serverURL";
+import {CheckContext} from '../../context/CheckContext';
+
 ReactModal.setAppElement('body');
 
 
 const arts = [
-    { id: 1, name: 'Product 1', price: 10,test: 1 },
-    { id: 2, name: 'Product 2', price: 20,test: 2 },
-    { id: 3, name: 'Product 3', price: 15,test: 3 },
+    {id: 1, name: 'Product 1', price: 10, test: 1},
+    {id: 2, name: 'Product 2', price: 20, test: 2},
+    {id: 3, name: 'Product 3', price: 15, test: 3},
 ]
 export default function CartForm() {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
-    const { check, setCheck } = useContext(CheckContext);
+    const {check, setCheck} = useContext(CheckContext);
 
     useEffect(() => {
         checkUser();
@@ -100,9 +101,9 @@ export default function CartForm() {
                     },
                 }}
             >
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                     <Button
-                        style={{ width: '45%', marginRight: '10px' }}
+                        style={{width: '45%', marginRight: '10px'}}
                         variant="outlined"
                         color="success"
                         onClick={() => {
@@ -112,7 +113,7 @@ export default function CartForm() {
                         Continuer en tant qu'invité
                     </Button>
                     <Button
-                        style={{ width: '45%' }}
+                        style={{width: '45%'}}
                         variant="outlined"
                         color="success"
                         onClick={() => {

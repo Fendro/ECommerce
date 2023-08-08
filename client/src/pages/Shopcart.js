@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
-import { createGlobalStyle } from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 import Shopcart from '../components/form/cartForm';
 
 const GlobalStyle = createGlobalStyle`
@@ -13,13 +13,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Shopcard() {
-    return (
-        <>
-            <Header />
-            <Shopcart />
-            <GlobalStyle />
-        </>
-    )
+    return (<>
+        <Header/>
+        <Shopcart/>
+        <GlobalStyle/>
+    </>)
 }
 
 export default Shopcard;

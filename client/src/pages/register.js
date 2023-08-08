@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../components/header';
-import { createGlobalStyle } from 'styled-components';
+import {createGlobalStyle} from 'styled-components';
 import RegisterForm from "../components/form/registerForm";
 
 const GlobalStyle = createGlobalStyle`
@@ -13,13 +13,11 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function Register() {
-	return (
-		<>
-			<Header />
-			<RegisterForm />
-			<GlobalStyle />
-		</>
-	)
+    return (<>
+        <Header/>
+        <RegisterForm/>
+        <GlobalStyle/>
+    </>)
 }
 
 export default Register;
