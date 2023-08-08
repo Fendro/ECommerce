@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import {TopCenterContainer} from '../styling';
-import { urlFetch } from '../../utils/urlFetch';
 import { IdContext } from '../../context/IdContext';
 
 

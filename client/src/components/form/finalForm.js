@@ -24,16 +24,16 @@ export default function Login() {
         method: 'POST',
         body: JSON.stringify({
             user_id: '64d1fde0d5ec9a84f07dfde8',
-            packages: [
-                {
-                    articles: "64d20169d5ec9a84f07dfdea",
+            packages: {
+                articles: [{
+                    article: "64d20169d5ec9a84f07dfdea",
                     quantity: 2,
                 },
-                {
-                    articles: "64d2016dd5ec9a84f07dfdeb",
-                    quantity: 6,
-                },
-            ],
+                    {
+                        article: "64d2016dd5ec9a84f07dfdeb",
+                        quantity: 6,
+                    }],
+            },
         }),
         headers: {
             'Content-Type': 'application/json',
@@ -41,6 +41,7 @@ export default function Login() {
     };
 
     useEffect(() => {
+        console.log(requestOptions);
         fetch("http://localhost:4242/orders/", requestOptions)
             .then(response => response.json())
             .then(result => console.log(result))
