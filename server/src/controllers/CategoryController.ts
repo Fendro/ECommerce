@@ -12,9 +12,10 @@ let model: CategoryModel;
 const addCategory = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(editableFields, req.body);
 
-  await model.addCategory(data);
+  const { insertedId } = await model.addCategory(data);
 
   requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
     message: "Category registered.",
     success: true,
   });
