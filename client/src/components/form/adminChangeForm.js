@@ -4,7 +4,7 @@ import { CenteredContainer, FormContainer, StyledInput } from "../styling";
 import { UserContext } from "../../context/UserContext";
 import { EmailContext } from "../../context/EmailContext";
 import { useParams, useNavigate } from "react-router-dom";
-import { urlFetch } from "../../utils/urlFetch";
+import { serverURL } from "../../utils/serverURL";
 
 export default function EditUser() {
     const { id } = useParams();

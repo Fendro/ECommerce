@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import {TopCenterContainer} from '../styling';
-import { urlFetch } from '../../utils/urlFetch';
+import { serverURL } from '../../utils/serverURL';
 
 
 export default function AddUser() {
@@ -26,7 +26,7 @@ export default function AddUser() {
         const username = inputUser.current.children[1].children[0].value;
         const password = inputPsw.current.children[1].children[0].value;
         try{
-            const res = await fetch(urlFetch("auth"), {
+            const res = await fetch(serverURL("auth"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

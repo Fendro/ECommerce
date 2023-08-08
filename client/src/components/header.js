@@ -3,7 +3,7 @@ import Logo from "./asset/logo.png";
 import styled from "styled-components";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { urlFetch } from "../utils/urlFetch";
+import { serverURL } from "../utils/serverURL";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 function Header() {
   const { admin, setAdmin } = useContext(UserContext);
@@ -40,7 +40,7 @@ function Header() {
   };
   const checkUser = async () => {
     try {
-      const res = await fetch(urlFetch("auth/login"), {
+      const res = await fetch(serverURL("auth/login"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

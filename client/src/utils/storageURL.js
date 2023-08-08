@@ -1,5 +1,5 @@
-export function urlFetch(path, args) {
-	let url = "http://localhost:4242/" + path;
+export function storageURL(path, args) {
+	let url = "http://localhost:8484/" + path;
 	if (!args)
 		return url;
 	url += "?";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AnyDiv, AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
-import { urlFetch } from '../../utils/urlFetch';
+import { serverURL } from '../../utils/serverURL';
 
 export default function Product() {
 	const { id } = useParams();
@@ -14,7 +14,7 @@ export default function Product() {
 			let json;
 			console.log(id);
 			try {
-				json = await fetch(urlFetch("articles/" + id), {
+				json = await fetch(serverURL("articles/" + id), {
 					method: "GET",
 				}).then((response) => {
 					return response.json();

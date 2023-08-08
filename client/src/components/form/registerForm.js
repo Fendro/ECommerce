@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledLink, StyledInput } from '../styling';
-import { urlFetch } from '../../utils/urlFetch';
+import { serverURL } from '../../utils/serverURL';
 
 export default function Register() {
 
@@ -29,7 +29,7 @@ export default function Register() {
 			return;
 		}
 		try {
-			const res = await fetch(urlFetch("auth"), {
+			const res = await fetch(serverURL("auth"), {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
