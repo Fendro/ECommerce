@@ -4,8 +4,11 @@ import cors from "cors";
 import express, { Express, Router } from "express";
 import rateLimiter from "express-rate-limit";
 import routers from "./src/routers";
-import { ErrorHandler } from "./src/services";
-import { incomingRequest } from "./src/services/";
+import {
+  incomingRequest,
+  logParsedPayloads,
+  ErrorHandler,
+} from "./src/services/";
 
 const app: Express = express();
 
@@ -14,14 +17,20 @@ app.use(incomingRequest);
 
 /*  Setting up requests parsers and permissions  */
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ["http://localhost:3000", "http://localhost:4242"],
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-    credentials: true,
-  }),
-);
+
+if (config.env === "development") {
+  app.use(
+    cors({
+      origin: ["http://localhost:3000", "http://localhost:4242"],
+      methods: "GET,POST,PUT,DELETE",
+      allowedHeaders: "Content-Type,Authorization",
+      credentials: true,
+    }),
+  );
+}
+
+/*  Logging payloads after necessary middlewares have been set  */
+app.use(logParsedPayloads);
 
 /*  Setting up the rate limiter  */
 app.use(
@@ -32,6 +41,7 @@ app.use(
   }),
 );
 
+/*  Setting content delivery routes up  */
 app.use("/images", express.static(`${__dirname}/images`));
 
 /*  Setting routes up  */
