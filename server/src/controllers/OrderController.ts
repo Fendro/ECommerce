@@ -16,9 +16,10 @@ let model: OrderModel;
 const addOrder = async (req: Request, res: Response): Promise<void> => {
   const data = requestHandler.fetchParams(["user_id", "packages"], req.body);
 
-  await model.addOrder(data);
+  const { insertedId } = await model.addOrder(data);
 
   requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
     message: "Order saved.",
     success: true,
   });
