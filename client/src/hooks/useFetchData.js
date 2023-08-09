@@ -18,7 +18,7 @@ const useFetchData = (url, options) => {
     }, [url, options]);
 
 
-    return { data, isLoading, error };
+    return {data, isLoading, error};
 }
 
 export default useFetchData;

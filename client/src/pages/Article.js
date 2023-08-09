@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import { createGlobalStyle } from "styled-components";
-import Shopcart from "../components/form/CartForm";
+import ArticleForm from "../components/form/ArticleForm";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,14 +12,12 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
-function Shopcard() {
+export default function Article() {
   return (
     <>
       <Header />
-      <Shopcart />
+      <ArticleForm />
       <GlobalStyle />
     </>
   );
 }
-
-export default Shopcard;

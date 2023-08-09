@@ -1,7 +1,7 @@
 import appConfig from "../configs/appConfig";
 import fs from "fs";
 import requestHandler from "./requestHandler";
-import { outgoingResponse } from "./logger";
+import { outgoingResponse } from "./requestLogger";
 import { BadRequest, FailedDependency } from "../models";
 import { BSONError } from "bson";
 import { MongoError } from "mongodb";
