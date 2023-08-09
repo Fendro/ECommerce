@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {AnyDiv, AnyImage, AnyText, ArticleContainer, Linebreak} from "../styling";
 import {serverURL} from "../../utils/serverURL";
-import {ArticleContext} from "../../context/articleContext";
+import {ArticleContext} from "../../context/ArticleContext";
 import {Button} from "@mui/material";
 
 export default function Product() {

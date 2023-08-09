@@ -1,7 +1,7 @@
 import Router from "./router";
 import {useState} from "react";
 import {UserContext} from "./context/UserContext";
-import {ArticleContext} from "./context/articleContext";
+import {ArticleContext} from "./context/ArticleContext";
 
 function App() {
     const [user, setUser] = useState({});

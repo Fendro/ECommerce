@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {Button} from "@mui/material";
 import {TopCenterContainer} from "../styling";
 import {UserContext} from "../../context/UserContext";
-import {ArticleContext} from "../../context/articleContext";
+import {ArticleContext} from "../../context/ArticleContext";
 
 ReactModal.setAppElement("body");
 
