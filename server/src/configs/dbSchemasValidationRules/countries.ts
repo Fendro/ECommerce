@@ -9,7 +9,7 @@ module.exports = {
         description: "must be a unique string and is required.",
       },
       currency: {
-        bsonType: "objectId",
+        bsonType: "string",
         description: "must reference a currencies document and is required.",
       },
     },

@@ -1,24 +1,18 @@
 import { catchWrapper } from "../utils";
-import { isLoggedIn } from "../controllers/UserController";
 import { Router } from "express";
 import * as CountryController from "../controllers/CountryController";
 import { isAdmin } from "../controllers/AdminController";
 
 const countriesRouter: Router = Router();
 
-countriesRouter.put(
-  "/countries/:_id",
+countriesRouter.delete(
+  "/countries/:name",
   isAdmin,
   catchWrapper(CountryController.deleteCountry),
 );
+countriesRouter.get("/countries", catchWrapper(CountryController.getCountries));
 countriesRouter.get(
-  "/countries",
-  isLoggedIn,
-  catchWrapper(CountryController.getCountries),
-);
-countriesRouter.get(
-  "/countries/:_id",
-  isLoggedIn,
+  "/countries/:name",
   catchWrapper(CountryController.getCountry),
 );
 countriesRouter.post(
@@ -27,7 +21,7 @@ countriesRouter.post(
   catchWrapper(CountryController.addCountry),
 );
 countriesRouter.put(
-  "/countries/:_id",
+  "/countries/:name",
   isAdmin,
   catchWrapper(CountryController.editCountry),
 );
