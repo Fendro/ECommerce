@@ -22,10 +22,10 @@ const addCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteCategory = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  if (!(await model.deleteCategory(_id)))
-    throw new NotFound("No category found with the provided id.");
+  if (!(await model.deleteCategory(name)))
+    throw new NotFound("No category found with the provided name.");
 
   requestHandler.sendResponse(res, {
     message: "Category deleted.",
@@ -34,7 +34,7 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editCategory = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
@@ -42,7 +42,7 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
     false,
   );
 
-  const category = await model.editCategory(_id, fieldsToUpdate);
+  const category = await model.editCategory(name, fieldsToUpdate);
   if (!category.value) throw new ServiceError("Database error.", category);
 
   requestHandler.sendResponse(res, {
@@ -53,10 +53,11 @@ const editCategory = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCategory = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  const category = await model.getCategory(_id);
-  if (!category) throw new NotFound("No category found with the provided id.");
+  const category = await model.getCategory(name);
+  if (!category)
+    throw new NotFound("No category found with the provided name.");
 
   requestHandler.sendResponse(res, {
     data: category,

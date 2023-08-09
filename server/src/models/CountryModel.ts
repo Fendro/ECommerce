@@ -3,37 +3,45 @@ import {
   Document,
   InsertOneResult,
   ModifyResult,
-  ObjectId,
   WithId,
 } from "mongodb";
+import { FailedDependency } from "./Errors";
 
 export class CountryModel {
   collection: Collection;
+  currenciesCollection: Collection;
 
-  constructor(collection: Collection) {
+  constructor(collection: Collection, currenciesCollection: Collection) {
     this.collection = collection;
+    this.currenciesCollection = currenciesCollection;
   }
 
   addCountry = async (data: {
     [key: string]: any;
   }): Promise<InsertOneResult> => {
+    if (!(await this.currenciesCollection.findOne({ name: data.currency })))
+      throw new FailedDependency("Currency not found", {
+        failed: data.currency,
+        payload: data,
+      });
+
     return await this.collection.insertOne(data);
   };
 
-  deleteCountry = async (_id: string): Promise<number> => {
+  deleteCountry = async (name: string): Promise<number> => {
     const { deletedCount } = await this.collection.deleteOne({
-      _id: ObjectId.createFromHexString(_id),
+      name: name,
     });
 
     return deletedCount;
   };
 
   editCountry = async (
-    _id: string,
+    name: string,
     fieldsToUpdate: { [key: string]: any },
   ): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: ObjectId.createFromHexString(_id) },
+      { name: name },
       {
         $set: fieldsToUpdate,
       },
@@ -41,9 +49,9 @@ export class CountryModel {
     );
   };
 
-  getCountry = async (_id: string): Promise<WithId<Document> | null> => {
+  getCountry = async (name: string): Promise<WithId<Document> | null> => {
     return await this.collection.findOne({
-      _id: ObjectId.createFromHexString(_id),
+      name: name,
     });
   };
 

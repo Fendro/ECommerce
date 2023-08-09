@@ -17,6 +17,8 @@ export class CurrencyModel {
   addCurrency = async (data: {
     [key: string]: any;
   }): Promise<InsertOneResult> => {
+    data.manuallySet ??= true;
+
     return await this.collection.insertOne(data);
   };
 
@@ -29,11 +31,11 @@ export class CurrencyModel {
   };
 
   editCurrency = async (
-    _id: string,
+    name: string,
     fieldsToUpdate: { [key: string]: any },
   ): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: ObjectId.createFromHexString(_id) },
+      { name: name },
       {
         $set: fieldsToUpdate,
       },
@@ -41,9 +43,9 @@ export class CurrencyModel {
     );
   };
 
-  getCurrency = async (_id: string): Promise<WithId<Document> | null> => {
+  getCurrency = async (name: string): Promise<WithId<Document> | null> => {
     return await this.collection.findOne({
-      _id: ObjectId.createFromHexString(_id),
+      name: name,
     });
   };
 

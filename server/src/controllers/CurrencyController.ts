@@ -3,14 +3,14 @@ import { getCollection } from "../services";
 import { NotFound, CurrencyModel, ServiceError } from "../models";
 import { Request, Response } from "express";
 
-const editableFields = ["name"];
+const editableFields = ["name", "description", "rate", "manuallySet"];
 let model: CurrencyModel;
 (async () => {
   model = new CurrencyModel(await getCollection("currencies"));
 })();
 
 const addCurrency = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(editableFields, req.body);
+  const data = requestHandler.fetchParams(["name", "rate"], req.body);
 
   const { insertedId } = await model.addCurrency(data);
 
@@ -22,10 +22,10 @@ const addCurrency = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteCurrency = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  if (!(await model.deleteCurrency(_id)))
-    throw new NotFound("No currency found with the provided id.");
+  if (!(await model.deleteCurrency(name)))
+    throw new NotFound("No currency found with the provided name.");
 
   requestHandler.sendResponse(res, {
     message: "Currency deleted.",
@@ -34,7 +34,7 @@ const deleteCurrency = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editCurrency = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
@@ -42,7 +42,7 @@ const editCurrency = async (req: Request, res: Response): Promise<void> => {
     false,
   );
 
-  const currency = await model.editCurrency(_id, fieldsToUpdate);
+  const currency = await model.editCurrency(name, fieldsToUpdate);
   if (!currency.value) throw new ServiceError("Database error.", currency);
 
   requestHandler.sendResponse(res, {
@@ -53,10 +53,11 @@ const editCurrency = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCurrency = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  const currency = await model.getCurrency(_id);
-  if (!currency) throw new NotFound("No currency found with the provided id.");
+  const currency = await model.getCurrency(name);
+  if (!currency)
+    throw new NotFound("No currency found with the provided name.");
 
   requestHandler.sendResponse(res, {
     data: currency,
@@ -67,12 +68,12 @@ const getCurrency = async (req: Request, res: Response): Promise<void> => {
 
 const getCurrencies = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
-  const currencies = await model.getCurrencies(req.session.user._id);
+  const currencies = await model.getCurrencies();
   if (!currencies.length) throw new NotFound("No currencies found.");
 
   requestHandler.sendResponse(res, {
     data: currencies,
-    message: "Currencies retrieved.",
+    message: "Currencies.json retrieved.",
     success: true,
   });
 };

@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 if (config.env === "development") {
   app.use(
     cors({
-      origin: ["http://localhost:3000", "http://localhost:4242"],
+      origin: "*",
       methods: "GET,POST,PUT,DELETE",
       allowedHeaders: "Content-Type,Authorization",
       credentials: true,

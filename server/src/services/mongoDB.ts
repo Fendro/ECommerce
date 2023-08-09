@@ -45,7 +45,7 @@ const setCollections = async (client: MongoClient) => {
       await client.db().createCollection(collection, {
         validator: rules,
       });
-      if (collection === "categories") {
+      if (collection in ["categories", "countries", "currencies"]) {
         await client
           .db()
           .collection(collection)

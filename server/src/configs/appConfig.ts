@@ -16,6 +16,9 @@ const development = {
     max: 100,
     windowMs: 10000,
   },
+  currencies: {
+    updateDelay: 1000 * 60 * 60 * 24,
+  },
 };
 
 const production = {
@@ -32,6 +35,9 @@ const production = {
   rateLimit: {
     max: 10,
     windowMs: 10000,
+  },
+  currencies: {
+    updateDelay: 1000 * 60 * 60 * 24,
   },
 };
 

@@ -7,7 +7,6 @@ import { Request, Response } from "express";
 const editableFields = [
   "categories",
   "description",
-  "images",
   "name",
   "price",
   "quantity",

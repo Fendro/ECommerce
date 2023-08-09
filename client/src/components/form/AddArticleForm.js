@@ -13,6 +13,7 @@ import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import { bodyCleaner } from "../../utils/bodyCleaner";
 import { serverURL } from "../../utils/serverURL";
+import { storageURL } from "../../utils/storageURL";
 
 export default function AddArticle() {
 	const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function AddArticle() {
 			quantity: Number(inputQuantity.current.children[1].children[0].value),
 		});
 
-		console.log(typeof formData.price);
+		const formImage = [affImage];
 
 		axios
 			.post(serverURL("articles"), formData, { withCredentials: true })
@@ -67,9 +68,24 @@ export default function AddArticle() {
 				const { data } = response;
 
 				setMessage(data.message);
-				setTimeout(() => {
-					navigate("/admin");
-				});
+				return data.data._id;
+			})
+			.then((articleID) => {
+				axios
+					.post(storageURL(`images/${articleID}`), formImage)
+					.then((response) => {
+						const { data } = response;
+
+						setMessage(data.message);
+
+						setTimeout(() => {
+							navigate("/admin");
+						}, 500);
+					})
+					.catch((error) => {
+						setMessage(error.response.data.message);
+						console.error(error.response.data);
+					});
 			})
 			.catch((error) => {
 				setMessage(error.response.data.message);

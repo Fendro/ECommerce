@@ -6,7 +6,7 @@ import * as CategoryController from "../controllers/CategoryController";
 const categoriesRouter: Router = Router();
 
 categoriesRouter.delete(
-  "/categories/:_id",
+  "/categories/:name",
   isAdmin,
   catchWrapper(CategoryController.deleteCategory),
 );
@@ -15,7 +15,7 @@ categoriesRouter.get(
   catchWrapper(CategoryController.getCategories),
 );
 categoriesRouter.get(
-  "/categories/:_id",
+  "/categories/:name",
   catchWrapper(CategoryController.getCategory),
 );
 categoriesRouter.post(
@@ -24,7 +24,7 @@ categoriesRouter.post(
   catchWrapper(CategoryController.addCategory),
 );
 categoriesRouter.put(
-  "/categories/:_id",
+  "/categories/:name",
   isAdmin,
   catchWrapper(CategoryController.editCategory),
 );
