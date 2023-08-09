@@ -1,10 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {AnyDiv, AnyImage, AnyText, ArticleContainer, Linebreak} from "../styling";
 import {serverURL} from "../../utils/serverURL";
+import {ArticleContext} from "../../context/ArticleContext";
 import {Button} from "@mui/material";
 
 export default function Product() {
+    const {article, setArticle} = useContext(ArticleContext);
     const {id} = useParams();
     const [fetchRes, setFetchRes] = useState("loading");
     const [errorMsg, setErrorMsg] = useState("");
@@ -35,7 +37,7 @@ export default function Product() {
         // eslint-disable-next-line
     }, []);
 
-    const addToCart = (articleId, quantity) => {
+    const addToCart = (articleId, quantity, articleName) => {
         const existingCart = JSON.parse(localStorage.getItem("packages")) || [];
         const cartPackageIndex = existingCart.findIndex(
             (cartPackage) => cartPackage.articles.find((article) => article.article_id === articleId)
@@ -47,13 +49,51 @@ export default function Product() {
         } else {
             const articles = [{article_id: articleId, quantity}];
             existingCart.push({
-                articles
+                articles,
             });
         }
 
         localStorage.setItem("packages", JSON.stringify(existingCart));
+        addToContext(articleId, quantity, articleName);
     };
-    console.log(id)
+
+    const addToContext = (articleId, quantity, articleName) => {
+        let existingArticle = null;
+        for (const key in article) {
+            if (article[key].article_id === articleId) {
+                existingArticle = article[key];
+                break;
+            }
+        }
+
+        if (existingArticle) {
+            const updatedArticle = {
+                ...existingArticle,
+                quantity: existingArticle.quantity + quantity,
+            };
+            const updatedArticleList = {
+                ...article,
+                [existingArticle.article_id]: updatedArticle,
+            };
+
+            setArticle(updatedArticleList);
+        } else {
+            const newArticle = {
+                article_id: articleId,
+                quantity: quantity,
+                name: articleName,
+            };
+            const updatedArticleList = {
+                ...article,
+                [newArticle.article_id]: newArticle,
+            };
+
+            setArticle(updatedArticleList);
+        }
+
+    };
+    console.log(article);
+    console.log(id);
     switch (fetchRes) {
         case "loading":
             return (
@@ -75,7 +115,7 @@ export default function Product() {
                             type="submit"
                             width={"100"}
                             mb={"5"}
-                            onClick={() => addToCart(id, 1)}
+                            onClick={() => addToCart(id, 1, data?.name)}
                         >
                             Add to cart
                         </Button>
