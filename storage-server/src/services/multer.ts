@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
       null,
       `${
         sha1(file.originalname).substring(0, 10) +
-        sha1(new Date().toString().substring(0, 10))
+        sha1(new Date().getMilliseconds().toString().substring(0, 10))
       }.${fileType}`,
     );
   },
