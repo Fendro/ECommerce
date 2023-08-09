@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
 import { UserContext } from '../../context/UserContext';
-import { serverURL } from '../../utils/serverURL';
+import serverURL from '../../utils/serverURL';
 
 export default function Product() {
 	const { admin, setAdmin } = useContext(UserContext);

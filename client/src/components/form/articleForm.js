@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AnyDiv, AnyImage, AnyText, ArticleContainer, Linebreak } from '../styling';
-import { serverURL } from '../../utils/serverURL';
+import serverURL from '../../utils/serverURL';
 
 export default function Product() {
 	const { id } = useParams();

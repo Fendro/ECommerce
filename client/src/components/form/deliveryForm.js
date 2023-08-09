@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import PeopleAltRoundedIcon from '@mui/icons-material/PeopleAltRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import {TopCenterContainer} from '../styling';
-import { serverURL } from '../../utils/serverURL';
+import serverURL from '../../utils/serverURL';
 
 
 export default function AddUser() {

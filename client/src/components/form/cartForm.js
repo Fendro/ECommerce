@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
 import { TopCenterContainer } from '../styling';
 import ReactModal from 'react-modal';
-import { serverURL } from "../../utils/serverURL";
+import serverURL from "../../utils/serverURL";
 import { CheckContext } from '../../context/CheckContext';
 ReactModal.setAppElement('body');
 

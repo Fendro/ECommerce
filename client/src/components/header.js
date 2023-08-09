@@ -3,7 +3,7 @@ import Logo from "./asset/logo.png";
 import styled from "styled-components";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
-import { serverURL } from "../utils/serverURL";
+import serverURL from "../utils/serverURL";
 import ShoppingCartRoundedIcon from "@mui/icons-material/ShoppingCartRounded";
 function Header() {
 	const { admin, setAdmin } = useContext(UserContext);

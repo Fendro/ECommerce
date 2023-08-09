@@ -6,7 +6,7 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import PostAddRoundedIcon from '@mui/icons-material/PostAddRounded';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import PersonAddAlt1RoundedIcon from '@mui/icons-material/PersonAddAlt1Rounded';
-import { serverURL } from "../../utils/serverURL";
+import serverURL from "../../utils/serverURL";
 
 export default function Admin() {
 	const navigate = useNavigate();

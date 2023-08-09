@@ -10,7 +10,7 @@ import { UserContext } from "../../context/UserContext";
 import { EmailContext } from "../../context/EmailContext";
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { serverURL } from "../../utils/serverURL";
+import serverURL from "../../utils/serverURL";
 
 export default function Login() {
   const [message, setMessage] = useState("");

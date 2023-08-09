@@ -1,4 +1,4 @@
-export function serverURL(path, args) {
+export default function serverURL(path, args) {
 	let url = "http://localhost:4242/" + path;
 	if (!args)
 		return url;

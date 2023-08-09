@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@mui/material';
 import { CenteredContainer, FormContainer, StyledLink, StyledInput } from '../styling';
-import { serverURL } from '../../utils/serverURL';
+import serverURL from '../../utils/serverURL';
 
 export default function Register() {
 
