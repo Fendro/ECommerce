@@ -6,25 +6,25 @@ import * as CurrencyController from "../controllers/CurrencyController";
 const currenciesRouter: Router = Router();
 
 currenciesRouter.delete(
-  "/categories/:_id",
+  "/currencies/:_id",
   isAdmin,
   catchWrapper(CurrencyController.deleteCurrency),
 );
 currenciesRouter.get(
-  "/categories",
+  "/currencies",
   catchWrapper(CurrencyController.getCurrencies),
 );
 currenciesRouter.get(
-  "/categories/:_id",
+  "/currencies/:_id",
   catchWrapper(CurrencyController.getCurrency),
 );
 currenciesRouter.post(
-  "/categories/",
+  "/currencies/",
   isAdmin,
   catchWrapper(CurrencyController.addCurrency),
 );
 currenciesRouter.put(
-  "/categories/:_id",
+  "/currencies/:_id",
   isAdmin,
   catchWrapper(CurrencyController.editCurrency),
 );

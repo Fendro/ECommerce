@@ -12,26 +12,38 @@ const incomingRequest = (
   // @ts-ignore
   req.logger = {};
 
-  const times = {
-    requestTime: new Date(),
-    responseTime: undefined,
-    executionTime: undefined,
-  };
   const client = {
-    headers: req.headers,
     ip: req.ip,
+    headers: req.headers,
   };
   const server = {
-    method: req.method,
-    body: req.body,
-    params: req.params,
-    query: req.query,
     url: req.url,
+    method: req.method,
   };
   const response = {};
+  const times = {
+    requestTime: new Date(),
+  };
 
   // @ts-ignore
-  req.logger = { times, client, server, response };
+  req.logger = { client, response, server, times };
+
+  next();
+};
+
+const logParsedPayloads = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  // @ts-ignore
+  req.logger.server.body = req.body;
+  // @ts-ignore
+  req.logger.server.params = req.params;
+  // @ts-ignore
+  req.logger.server.query = req.query;
+  // @ts-ignore
+  req.logger.server.session = req.session;
 
   next();
 };
@@ -78,4 +90,4 @@ const outgoingResponse = (req: Request, data: ResponseData): void => {
   });
 };
 
-export { incomingRequest, outgoingResponse };
+export { incomingRequest, logParsedPayloads, outgoingResponse };

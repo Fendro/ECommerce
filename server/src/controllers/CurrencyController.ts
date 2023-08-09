@@ -9,6 +9,18 @@ let model: CurrencyModel;
   model = new CurrencyModel(await getCollection("currencies"));
 })();
 
+const addCurrency = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.fetchParams(editableFields, req.body);
+
+  const { insertedId } = await model.addCurrency(data);
+
+  requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
+    message: "Currency saved.",
+    success: true,
+  });
+};
+
 const deleteCurrency = async (req: Request, res: Response): Promise<void> => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
 
@@ -17,17 +29,6 @@ const deleteCurrency = async (req: Request, res: Response): Promise<void> => {
 
   requestHandler.sendResponse(res, {
     message: "Currency deleted.",
-    success: true,
-  });
-};
-
-const addCurrency = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(editableFields, req.body);
-
-  await model.addCurrency(data);
-
-  requestHandler.sendResponse(res, {
-    message: "Currency saved.",
     success: true,
   });
 };

@@ -1,6 +1,6 @@
 import requestHandler from "../services/requestHandler";
 import { getCollection } from "../services";
-import { NotFound, CountryModel, ServiceError, Unauthorized } from "../models";
+import { NotFound, CountryModel, ServiceError } from "../models";
 import { Request, Response } from "express";
 
 const editableFields = ["name"];
@@ -8,6 +8,18 @@ let model: CountryModel;
 (async () => {
   model = new CountryModel(await getCollection("countries"));
 })();
+
+const addCountry = async (req: Request, res: Response): Promise<void> => {
+  const data = requestHandler.fetchParams(editableFields, req.body);
+
+  const { insertedId } = await model.addCountry(data);
+
+  requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
+    message: "Country saved.",
+    success: true,
+  });
+};
 
 const deleteCountry = async (req: Request, res: Response): Promise<void> => {
   const { _id } = requestHandler.fetchParams(["_id"], req.params);
@@ -17,17 +29,6 @@ const deleteCountry = async (req: Request, res: Response): Promise<void> => {
 
   requestHandler.sendResponse(res, {
     message: "Country deleted.",
-    success: true,
-  });
-};
-
-const addCountry = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(editableFields, req.body);
-
-  await model.addCountry(data);
-
-  requestHandler.sendResponse(res, {
-    message: "Country saved.",
     success: true,
   });
 };

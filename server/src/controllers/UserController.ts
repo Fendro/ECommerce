@@ -116,9 +116,10 @@ const register = async (req: Request, res: Response): Promise<void> => {
   const user = await model.getUser({ email: data.email });
   if (user) throw new Unauthorized("Email already in use.");
 
-  await model.addUser(data);
+  const { insertedId } = await model.addUser(data);
 
   requestHandler.sendResponse(res, {
+    data: { _id: insertedId },
     message: "Registration succeeded.",
     success: true,
   });
@@ -142,7 +143,7 @@ const registerGuest = async (req: Request, res: Response): Promise<void> => {
   const { insertedId } = await model.addGuest(data);
 
   requestHandler.sendResponse(res, {
-    data: { user_id: insertedId },
+    data: { _id: insertedId },
     message: "Registration succeeded.",
     success: true,
   });
