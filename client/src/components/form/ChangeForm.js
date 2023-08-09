@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 import { useNavigate } from "react-router-dom";
 import { serverURL } from "../../utils/serverURL";
 import { Button } from "@mui/material";
@@ -16,29 +17,38 @@ export default function EditUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const edits = {
+    const edits = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       password: inputPsw.current.children[1].children[0].value,
-    };
+    });
 
-    const formData = {
+    const formData = bodyCleaner({
       email: inputCurrentEmail.current.children[1].children[0].value,
       password: currentPsw.current.children[1].children[0].value,
       edits: edits,
-    };
+    });
+
+    let error_msg = "";
+    if (formData.email.length < 6)
+      error_msg += "Email must be at least 6 characters long";
+    if (formData.password.length < 6)
+      error_msg += "Password must be at least 6 characters long";
+
+    if (error_msg.length) {
+      alert(error_msg);
+      return;
+    }
 
     axios
       .put(serverURL("auth"), formData, { withCredentials: true })
       .then((response) => {
         const { data } = response;
 
-        if (data.success) {
-          setMessage(data.message);
+        setMessage(data.message);
 
-          setTimeout(() => {
-            navigate("/");
-          }, 500);
-        }
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
       })
       .catch((error) => {
         setMessage(error.response.data.message);

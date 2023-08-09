@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 import { serverURL } from "../../utils/serverURL";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
@@ -20,11 +21,11 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
+    const formData = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       username: inputUser.current.children[1].children[0].value,
       password: inputPsw.current.children[1].children[0].value,
-    };
+    });
 
     let error_msg = "";
     if (formData.email < 6)
@@ -43,13 +44,11 @@ export default function Register() {
       .post(serverURL("auth"), formData)
       .then((response) => {
         const { data } = response;
-        if (data.success) {
-          setMessage(data.message);
+        setMessage(data.message);
 
-          setTimeout(() => {
-            navigate("/login");
-          }, 500);
-        }
+        setTimeout(() => {
+          navigate("/login");
+        }, 500);
       })
       .catch((error) => {
         setMessage(error.response.data.message);

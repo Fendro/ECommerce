@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 import { serverURL } from "../../utils/serverURL";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, FormControlLabel, Switch } from "@mui/material";
@@ -15,24 +16,22 @@ export default function EditUser() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
+    const formData = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       password: inputPsw.current.children[1].children[0].value,
       admin: adminSwitch.current.checked,
-    };
+    });
 
     axios
       .put(serverURL(`admin/users/${id}`), formData)
       .then((response) => {
         const { data } = response;
 
-        if (data.success) {
-          setMessage(data.message);
+        setMessage(data.message);
 
-          setTimeout(() => {
-            navigate("/admin");
-          }, 500);
-        }
+        setTimeout(() => {
+          navigate("/admin");
+        }, 500);
       })
       .catch((error) => {
         setMessage(error.response.data.message);

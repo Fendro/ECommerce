@@ -12,6 +12,7 @@ import React, { useRef, useState } from "react";
 import { serverURL } from "../../utils/serverURL";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 
 export default function AddUser() {
   const navigate = useNavigate();
@@ -27,23 +28,21 @@ export default function AddUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
+    const formData = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       username: inputUser.current.children[1].children[0].value,
       password: inputPsw.current.children[1].children[0].value,
-    };
+    });
 
     axios
       .post(serverURL("auth"), formData)
       .then((response) => {
         const { data } = response;
 
-        if (data.success) {
-          setMessage(data.message);
-          setTimeout(() => {
-            navigate("/admin");
-          });
-        }
+        setMessage(data.message);
+        setTimeout(() => {
+          navigate("/admin");
+        });
       })
       .catch((error) => {
         setMessage(error.response.data.message);

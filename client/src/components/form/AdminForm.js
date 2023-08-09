@@ -23,10 +23,8 @@ export default function Admin() {
       .then((response) => {
         const { data } = response;
 
-        if (data.success) {
-          setData(data.data);
-          setFetched(true);
-        }
+        setData(data.data);
+        setFetched(true);
       })
       .catch((error) => {
         setData([]);
@@ -38,13 +36,11 @@ export default function Admin() {
   const handleDelete = (id) => {
     axios
       .delete(serverURL(`admin/users/${id}`))
-      .then((response) => {
-        const { data } = response;
-
-        if (data.success) setReload(!reload);
+      .then(() => {
+        setReload(!reload);
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error.response.data);
       });
   };
   const handleEdit = (id) => {

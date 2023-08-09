@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useContext, useRef, useState } from "react";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 import { Button } from "@mui/material";
 import { CenteredContainer, FormContainer, StyledInput } from "../styling";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,7 @@ export default function AddUser() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
+    const formData = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       firstname: inputName.current.children[1].children[0].value,
       lastname: inputLastname.current.children[1].children[0].value,
@@ -30,17 +31,15 @@ export default function AddUser() {
       country: inputCountry.current.children[1].children[0].value,
       city: inputCity.current.children[1].children[0].value,
       zipcode: inputZipcode.current.children[1].children[0].value,
-    };
+    });
 
     axios
       .post(serverURL("/auth/guest"), formData)
       .then((response) => {
         const { data } = response;
 
-        if (data.success) {
-          setUser({ _id: data.data._id });
-          navigate("/final");
-        }
+        setUser({ _id: data.data._id });
+        navigate("/final");
       })
       .catch((error) => {
         setMessage(error.response.data.message);

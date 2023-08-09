@@ -48,16 +48,17 @@ function Header() {
   };
   const handleLogoutClick = async () => {
     axios
-      .post(serverURL("auth/logout"))
+      .post(serverURL("auth/logout"), {}, { withCredentials: true })
       .then((response) => {
         const { data } = response;
 
         if (data.success) setUser({});
+
+        navigate("/");
       })
       .catch((error) => {
         console.error(error.response.data);
       });
-    navigate("/");
   };
 
   if (user.admin === true) {

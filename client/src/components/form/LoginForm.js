@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { bodyCleaner } from "../../utils/bodyCleaner";
 import { serverURL } from "../../utils/serverURL";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
@@ -16,14 +17,18 @@ export default function Login() {
   const inputMail = useRef();
   const inputPsw = useRef();
   const [message, setMessage] = useState("");
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    if (Object.keys(user).length) navigate("/");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = {
+    const formData = bodyCleaner({
       email: inputMail.current.children[1].children[0].value,
       password: inputPsw.current.children[1].children[0].value,
-    };
+    });
     let error_msg = "";
     if (formData.email.length < 6)
       error_msg += "Email must be at least 6 characters long";
@@ -39,14 +44,12 @@ export default function Login() {
       .post(serverURL("auth/login"), formData, { withCredentials: true })
       .then((response) => {
         const { data } = response;
-        if (data.success) {
-          setMessage(data.message);
+        setMessage(data.message);
 
-          setTimeout(() => {
-            setUser(data.data);
-            navigate("/");
-          }, 500);
-        }
+        setTimeout(() => {
+          setUser(data.data);
+          navigate("/");
+        }, 500);
       })
       .catch((error) => {
         setMessage(error.response.data.message);

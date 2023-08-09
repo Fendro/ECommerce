@@ -1,6 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnyImage, AnyText, ArticleContainer, Linebreak } from "../styling";
-import { UserContext } from "../../context/UserContext";
 import { serverURL } from "../../utils/serverURL";
 
 export default function Product() {
