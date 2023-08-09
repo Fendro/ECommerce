@@ -18,7 +18,7 @@ export default function CartForm() {
     return (
         <>
             <TopCenterContainer>
-                <h1>List of articles</h1>
+                <h1>Liste des articles</h1>
             </TopCenterContainer>
             {storedPackages.map((pkg, packageIndex) => (
                 <div key={`package_${packageIndex}`}>
@@ -27,14 +27,14 @@ export default function CartForm() {
 
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
-                                <h2>Article Name: {articleInfo?.name ?? 'Unknown'}</h2>
-                                <p>Quantity: {articleInCart.quantity}</p>
+                                <h2>Nom de l'article: {articleInfo?.name ?? 'Unknown'}</h2>
+                                <p>Quantité: {articleInCart.quantity}</p>
                             </TopCenterContainer>
                         );
                     })}
                 </div>
             ))}
-            {user ? (
+            {Object.keys(user).length ? (
                 <TopCenterContainer>
                     <Button
                         variant="outlined"
@@ -51,7 +51,7 @@ export default function CartForm() {
                         color="success"
                         onClick={() => setIsOpen(true)}
                     >
-                        Order
+                        Commander
                     </Button>
                 </TopCenterContainer>
             )}
@@ -94,7 +94,7 @@ export default function CartForm() {
                             navigate("/delivery");
                         }}
                     >
-                        Continue as Guest
+                        Continuer en tant qu'invité
                     </Button>
                     <Button
                         style={{width: "45%"}}
@@ -104,7 +104,7 @@ export default function CartForm() {
                             navigate("/login");
                         }}
                     >
-                        Log In
+                        Se connecter
                     </Button>
                 </div>
             </ReactModal>

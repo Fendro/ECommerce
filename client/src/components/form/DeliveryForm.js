@@ -3,6 +3,9 @@ import {Button} from "@mui/material";
 import {CenteredContainer, FormContainer, StyledInput} from "../styling";
 import {useNavigate} from "react-router-dom";
 import {UserContext} from "../../context/UserContext";
+import {bodyCleaner} from "../../utils/bodyCleaner";
+import axios from "axios";
+import {serverURL} from "../../utils/serverURL";
 
 export default function AddUser() {
     const navigate = useNavigate();
@@ -19,29 +22,29 @@ export default function AddUser() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // const formData = bodyCleaner({
-        //   email: inputMail.current.children[1].children[0].value,
-        //   firstname: inputName.current.children[1].children[0].value,
-        //   lastname: inputLastname.current.children[1].children[0].value,
-        //   phone: inputPhone.current.children[1].children[0].value,
-        //   address: inputAddress.current.children[1].children[0].value,
-        //   country: inputCountry.current.children[1].children[0].value,
-        //   city: inputCity.current.children[1].children[0].value,
-        //   zipcode: inputZipcode.current.children[1].children[0].value,
-        // });
-        //
-        // axios
-        //   .post(serverURL("/auth/guest"), formData)
-        //   .then((response) => {
-        //     const { data } = response;
+        const formData = bodyCleaner({
+            email: inputMail.current.children[1].children[0].value,
+            firstname: inputName.current.children[1].children[0].value,
+            lastname: inputLastname.current.children[1].children[0].value,
+            phone: inputPhone.current.children[1].children[0].value,
+            address: inputAddress.current.children[1].children[0].value,
+            country: inputCountry.current.children[1].children[0].value,
+            city: inputCity.current.children[1].children[0].value,
+            zip: inputZipcode.current.children[1].children[0].value,
+        });
 
-        // setUser({ _id: data.data._id });
-        navigate("/final");
-        // })
-        // .catch((error) => {
-        //   setMessage(error.response.data.message);
-        //   console.error(error.response.data);
-        // });
+        axios
+            .post(serverURL("auth/guest"), formData)
+            .then((response) => {
+                const {data} = response;
+
+                setUser({_id: data.data._id});
+                navigate("/final");
+            })
+            .catch((error) => {
+                setMessage(error.response.data.message);
+                console.error(error.response.data);
+            });
     };
 
     return (
@@ -60,7 +63,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Firstname"
+                            label="Prénom"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -69,7 +72,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Lastname"
+                            label="Nom"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -78,7 +81,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Phone"
+                            label="Numero de téléphone"
                             type="tel"
                             variant="outlined"
                             minLength="6"
@@ -87,7 +90,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Address"
+                            label="Adresse"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -96,7 +99,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Country"
+                            label="Pays"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -105,7 +108,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="City"
+                            label="Ville"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -114,7 +117,7 @@ export default function AddUser() {
                             requered
                         />
                         <StyledInput
-                            label="Zipcode"
+                            label="Code postale"
                             type="text"
                             variant="outlined"
                             minLength="6"
@@ -129,7 +132,7 @@ export default function AddUser() {
                             width={"100"}
                             mb={"5"}
                         >
-                            Next step
+                            Continuer
                         </Button>
                     </FormContainer>
                 </CenteredContainer>

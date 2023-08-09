@@ -98,9 +98,9 @@ export default function Product() {
         case "loading":
             return (
                 <ArticleContainer>
-                    <AnyText width="60">Product name</AnyText>
+                    <AnyText width="60">Nom du produit</AnyText>
                     <AnyText width="80">
-                        Description is loading, please wait until server response
+                        La description est en cours de chargement, veuillez attendre la réponse du serveur
                     </AnyText>
                 </ArticleContainer>
             );
@@ -117,7 +117,7 @@ export default function Product() {
                             mb={"5"}
                             onClick={() => addToCart(id, 1, data?.name)}
                         >
-                            Add to cart
+                            Ajouter au panier
                         </Button>
                         <Linebreak/>
                         <AnyImage width="30" bin={data?.image?.[0] ?? null}></AnyImage>
