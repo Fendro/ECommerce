@@ -3,7 +3,6 @@ import {
   Document,
   InsertOneResult,
   ModifyResult,
-  ObjectId,
   WithId,
 } from "mongodb";
 
@@ -20,20 +19,18 @@ export class CategoryModel {
     return await this.collection.insertOne(data);
   };
 
-  deleteCategory = async (_id: string): Promise<number> => {
-    const { deletedCount } = await this.collection.deleteOne({
-      _id: ObjectId.createFromHexString(_id),
-    });
+  deleteCategory = async (name: string): Promise<number> => {
+    const { deletedCount } = await this.collection.deleteOne({ name: name });
 
     return deletedCount;
   };
 
   editCategory = async (
-    _id: string,
+    name: string,
     fieldsToUpdate: { [key: string]: any },
   ): Promise<ModifyResult> => {
     return await this.collection.findOneAndUpdate(
-      { _id: ObjectId.createFromHexString(_id) },
+      { name: name },
       {
         $set: fieldsToUpdate,
       },
@@ -41,10 +38,8 @@ export class CategoryModel {
     );
   };
 
-  getCategory = async (_id: string): Promise<WithId<Document> | null> => {
-    return await this.collection.findOne({
-      _id: ObjectId.createFromHexString(_id),
-    });
+  getCategory = async (name: string): Promise<WithId<Document> | null> => {
+    return await this.collection.findOne({ name: name });
   };
 
   getCategories = async (): Promise<WithId<Document>[]> => {

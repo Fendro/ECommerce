@@ -3,10 +3,13 @@ import { getCollection } from "../services";
 import { NotFound, CountryModel, ServiceError } from "../models";
 import { Request, Response } from "express";
 
-const editableFields = ["name"];
+const editableFields = ["name", "currency"];
 let model: CountryModel;
 (async () => {
-  model = new CountryModel(await getCollection("countries"));
+  model = new CountryModel(
+    await getCollection("countries"),
+    await getCollection("currencies"),
+  );
 })();
 
 const addCountry = async (req: Request, res: Response): Promise<void> => {
@@ -22,10 +25,10 @@ const addCountry = async (req: Request, res: Response): Promise<void> => {
 };
 
 const deleteCountry = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  if (!(await model.deleteCountry(_id)))
-    throw new NotFound("No country found with the provided id.");
+  if (!(await model.deleteCountry(name)))
+    throw new NotFound("No country found with the provided name.");
 
   requestHandler.sendResponse(res, {
     message: "Country deleted.",
@@ -34,7 +37,7 @@ const deleteCountry = async (req: Request, res: Response): Promise<void> => {
 };
 
 const editCountry = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
   const fieldsToUpdate = requestHandler.fetchParams(
     editableFields,
@@ -42,7 +45,7 @@ const editCountry = async (req: Request, res: Response): Promise<void> => {
     false,
   );
 
-  const country = await model.editCountry(_id, fieldsToUpdate);
+  const country = await model.editCountry(name, fieldsToUpdate);
   if (!country.value) throw new ServiceError("Database error.", country);
 
   requestHandler.sendResponse(res, {
@@ -53,10 +56,10 @@ const editCountry = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getCountry = async (req: Request, res: Response): Promise<void> => {
-  const { _id } = requestHandler.fetchParams(["_id"], req.params);
+  const { name } = requestHandler.fetchParams(["name"], req.params);
 
-  const country = await model.getCountry(_id);
-  if (!country) throw new NotFound("No country found with the provided id.");
+  const country = await model.getCountry(name);
+  if (!country) throw new NotFound("No country found with the provided name.");
 
   requestHandler.sendResponse(res, {
     data: country,
@@ -67,7 +70,7 @@ const getCountry = async (req: Request, res: Response): Promise<void> => {
 
 const getCountries = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
-  const countries = await model.getCountries(req.session.user._id);
+  const countries = await model.getCountries();
   if (!countries.length) throw new NotFound("No countries found.");
 
   requestHandler.sendResponse(res, {

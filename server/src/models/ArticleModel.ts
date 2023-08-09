@@ -19,6 +19,7 @@ export class ArticleModel {
   addArticle = async (data: {
     [key: string]: any;
   }): Promise<InsertOneResult> => {
+    data.images = [];
     data.views = 0;
     data.searches = 0;
 

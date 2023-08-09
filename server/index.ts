@@ -12,6 +12,7 @@ import {
   logParsedPayloads,
   ErrorHandler,
 } from "./src/services";
+import { exchangeRateService } from "./src/services/exchangeRate";
 
 const app: Express = express();
 
@@ -20,6 +21,9 @@ dbInit().catch((error: unknown) => {
   console.error(error);
   process.exit(1);
 });
+
+/*  Setting up exchange rates fetcher  */
+exchangeRateService();
 
 /*  Mounting request information logger at the beginning of the stack  */
 app.use(incomingRequest);
