@@ -25,7 +25,7 @@ export default function Login() {
                 user_id: user._id,
                 packages: ordersToSend,
             };
-
+            console.log(user);
             console.log("requestData:", requestData, typeof requestData);
             console.log("user_id:", requestData.user_id, typeof requestData.user_id);
             console.log("packages:", requestData.packages, typeof requestData.packages);

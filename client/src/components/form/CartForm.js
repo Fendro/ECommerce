@@ -39,7 +39,7 @@ export default function CartForm() {
                     <Button
                         variant="outlined"
                         color="success"
-                        onClick={() => navigate("/delivery")}
+                        onClick={() => navigate("/deliveryForUser")}
                     >
                         Order
                     </Button>

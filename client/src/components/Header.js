@@ -60,6 +60,7 @@ function Header() {
             .catch((error) => {
                 console.error(error.response.data);
             });
+        localStorage.clear();
     };
 
     if (user.admin === true) {
