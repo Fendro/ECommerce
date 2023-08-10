@@ -6,8 +6,7 @@ import placeholder from "./asset/placeholder.png";
 export const CenteredContainer = styled(Container)({
   display: "flex",
   justifyContent: "center",
-  alignItems: "center",
-  height: "100vh",
+  marginTop: "5rem"
 });
 
 export const FormContainer = styled(Box)({

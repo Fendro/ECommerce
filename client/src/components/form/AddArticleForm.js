@@ -11,9 +11,9 @@ import {
 import { Form, useNavigate } from "react-router-dom";
 import PeopleAltRoundedIcon from "@mui/icons-material/PeopleAltRounded";
 import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
-import {bodyCleaner} from "../../utils/bodyCleaner";
-import {serverURL} from "../../utils/serverURL";
-import {storageURL} from "../../utils/storageURL";
+import { bodyCleaner } from "../../utils/bodyCleaner";
+import { serverURL } from "../../utils/serverURL";
+import { storageURL } from "../../utils/storageURL";
 
 export default function AddArticle() {
 	const navigate = useNavigate();
@@ -84,8 +84,8 @@ export default function AddArticle() {
 						setMessage(data.message);
 
 						setTimeout(() => {
-							// navigate("/admin");
-						}, 500);
+							navigate("/admin");
+						}, 1000);
 					})
 					.catch((error) => {
 						setMessage(error.response?.data.message ?? error.message);
@@ -111,7 +111,7 @@ export default function AddArticle() {
 				</Button>
 			</TopCenterContainer>
 
-			<form onSubmit={handleSubmit}>
+			<form onSubmit={handleSubmit} style={{ marginTop: "50px" }}>
 				<CenteredContainer>
 					<FormContainer>
 						<h1>Add an article</h1>
@@ -127,6 +127,13 @@ export default function AddArticle() {
 							ref={inputDesc}
 							type="text"
 							label="Description"
+							multiline
+							fullWidth
+						/>
+						<StyledInput
+							className="specs"
+							type="text"
+							label="Specification"
 							fullWidth
 						/>
 						<StyledInput
