@@ -52,13 +52,15 @@ export default function AddArticle() {
 
 		const formData = bodyCleaner({
 			name: inputName.current.children[1].children[0].value,
-			description: inputDesc.current.children[1].children[0].value,
+			description: inputDesc.current.children[1].children[0].value ?? "Pas de description",
 			price: Number(inputPrice.current.children[1].children[0].value),
 			images: [""],
 			specs: [""],
 			categories: [""],
-			quantity: Number(inputQuantity.current.children[1].children[0].value),
+			quantity: Number(inputQuantity.current.children[1].children[0].value) ?? 0,
 		});
+
+		console.log(formData);
 
 		axios
 			.post(serverURL("articles"), formData, { withCredentials: true })
@@ -126,7 +128,6 @@ export default function AddArticle() {
 							type="text"
 							label="Description"
 							fullWidth
-							required
 						/>
 						<StyledInput
 							ref={inputPrice}
@@ -142,14 +143,12 @@ export default function AddArticle() {
 							label="Quantité"
 							InputProps={{ inputProps: { min: 0 } }}
 							fullWidth
-							required
 						/>
 						<StyledInput
 							ref={inputImage}
 							type="file"
 							onChange={getImageFromLocal}
 							fullWidth
-							required
 						/>
 						<AnyImage url={affImage} />
 						<Button
