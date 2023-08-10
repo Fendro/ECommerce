@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import { Button } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
 import {
 	AnyImage,
 	CenteredContainer,
@@ -136,6 +137,13 @@ export default function AddArticle() {
 							label="Specification"
 							fullWidth
 						/>
+						<Button
+							variant="outlined"
+							color="secondary"
+						// onClick={() => handleDelete(admin?._id)}
+						>
+							<AddIcon />
+						</Button>
 						<StyledInput
 							ref={inputPrice}
 							type="number"
