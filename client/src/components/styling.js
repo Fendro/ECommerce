@@ -41,7 +41,8 @@ export const StyledLink = styled(Link)({
 
 export function ArticleContainer({ link, children }) {
   const style = {
-    marginTop: "3%",
+    marginTop: "1.5%",
+    marginBottom: "1.5%",
     marginRight: "auto",
     marginLeft: "auto",
     display: "flex",
