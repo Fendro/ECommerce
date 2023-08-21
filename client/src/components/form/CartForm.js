@@ -15,6 +15,7 @@ export default function CartForm() {
     const storedPackages = JSON.parse(localStorage.getItem("packages")) || [];
     const articleContext = useContext(ArticleContext);
 
+
     return (
         <>
             <TopCenterContainer>
@@ -24,10 +25,10 @@ export default function CartForm() {
                 <div key={`package_${packageIndex}`}>
                     {pkg.articles.map((articleInCart, articleIndex) => {
                         const articleInfo = articleContext.article[articleInCart.article_id];
-
+                        // console.log(articleInCart.article_id);
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
-                                <h2>Nom de l'article: {articleInfo?.name ?? 'Unknown'}</h2>
+                                <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.article_id}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
                             </TopCenterContainer>
                         );

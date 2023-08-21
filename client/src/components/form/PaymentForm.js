@@ -17,6 +17,7 @@ export default function Payment() {
         console.log(inputCVV.current.children[1].children[0].value);
         console.log(inputDate.current.children[1].children[0].value);
         console.log(inputCard.current.children[1].children[0].value);
+        navigate("/final");
     }
 
     return (
@@ -32,6 +33,7 @@ export default function Payment() {
                         variant="outlined"
                         ref={inputCard}
                         fullWidth
+                        required
                     />
                     <StyledInput
                         label="Valide jusqu'au"
@@ -42,6 +44,7 @@ export default function Payment() {
                         variant="outlined"
                         ref={inputDate}
                         fullWidth
+                        required
                     />
                     <StyledInput
                         label="Code de sécurité"
@@ -52,6 +55,7 @@ export default function Payment() {
                         variant="outlined"
                         ref={inputCVV}
                         fullWidth
+                        required
                     />
                     <Button
                         variant="contained"
