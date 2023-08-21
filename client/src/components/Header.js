@@ -62,7 +62,6 @@ function Header() {
             });
         localStorage.clear();
     };
-
     if (user.admin === true) {
         return (
             <HeaderContainer>
