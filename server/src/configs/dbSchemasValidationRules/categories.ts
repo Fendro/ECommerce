@@ -11,6 +11,10 @@ module.exports = {
         description:
           "must be a unique string from 2 to 20 characters and is required.",
       },
+      promotion: {
+        bsonType: ["double", "int", "long"],
+        description: "must be a number.",
+      },
     },
   },
 };

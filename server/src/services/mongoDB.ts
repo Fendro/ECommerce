@@ -28,7 +28,7 @@ const getCollection = async (collection: string) => {
 
 /**
  * Retrieves collections from dbConfig and creates them
- * if necessary. Sets their validation associated rules on
+ * if necessary. Sets their associated validation rules on
  * creation.
  * @param client MongoClient instance.
  */
