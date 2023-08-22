@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useRef, useState } from "react";
 import { Button } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+
 import {
 	AnyImage,
 	CenteredContainer,
@@ -15,6 +17,7 @@ import PersonAddAlt1RoundedIcon from "@mui/icons-material/PersonAddAlt1Rounded";
 import { bodyCleaner } from "../../utils/bodyCleaner";
 import { serverURL } from "../../utils/serverURL";
 import { storageURL } from "../../utils/storageURL";
+import ReactDOM from 'react-dom/client';
 
 export default function AddArticle() {
 	const navigate = useNavigate();
@@ -25,14 +28,6 @@ export default function AddArticle() {
 	const inputImage = useRef();
 	const [affImage, setAffImage] = useState();
 	const [message, setMessage] = useState("");
-
-	function handleList() {
-		navigate("/admin");
-	}
-
-	function handleAddUser() {
-		navigate("/admin/addUser");
-	}
 
 	function getImageFromLocal(e) {
 		e.preventDefault();
@@ -51,17 +46,26 @@ export default function AddArticle() {
 	async function handleSubmit(e) {
 		e.preventDefault();
 
+		let specsDom = document.getElementsByClassName("specs");
+		let specs = [];
+		for (let i = 0; i < specsDom.length; i++) {
+			let spec = "";
+			spec += specsDom[i].children[1].innerText;
+			spec += " : ";
+			spec += specsDom[i].children[1].children[0].value;
+			specs[i] = spec;
+		}
+
 		const formData = bodyCleaner({
 			name: inputName.current.children[1].children[0].value,
 			description: inputDesc.current.children[1].children[0].value ?? "Pas de description",
 			price: Number(inputPrice.current.children[1].children[0].value),
 			images: [""],
-			specs: [""],
+			specs: specs,
 			categories: [""],
 			quantity: Number(inputQuantity.current.children[1].children[0].value) ?? 0,
 		});
 
-		console.log(formData);
 
 		axios
 			.post(serverURL("articles"), formData, { withCredentials: true })
@@ -97,16 +101,61 @@ export default function AddArticle() {
 			});
 	}
 
+	function addSpec(elem) {
+		let label = prompt("Quelle type de spécification ?");
+
+		let Specs = elem.target;
+		while (Specs.nodeName !== "BUTTON") {
+			Specs = Specs.parentElement;
+		}
+		Specs = Specs.parentElement.parentElement;
+
+		const div = document.createElement("div");
+		div.style.display = "flex";
+		div.style.width = "100%";
+		Specs.append(div);
+		const root = ReactDOM.createRoot(div);
+		root.render(
+			<>
+				<StyledInput
+					className="specs"
+					type="text"
+					label={label}
+					fullWidth
+				/>
+				<Button style={{ marginBottom: "30px" }}
+					variant="outlined"
+					color="secondary"
+					onClick={removeSpec}
+				>
+					<DeleteRoundedIcon />
+				</Button>
+			</>
+		);
+		Specs.append(div);
+
+	}
+
+	function removeSpec (elem) {
+		let Spec = elem.target;
+		while (Spec.nodeName !== "BUTTON") {
+			Spec = Spec.parentElement;
+		}
+		Spec = Spec.parentElement;
+		Spec.remove();
+
+	}
+
 	return (
 		<>
 			<TopCenterContainer>
-				<Button variant="outlined" color="success" onClick={() => handleList()}>
+				<Button variant="outlined" color="success" onClick={() => navigate("/admin")}>
 					<PeopleAltRoundedIcon />
 				</Button>
 				<Button
 					variant="outlined"
 					color="success"
-					onClick={() => handleAddUser()}
+					onClick={() => navigate("/admin/addUser")}
 				>
 					<PersonAddAlt1RoundedIcon />
 				</Button>
@@ -132,19 +181,6 @@ export default function AddArticle() {
 							fullWidth
 						/>
 						<StyledInput
-							className="specs"
-							type="text"
-							label="Specification"
-							fullWidth
-						/>
-						<Button
-							variant="outlined"
-							color="secondary"
-						// onClick={() => handleDelete(admin?._id)}
-						>
-							<AddIcon />
-						</Button>
-						<StyledInput
 							ref={inputPrice}
 							type="number"
 							label="Prix"
@@ -159,6 +195,36 @@ export default function AddArticle() {
 							InputProps={{ inputProps: { min: 0 } }}
 							fullWidth
 						/>
+						<FormContainer>
+							<h2>Specifications</h2>
+							<StyledInput
+								className="specs"
+								type="text"
+								label="Width"
+								fullWidth
+							/>
+							<StyledInput
+								className="specs"
+								type="text"
+								label="Height"
+								fullWidth
+							/>
+							<div style={{ display: "flex", width: "100%" }}>
+								<StyledInput
+									className="specs"
+									type="text"
+									label="Length"
+									fullWidth
+								/>
+								<Button style={{ marginBottom: "30px" }}
+									variant="outlined"
+									color="secondary"
+									onClick={addSpec}
+								>
+									<AddIcon />
+								</Button>
+							</div>
+						</FormContainer>
 						<StyledInput
 							ref={inputImage}
 							type="file"
