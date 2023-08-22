@@ -14,8 +14,6 @@ export default function CartForm() {
     const {user} = useContext(UserContext);
     const storedPackages = JSON.parse(localStorage.getItem("packages")) || [];
     const articleContext = useContext(ArticleContext);
-
-
     return (
         <>
             <TopCenterContainer>
@@ -28,7 +26,7 @@ export default function CartForm() {
                         // console.log(articleInCart.article_id);
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
-                                <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.article_id}</h2>
+                                <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.articleName}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
                             </TopCenterContainer>
                         );

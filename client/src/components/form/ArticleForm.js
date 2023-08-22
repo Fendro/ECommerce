@@ -47,7 +47,7 @@ export default function Product() {
                 (article) => article.article_id === articleId
             ).quantity += quantity;
         } else {
-            const articles = [{article_id: articleId, quantity}];
+            const articles = [{article_id: articleId, quantity, articleName}];
             existingCart.push({
                 articles,
             });
