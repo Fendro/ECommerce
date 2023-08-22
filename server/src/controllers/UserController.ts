@@ -66,6 +66,17 @@ const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   else next();
 };
 
+const isOwner = (req: Request, res: Response, next: NextFunction): void => {
+  // @ts-ignore
+  if (!req.session?.user) throw new Unauthorized("Authentication required.");
+
+  const { user_id } = requestHandler.fetchParams(["user_id"], req.params);
+  // @ts-ignore
+  if (req.session?.user._id !== user_id)
+    throw new Unauthorized("Unauthorized access.");
+  else next();
+};
+
 const login = async (req: Request, res: Response): Promise<void> => {
   // @ts-ignore
   if (req.session.user) {
@@ -152,6 +163,7 @@ export {
   deleteUser,
   editUser,
   isLoggedIn,
+  isOwner,
   login,
   logout,
   register,

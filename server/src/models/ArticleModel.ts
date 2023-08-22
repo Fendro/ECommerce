@@ -51,7 +51,7 @@ export class ArticleModel {
     return await this.collection.findOneAndUpdate(
       { _id: ObjectId.createFromHexString(_id) },
       { $inc: { views: 1 } },
-      // { projection: { views: 0, searches: 0 } },
+      { projection: { views: 0, searches: 0 } },
     );
   };
 
