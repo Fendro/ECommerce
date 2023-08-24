@@ -1,5 +1,5 @@
-import { catchWrapper } from "../utils";
-import { isAdmin } from "../controllers/AdminController";
+import { catchWrapper } from "utils";
+import { isAdmin } from "controllers/AdminController";
 import { Router } from "express";
 import { ArticleController } from "../controllers/";
 
