@@ -1,7 +1,7 @@
-import { catchWrapper } from "../utils";
-import { isOwner } from "../controllers/UserController";
+import { catchWrapper } from "utils";
+import { isOwner } from "controllers/UserController";
 import { Router } from "express";
-import * as CreditCardController from "../controllers/CreditCardController";
+import { CreditCardController } from "controllers";
 
 const creditCardsRouter: Router = Router();
 

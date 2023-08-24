@@ -1,4 +1,4 @@
-import appConfig from "../configs/appConfig";
+import appConfig from "configs/appConfig";
 import fs from "fs";
 import requestHandler from "./requestHandler";
 import { outgoingResponse } from "./requestLogger";
@@ -9,11 +9,11 @@ import {
   NotFound,
   ServiceError,
   Unauthorized,
-} from "../models";
+} from "models";
 import { BSONError } from "bson";
 import { MongoError } from "mongodb";
 import { NextFunction, Request, Response } from "express";
-import { ResponseData } from "../types";
+import { ResponseData } from "types";
 
 /**
  * Custom error handling middleware which sends responses
@@ -79,12 +79,12 @@ export const ErrorHandler = (
     stack: error.stack,
   };
 
-  if (!fs.existsSync("./server logs")) {
-    fs.mkdirSync("./server logs");
+  if (!fs.existsSync("../server logs")) {
+    fs.mkdirSync("../server logs");
   }
 
   fs.writeFile(
-    `./server logs/${new Date()}.json`,
+    `../server logs/${new Date()}.json`,
     JSON.stringify(response, null, 2),
     (writeError) => {
       if (writeError)

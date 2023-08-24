@@ -1,7 +1,7 @@
-import { catchWrapper } from "../utils";
-import { isOwner } from "../controllers/UserController";
+import { catchWrapper } from "utils";
+import { isOwner } from "controllers/UserController";
 import { Router } from "express";
-import * as AddressController from "../controllers/AddressController";
+import { AddressController } from "controllers";
 
 const addressesRouter: Router = Router();
 

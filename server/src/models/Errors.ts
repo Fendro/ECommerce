@@ -1,5 +1,5 @@
 import appConfig from "../configs/appConfig";
-import { ResponseData, User } from "../types";
+import { ResponseData, User } from "types";
 
 class BadRequest extends Error {
   response: ResponseData;

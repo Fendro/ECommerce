@@ -1,7 +1,7 @@
 import axios from "axios";
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { ArticleModel, NotFound, ServiceError } from "../models";
+import { getCollection } from "services";
+import { ArticleModel, NotFound, ServiceError } from "models";
 import { Request, Response } from "express";
 
 const editableFields = [

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import bodyParser from "body-parser";
 import config from "./src/configs/appConfig";
 import cookieParser from "cookie-parser";
@@ -11,8 +12,8 @@ import {
   incomingRequest,
   logParsedPayloads,
   ErrorHandler,
-} from "./src/services";
-import { exchangeRateService } from "./src/services/exchangeRate";
+} from "services";
+import { exchangeRateService } from "services/exchangeRate";
 
 const app: Express = express();
 
