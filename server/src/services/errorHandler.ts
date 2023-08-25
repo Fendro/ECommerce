@@ -79,12 +79,12 @@ export const ErrorHandler = (
     stack: error.stack,
   };
 
-  if (!fs.existsSync("../server logs")) {
-    fs.mkdirSync("../server logs");
+  if (!fs.existsSync("./server logs")) {
+    fs.mkdirSync("./server logs");
   }
 
   fs.writeFile(
-    `../server logs/${new Date()}.json`,
+    `./server logs/${new Date()}.json`,
     JSON.stringify(response, null, 2),
     (writeError) => {
       if (writeError)

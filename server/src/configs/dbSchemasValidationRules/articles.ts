@@ -50,7 +50,7 @@ export const articles = {
       specs: {
         bsonType: "object",
         description: "must be an object and is required.",
-        required: ["height", "length", "width"],
+        required: ["height", "length", "width", "weight"],
         properties: {
           height: {
             bsonType: ["double", "int", "long"],
@@ -61,6 +61,10 @@ export const articles = {
             description: "must be a number and is required.",
           },
           width: {
+            bsonType: ["double", "int", "long"],
+            description: "must be a number and is required.",
+          },
+          weight: {
             bsonType: ["double", "int", "long"],
             description: "must be a number and is required.",
           },
