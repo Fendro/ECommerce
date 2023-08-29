@@ -26,80 +26,9 @@ export default function AddArticle() {
 	const inputPrice = useRef();
 	const inputQuantity = useRef();
 	const inputImage = useRef();
-	const [affImage, setAffImage] = useState();
+	const imagesFiles = useRef([]);
 	const [message, setMessage] = useState("");
-
-	function getImageFromLocal(e) {
-		e.preventDefault();
-
-		var file = inputImage.current.children[0].children[0].files?.[0];
-		if (!file) return;
-
-		const fileReader = new FileReader();
-		fileReader.onload = function (fileLoadedEvent) {
-			var srcData = fileLoadedEvent.target.result;
-			setAffImage(srcData);
-		};
-		fileReader.readAsDataURL(file);
-	}
-
-	async function handleSubmit(e) {
-		e.preventDefault();
-
-		let specsDom = document.getElementsByClassName("specs");
-		let specs = [];
-		for (let i = 0; i < specsDom.length; i++) {
-			let spec = "";
-			spec += specsDom[i].children[1].innerText;
-			spec += " : ";
-			spec += specsDom[i].children[1].children[0].value;
-			specs[i] = spec;
-		}
-
-		const formData = bodyCleaner({
-			name: inputName.current.children[1].children[0].value,
-			description: inputDesc.current.children[1].children[0].value ?? "Pas de description",
-			price: Number(inputPrice.current.children[1].children[0].value),
-			images: [""],
-			specs: specs,
-			categories: [""],
-			quantity: Number(inputQuantity.current.children[1].children[0].value) ?? 0,
-		});
-
-
-		axios
-			.post(serverURL("articles"), formData, { withCredentials: true })
-			.then((response) => {
-				const { data } = response;
-
-				setMessage(data.message);
-				return data.data._id;
-			})
-			.then((articleID) => {
-				const imagesFormData = new FormData();
-				for (const file of inputImage.current.children[0].children[0].files) {
-					imagesFormData.append("images", file, file.name);
-				}
-
-				axios
-					.post(storageURL(`images/${articleID}`), imagesFormData)
-					.then((response) => {
-						const { data } = response;
-
-						setMessage(data.message);
-
-						setTimeout(() => {
-							navigate("/admin");
-						}, 1000);
-					})
-					.catch((error) => {
-						setMessage(error.response?.data.message ?? error.message);
-					});
-			})
-			.catch((error) => {
-				setMessage(error.response?.data.message ?? error.message);
-			});
-	}
+	const [imagesDisplay, setImagesDisplay] = useState();
 
 	function addSpec(elem) {
 		let label = prompt("Quelle type de spécification ?");
@@ -126,23 +55,113 @@ export default function AddArticle() {
 				<Button style={{ marginBottom: "30px" }}
 					variant="outlined"
 					color="secondary"
-					onClick={removeSpec}
+					onClick={removeParent}
 				>
 					<DeleteRoundedIcon />
 				</Button>
 			</>
 		);
-		Specs.append(div);
-
 	}
 
-	function removeSpec (elem) {
-		let Spec = elem.target;
-		while (Spec.nodeName !== "BUTTON") {
-			Spec = Spec.parentElement;
+	function updateImages() {
+		const images = [];
+		for (const file of imagesFiles.current) {
+			images.push(URL.createObjectURL(file));
 		}
-		Spec = Spec.parentElement;
-		Spec.remove();
+		setImagesDisplay(images);
+	}
+
+	function addImage(e) {
+		e.preventDefault();
+
+		let error = "";
+		for (const file of inputImage.current.children[0].children[0].files) {
+			if (file.name.match(/.+\.(jpeg|jpg|png)/)) {
+				imagesFiles.current.push(file);
+			} else {
+				error += `Le fichier ${file.name} n'a pas la bonne extension (.jpeg, .jpg, .png)\n`;
+			}
+		}
+
+		updateImages();
+
+		if (error != "") {
+			alert(error);
+		}
+	}
+
+	function removeImage(index) {
+		imagesFiles.current.splice(index, 1);
+		updateImages();
+	}
+
+
+	async function handleSubmit(e) {
+		e.preventDefault();
+
+		let specsDom = document.getElementsByClassName("specs");
+		let specs = [];
+		for (let i = 0; i < specsDom.length; i++) {
+			let spec = "";
+			spec += specsDom[i].children[1].innerText;
+			spec += " : ";
+			spec += specsDom[i].children[1].children[0].value;
+			specs[i] = spec;
+		}
+
+		const formData = bodyCleaner({
+			name: inputName.current.children[1].children[0].value,
+			description: inputDesc.current.children[1].children[0].value ?? "Pas de description",
+			price: Number(inputPrice.current.children[1].children[0].value),
+			images: [],
+			specs: specs,
+			categories: [""],
+			quantity: Number(inputQuantity.current.children[1].children[0].value) ?? 0,
+		});
+
+
+		axios
+			.post(serverURL("articles"), formData, { withCredentials: true })
+			.then((response) => {
+				const { data } = response;
+
+				setMessage(data.message);
+				return data.data._id;
+			})
+			.then((articleID) => {
+				const imagesFormData = new FormData;
+				for (const file of imagesFiles.current) {
+					imagesFormData.append("images", file, file.name);
+				}
+
+				axios
+					.post(storageURL(`images/${articleID}`), imagesFormData)
+					.then((response) => {
+
+						const { data } = response;
+
+						setMessage(data.message);
+
+						setTimeout(() => {
+							navigate("/admin");
+						}, 1000);
+					})
+					.catch((error) => {
+						setMessage(error.response?.data.message ?? error.message);
+					});
+			})
+			.catch((error) => {
+				setMessage(error.response?.data.message ?? error.message);
+			});
+	}
+
+	function removeParent(elem) {
+		let Parent = elem.target;
+		while (Parent.nodeName !== "BUTTON") {
+			Parent = Parent.parentElement;
+		}
+		Parent = Parent.parentElement;
+		Parent.remove();
 
 	}
 
@@ -228,10 +247,22 @@ export default function AddArticle() {
 						<StyledInput
 							ref={inputImage}
 							type="file"
-							onChange={getImageFromLocal}
+							onChange={addImage}
+							inputProps={{ multiple: true }}
 							fullWidth
 						/>
-						<AnyImage url={affImage} />
+						{imagesDisplay?.map((file, index) => (
+							<div style = {{width: "100%"}}>
+								<Button style={{ position: "absolute" }}
+									variant="outlined"
+									color="secondary"
+									onClick={() => { removeImage(index) }}
+								>
+									<DeleteRoundedIcon />
+								</Button>
+								<AnyImage src={file} />
+							</div>
+						))}
 						<Button
 							variant="contained"
 							color="primary"

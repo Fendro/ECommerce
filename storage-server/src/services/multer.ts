@@ -32,7 +32,7 @@ const upload = multer({
     if (extName && mimeType) {
       callback(null, true);
     } else {
-      callback(new ServiceError("Only images are allowed.", {}));
+      callback(new ServiceError("Only images (.jpeg, .jpg, .png) are allowed.", {}));
     }
   },
 });

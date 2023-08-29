@@ -80,7 +80,7 @@ export function AnyText({ width, color, children }) {
   return <div style={style}>{children}</div>;
 }
 
-export function AnyImage({ width, url, alt }) {
+export function AnyImage({ width, url, alt, ...other }) {
   const style = {
     width: width ? width - 1 + "%" : "99%",
     aspectRatio: 5 / 3,
@@ -89,7 +89,7 @@ export function AnyImage({ width, url, alt }) {
     padding: "1px",
   };
   return (
-    <img style={style} alt={alt ?? "image"} src={url ?? placeholder}></img>
+    <img style={style} alt={alt ?? "image"} src={url ?? placeholder} {...other}></img>
   );
 }
 
