@@ -64,7 +64,7 @@ export default function Payment() {
         if (useSavedCard && selectedCard) {
             localStorage.setItem("selectedCard", selectedCard);
             console.log("Selected card:", selectedCard);
-            // navigate("/final");
+            navigate("/final");
         } else {
             const cardDetails = {
                 number: inputCard.current.children[1].children[0].value,
@@ -73,7 +73,7 @@ export default function Payment() {
             };
             handleNewCardSubmission(cardDetails);
             console.log(selectedCard);
-            // navigate("/final");
+            navigate("/final");
         }
     }
 
