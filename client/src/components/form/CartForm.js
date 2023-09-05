@@ -28,7 +28,8 @@ export default function CartForm() {
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
                                 {articleImage && (
-                                    <AnyImage width="10" src={articleImage} alt={`Image de ${articleInfo.name}`}/>
+                                    <AnyImage width="10" src={articleImage}
+                                              alt={`Image de ${articleInfo?.name ?? articleInCart.articleName}`}/>
                                 )}
                                 <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.articleName}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
@@ -40,7 +41,7 @@ export default function CartForm() {
             {Object.keys(user).length ? (
                 <TopCenterContainer>
                     <Button variant="outlined" color="success" onClick={() => navigate("/deliveryForUser")}>
-                        Order
+                        Commander
                     </Button>
                 </TopCenterContainer>
             ) : (
