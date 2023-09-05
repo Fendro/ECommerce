@@ -67,6 +67,7 @@ export default function Payment() {
             console.log("Selected card:", selectedCard);
             navigate("/final");
         } else {
+            console.log(inputCard.current.children[1].children[0].value)
             const cardDetails = {
                 number: inputCard.current.children[1].children[0].value,
                 expirationDate: inputDate.current.children[1].children[0].value,
