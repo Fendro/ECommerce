@@ -1,7 +1,7 @@
-import { catchWrapper } from "../utils";
-import { isAdmin } from "../controllers/AdminController";
+import { catchWrapper } from "utils";
+import { isAdmin } from "controllers/AdminController";
 import { Router } from "express";
-import * as CurrencyController from "../controllers/CurrencyController";
+import { CurrencyController } from "controllers";
 
 const currenciesRouter: Router = Router();
 

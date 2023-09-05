@@ -14,6 +14,7 @@ import ShoppingCart from "./pages/Shopcart";
 import Delivery from "./pages/Delivery";
 import DeliveryForUser from "./pages/DeliveryForUser";
 import Final from "./pages/FinalPage";
+import Payment from "./pages/Payment";
 
 const AppRouter = () => {
     return (
@@ -32,6 +33,7 @@ const AppRouter = () => {
                 <Route path="/cart" element={<ShoppingCart/>}/>
                 <Route path="/delivery" element={<Delivery/>}/>
                 <Route path="/deliveryForUser" element={<DeliveryForUser/>}/>
+                <Route path="/payment" element={<Payment/>}/>
                 <Route path="/final" element={<Final/>}/>
                 <Route path="*" element={<ErrorPage/>}/>
             </Routes>

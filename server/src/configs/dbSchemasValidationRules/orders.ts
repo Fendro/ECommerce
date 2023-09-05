@@ -1,4 +1,4 @@
-module.exports = {
+export const orders = {
   $jsonSchema: {
     bsonType: "object",
     title: "Order Object Validation",

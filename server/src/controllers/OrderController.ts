@@ -1,6 +1,6 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { NotFound, OrderModel, ServiceError, Unauthorized } from "../models";
+import { getCollection } from "services";
+import { NotFound, OrderModel, ServiceError, Unauthorized } from "models";
 import { Request, Response } from "express";
 
 const editableFields = ["state"];
@@ -10,11 +10,15 @@ let model: OrderModel;
     await getCollection("orders"),
     await getCollection("articles"),
     await getCollection("packages"),
+    await getCollection("creditCards"),
   );
 })();
 
 const addOrder = async (req: Request, res: Response): Promise<void> => {
-  const data = requestHandler.fetchParams(["user_id", "packages"], req.body);
+  const data = requestHandler.fetchParams(
+    ["user_id", "packages", "creditCard_id"],
+    req.body,
+  );
 
   const { insertedId } = await model.addOrder(data);
 

@@ -1,4 +1,4 @@
-import appConfig from "../configs/appConfig";
+import appConfig from "configs/appConfig";
 import fs from "fs";
 import requestHandler from "./requestHandler";
 import { outgoingResponse } from "./requestLogger";
@@ -9,11 +9,11 @@ import {
   NotFound,
   ServiceError,
   Unauthorized,
-} from "../models";
+} from "models";
 import { BSONError } from "bson";
 import { MongoError } from "mongodb";
 import { NextFunction, Request, Response } from "express";
-import { ResponseData } from "../types";
+import { ResponseData } from "types";
 
 /**
  * Custom error handling middleware which sends responses

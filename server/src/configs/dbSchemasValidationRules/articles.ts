@@ -1,32 +1,22 @@
-module.exports = {
+export const articles = {
   $jsonSchema: {
     bsonType: "object",
     title: "Article Object Validation",
-    required: [
-      "categories",
-      "description",
-      "images",
-      "name",
-      "price",
-      "quantity",
-      "searches",
-      "specs",
-      "views",
-    ],
+    required: ["name", "price", "specs"],
     properties: {
       categories: {
         bsonType: "array",
-        description: "must be an array of strings and is required.",
+        description: "must be an array of references to categories documents.",
         items: {
-          bsonType: "string",
-          description: "must be a unique string.",
+          bsonType: "objectId",
+          description: "must be a unique reference.",
         },
         uniqueItems: true,
         minItems: 0,
       },
       description: {
         bsonType: "string",
-        description: "must be a string and is required.",
+        description: "must be a string.",
       },
       featured: {
         bsonType: "bool",
@@ -34,7 +24,7 @@ module.exports = {
       },
       images: {
         bsonType: "array",
-        description: "must be an array of strings and is required.",
+        description: "must be an array of strings.",
         items: {
           bsonType: "string",
           description: "must be a string.",
@@ -47,24 +37,39 @@ module.exports = {
       },
       price: {
         bsonType: ["double", "int", "long"],
-        description: "must be a number and is required.",
+        description: "must be a number (EUR) and is required.",
       },
       quantity: {
         bsonType: ["double", "int", "long"],
-        description: "must be a number and is required.",
+        description: "must be a number.",
       },
       searches: {
         bsonType: ["double", "int", "long"],
-        description: "must be a number and is required.",
+        description: "must be a number.",
       },
       specs: {
-        bsonType: "array",
-        description: "must be an array of strings and is required.",
-        items: {
-          bsonType: "string",
-          description: "must be a string.",
+        bsonType: "object",
+        description: "must be an object and is required.",
+        required: ["height", "length", "width", "weight"],
+        properties: {
+          height: {
+            bsonType: ["double", "int", "long"],
+            description: "must be a number and is required.",
+          },
+          length: {
+            bsonType: ["double", "int", "long"],
+            description: "must be a number and is required.",
+          },
+          width: {
+            bsonType: ["double", "int", "long"],
+            description: "must be a number and is required.",
+          },
+          weight: {
+            bsonType: ["double", "int", "long"],
+            description: "must be a number and is required.",
+          },
         },
-        minItems: 0,
+        additionalProperties: true,
       },
       views: {
         bsonType: ["double", "int", "long"],

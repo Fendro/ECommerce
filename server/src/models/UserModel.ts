@@ -1,4 +1,4 @@
-import { passwordHashing } from "../utils";
+import { passwordHashing } from "utils";
 import {
   Collection,
   Document,

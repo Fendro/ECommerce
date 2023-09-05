@@ -1,34 +1,21 @@
-export const guests = {
+export const addresses = {
   $jsonSchema: {
     bsonType: "object",
-    title: "Guest Object Validation",
+    title: "Address Object Validation",
     required: [
-      "address",
-      "city",
-      "country",
-      "email",
+      "user_id",
       "firstname",
       "lastname",
-      "phone",
+      "address",
       "zip",
+      "city",
+      "country",
+      "phone",
     ],
     properties: {
-      address: {
-        bsonType: "string",
-        description: "must be a string and is required.",
-      },
-      city: {
-        bsonType: "string",
-        description: "must be a string and is required.",
-      },
-      country: {
-        bsonType: "string",
-        description: "must be a string and is required.",
-      },
-      email: {
-        bsonType: "string",
-        pattern: "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
-        description: "must be a regex validated string and is required.",
+      user_id: {
+        bsonType: "objectId",
+        description: "must reference a users document and is required.",
       },
       firstname: {
         bsonType: "string",
@@ -38,11 +25,23 @@ export const guests = {
         bsonType: "string",
         description: "must be a string and is required.",
       },
-      phone: {
+      address: {
         bsonType: "string",
         description: "must be a string and is required.",
       },
       zip: {
+        bsonType: "string",
+        description: "must be a string and is required.",
+      },
+      country: {
+        bsonType: "string",
+        description: "must be a string and is required.",
+      },
+      city: {
+        bsonType: "string",
+        description: "must be a string and is required.",
+      },
+      phone: {
         bsonType: "string",
         description: "must be a string and is required.",
       },

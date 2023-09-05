@@ -11,15 +11,18 @@ export class OrderModel {
   collection: Collection;
   articlesCollection: Collection;
   packageCollection: Collection;
+  creditCardsCollection: Collection;
 
   constructor(
     collection: Collection,
     articlesCollection: Collection,
     packageCollection: Collection,
+    creditCardsCollection: Collection,
   ) {
     this.collection = collection;
     this.articlesCollection = articlesCollection;
     this.packageCollection = packageCollection;
+    this.creditCardsCollection = creditCardsCollection;
   }
 
   private arePackagesProper = (orderPackages: { [key: string]: any }[]) => {
@@ -35,6 +38,16 @@ export class OrderModel {
 
   addOrder = async (data: { [key: string]: any }): Promise<InsertOneResult> => {
     data.user_id = ObjectId.createFromHexString(data.user_id);
+
+    const creditCard = await this.creditCardsCollection.findOne({
+      _id: ObjectId.createFromHexString(data.creditCard_id),
+    });
+
+    if (!creditCard)
+      throw new FailedDependency("Credit card not found.", {
+        failed: data.creditCard_id,
+        payload: data,
+      });
 
     this.arePackagesProper(data.packages);
 
@@ -69,7 +82,7 @@ export class OrderModel {
     }
     data.packages_id = data.packages;
     data.orderDate = new Date();
-    data.payment = "pending";
+    data.payment = "paid";
     delete data.packages;
 
     return await this.collection.insertOne(data);

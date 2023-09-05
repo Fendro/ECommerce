@@ -1,12 +1,12 @@
-module.exports = {
+export const users = {
   $jsonSchema: {
     bsonType: "object",
     title: "User Object Validation",
-    required: ["admin", "email", "password", "username"],
+    required: ["email", "password", "username"],
     properties: {
       admin: {
         bsonType: "bool",
-        description: "must be a boolean and is required.",
+        description: "must be a boolean.",
       },
       email: {
         bsonType: "string",

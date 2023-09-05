@@ -23,6 +23,12 @@ export class ArticleModel {
     data.views = 0;
     data.searches = 0;
 
+    for (const index in data.categories) {
+      data.categories[index] = ObjectId.createFromHexString(
+        data.categories[index],
+      );
+    }
+
     return await this.collection.insertOne(data);
   };
 
@@ -51,7 +57,7 @@ export class ArticleModel {
     return await this.collection.findOneAndUpdate(
       { _id: ObjectId.createFromHexString(_id) },
       { $inc: { views: 1 } },
-      // { projection: { views: 0, searches: 0 } },
+      { projection: { views: 0, searches: 0 } },
     );
   };
 

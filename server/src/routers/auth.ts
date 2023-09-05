@@ -1,6 +1,6 @@
-import { catchWrapper } from "../utils";
+import { catchWrapper } from "utils";
 import { Router } from "express";
-import * as UserController from "../controllers/UserController";
+import { UserController } from "controllers";
 
 const authRouter: Router = Router();
 
@@ -18,7 +18,5 @@ authRouter.put(
   UserController.isLoggedIn,
   catchWrapper(UserController.editUser),
 );
-
-authRouter.post("/auth/logout", UserController.logout);
 
 export default authRouter;

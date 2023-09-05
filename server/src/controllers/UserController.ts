@@ -1,8 +1,7 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { ServiceError, Unauthorized } from "../models";
+import { getCollection } from "services";
+import { ServiceError, Unauthorized, UserModel } from "models";
 import { NextFunction, Request, Response } from "express";
-import { UserModel } from "../models";
 
 const editableFields = [
   "addresses",
@@ -63,6 +62,17 @@ const editUser = async (req: Request, res: Response): Promise<void> => {
 const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
   if (!req.session?.user) throw new Unauthorized("Authentication required.");
+  else next();
+};
+
+const isOwner = (req: Request, res: Response, next: NextFunction): void => {
+  // @ts-ignore
+  if (!req.session?.user) throw new Unauthorized("Authentication required.");
+
+  const { user_id } = requestHandler.fetchParams(["user_id"], req.params);
+  // @ts-ignore
+  if (req.session?.user._id !== user_id)
+    throw new Unauthorized("Unauthorized access.");
   else next();
 };
 
@@ -152,6 +162,7 @@ export {
   deleteUser,
   editUser,
   isLoggedIn,
+  isOwner,
   login,
   logout,
   register,

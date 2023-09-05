@@ -43,7 +43,7 @@ export default function AddUser() {
         //         setMessage(error.response.data.message);
         //         console.error(error.response.data);
         //     });
-        navigate("/final");
+        navigate("/payment");
     };
 
     return (

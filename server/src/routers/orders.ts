@@ -1,7 +1,7 @@
-import { catchWrapper } from "../utils";
-import { isLoggedIn } from "../controllers/UserController";
+import { catchWrapper } from "utils";
+import { isLoggedIn } from "controllers/UserController";
 import { Router } from "express";
-import * as OrderController from "../controllers/OrderController";
+import { OrderController } from "controllers";
 
 const ordersRouter: Router = Router();
 

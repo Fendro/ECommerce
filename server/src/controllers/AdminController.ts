@@ -1,12 +1,12 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { AdminModel } from "../models";
+import { getCollection } from "services";
 import {
+  AdminModel,
   ForbiddenRequest,
   NotFound,
   ServiceError,
   Unauthorized,
-} from "../models";
+} from "models";
 import { NextFunction, Request, Response } from "express";
 
 const editableFields = ["admin", "email", "password", "username"];
@@ -80,8 +80,7 @@ const isAdmin = (req: Request, res: Response, next: NextFunction): void => {
   // @ts-ignore
   if (!req.session.user?.admin) {
     throw new ForbiddenRequest(
-      "This action requires administrator privileges.",
-      // @ts-ignore
+      "This action requires administrator privileges.", // @ts-ignore
       req.session.user,
     );
   } else {

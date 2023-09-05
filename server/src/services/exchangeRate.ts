@@ -1,8 +1,8 @@
-import appConfig from "../configs/appConfig";
+import appConfig from "configs/appConfig";
 import axios from "axios";
 import fs from "fs";
 import { getCollection } from "./mongoDB";
-import { CurrencyModel, ServiceError } from "../models";
+import { CurrencyModel, ServiceError } from "models";
 
 const descriptions = JSON.parse(
   fs.readFileSync("assets/Currencies.json").toString(),
