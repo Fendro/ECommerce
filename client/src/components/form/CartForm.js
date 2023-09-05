@@ -24,7 +24,7 @@ export default function CartForm() {
                 <div key={`package_${packageIndex}`}>
                     {pkg.articles.map((articleInCart, articleIndex) => {
                         const articleInfo = articleContext.article[articleInCart.article_id];
-                        const articleImage = articleInCart?.images?.[0] || "https://fastly.picsum.photos/id/661/200/200.jpg?hmac=pTRumV7JHMWLu9tuOU6quaMWqF-oxcymEOAvPNfXG4I";
+                        const articleImage = articleInCart?.images?.[0] || "https://fastly.picsum.photos/id/367/200/200.jpg?hmac=6NmiWxiENMBIeAXEfu9fN20uigiBudgYzqHfz-eXZYk";
                         console.log(articleImage)
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
