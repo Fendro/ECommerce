@@ -1,7 +1,7 @@
-module.exports = {
+export const addresses = {
   $jsonSchema: {
     bsonType: "object",
-    title: "Article Object Validation",
+    title: "Address Object Validation",
     required: [
       "user_id",
       "firstname",
@@ -34,6 +34,10 @@ module.exports = {
         description: "must be a string and is required.",
       },
       country: {
+        bsonType: "string",
+        description: "must be a string and is required.",
+      },
+      city: {
         bsonType: "string",
         description: "must be a string and is required.",
       },

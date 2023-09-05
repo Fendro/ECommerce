@@ -1,4 +1,4 @@
-import { passwordHashing } from "../utils";
+import { passwordHashing } from "utils";
 import { Collection, Document, ModifyResult, ObjectId, WithId } from "mongodb";
 
 export class AdminModel {

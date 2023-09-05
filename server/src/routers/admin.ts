@@ -1,6 +1,6 @@
-import { catchWrapper } from "../utils";
+import { catchWrapper } from "utils";
 import { Router } from "express";
-import * as AdminController from "../controllers/AdminController";
+import { AdminController } from "controllers";
 
 const adminRouter: Router = Router();
 

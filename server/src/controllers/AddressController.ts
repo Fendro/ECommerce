@@ -1,17 +1,14 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { AddressModel, NotFound, ServiceError } from "../models";
+import { addresses as rules } from "../configs/dbSchemasValidationRules";
+import { getCollection } from "services";
+import { AddressModel, NotFound, ServiceError } from "models";
 import { Request, Response } from "express";
 
-const editableFields = [
-  "firstname",
-  "lastname",
-  "address",
-  "zip",
-  "city",
-  "country",
-  "phone",
-];
+const editableFields = Object.keys(rules.$jsonSchema.properties).filter(
+  (property) => {
+    return !["user_id"].includes(property);
+  },
+);
 let model: AddressModel;
 (async () => {
   model = new AddressModel(

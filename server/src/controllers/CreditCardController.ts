@@ -1,6 +1,6 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { CreditCardModel, NotFound, ServiceError } from "../models";
+import { getCollection } from "services";
+import { CreditCardModel, NotFound, ServiceError } from "models";
 import { Request, Response } from "express";
 
 const editableFields = ["country", "number", "expirationDate"];

@@ -1,4 +1,4 @@
-module.exports = {
+export const users = {
   $jsonSchema: {
     bsonType: "object",
     title: "User Object Validation",

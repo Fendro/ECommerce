@@ -1,4 +1,5 @@
-require("dotenv").config();
+import * as process from "process";
+
 const env = process.env.DOT_ENV === "production" ? "production" : "development";
 
 const development = {

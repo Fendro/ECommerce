@@ -1,4 +1,5 @@
-import config from "../configs/dbConfig";
+import config from "configs/dbConfig";
+import * as rules from "configs/dbSchemasValidationRules";
 import { MongoClient } from "mongodb";
 
 /**
@@ -41,11 +42,17 @@ const setCollections = async (client: MongoClient) => {
   for (const collection of config.collections) {
     if (!collectionsNames.includes(collection)) {
       console.log(`Collection '${collection}' does not exist. Creating it...`);
-      const rules = require(`../configs/dbSchemasValidationRules/${collection}`);
+      // const rules = require(`../configs/dbSchemasValidationRules/${collection}`);
+      // @ts-ignore
+      if (!rules[collection])
+        throw new Error(
+          `Missing validation schema for collection ${collection}.`,
+        );
       await client.db().createCollection(collection, {
-        validator: rules,
+        // @ts-ignore
+        validator: rules[collection],
       });
-      if (collection in ["categories", "countries", "currencies"]) {
+      if (["categories", "countries", "currencies"].includes(collection)) {
         await client
           .db()
           .collection(collection)

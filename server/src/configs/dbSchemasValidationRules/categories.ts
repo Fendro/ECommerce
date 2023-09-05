@@ -1,4 +1,4 @@
-module.exports = {
+export const categories = {
   $jsonSchema: {
     bsonType: "object",
     title: "Category Object Validation",

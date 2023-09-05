@@ -1,7 +1,7 @@
-module.exports = {
+export const guests = {
   $jsonSchema: {
     bsonType: "object",
-    title: "User Object Validation",
+    title: "Guest Object Validation",
     required: [
       "address",
       "city",

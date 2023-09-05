@@ -1,6 +1,6 @@
-import { BadRequest } from "../models";
+import { BadRequest } from "models";
 import { Request, Response } from "express";
-import { ResponseData } from "../types";
+import { ResponseData } from "types";
 
 const searchBuilder = (req: Request): { [key: string]: any } => {
   const { field, value, orderBy, order, page, limit } = req.query;
