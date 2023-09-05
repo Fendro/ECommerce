@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Button} from "@mui/material";
-import {AnyImage, TopCenterContainer} from "../styling";
+import {TopCenterContainer} from "../styling";
 import {UserContext} from "../../context/UserContext";
 import {ArticleContext} from "../../context/ArticleContext";
 
@@ -25,11 +25,12 @@ export default function CartForm() {
                     {pkg.articles.map((articleInCart, articleIndex) => {
                         const articleInfo = articleContext.article[articleInCart.article_id];
                         const articleImage = articleInCart?.images?.[0] || "https://fastly.picsum.photos/id/661/200/200.jpg?hmac=pTRumV7JHMWLu9tuOU6quaMWqF-oxcymEOAvPNfXG4I";
+                        console.log(articleImage)
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
                                 {articleImage && (
-                                    <AnyImage width="10" src={articleImage}
-                                              alt={`Image de ${articleInfo?.name ?? articleInCart.articleName}`}/>
+                                    <img width="70" src={articleImage}
+                                         alt={`Image de ${articleInfo?.name ?? articleInCart.articleName}`}/>
                                 )}
                                 <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.articleName}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
