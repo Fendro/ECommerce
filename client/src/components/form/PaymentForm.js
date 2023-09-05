@@ -11,6 +11,7 @@ export default function Payment() {
     const inputCard = useRef();
     const inputDate = useRef();
     const inputCountry = useRef();
+    const inputCVV = useRef();
     const [message, setMessage] = useState("");
     const [useSavedCard, setUseSavedCard] = useState(false);
     const [savedCards, setSavedCards] = useState([]);
@@ -64,16 +65,17 @@ export default function Payment() {
         if (useSavedCard && selectedCard) {
             localStorage.setItem("selectedCard", selectedCard);
             console.log("Selected card:", selectedCard);
-            // navigate("/final");
+            navigate("/final");
         } else {
             const cardDetails = {
                 number: inputCard.current.children[1].children[0].value,
                 expirationDate: inputDate.current.children[1].children[0].value,
-                country: inputCountry.current.children[1].children[0].value
+                country: inputCountry.current.children[1].children[0].value,
+                cvv: inputCVV.current.children[1].children[0].value
             };
             handleNewCardSubmission(cardDetails);
             console.log(selectedCard);
-            // navigate("/final");
+            navigate("/final");
         }
     }
 
@@ -112,6 +114,17 @@ export default function Payment() {
                                 maxLength="5"
                                 variant="outlined"
                                 ref={inputDate}
+                                fullWidth
+                                required
+                            />
+                            <StyledInput
+                                label="CVV"
+                                type="tel"
+                                pattern="[0-9]{3}"
+                                minLength="3"
+                                maxLength="3"
+                                variant="outlined"
+                                ref={inputCVV}
                                 fullWidth
                                 required
                             />
