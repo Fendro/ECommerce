@@ -36,8 +36,7 @@ export default function Product() {
         })();
         // eslint-disable-next-line
     }, []);
-
-    const addToCart = (articleId, quantity, articleName) => {
+    const addToCart = (articleId, quantity, articleName, articleImage) => {
         const existingCart = JSON.parse(localStorage.getItem("packages")) || [];
         const cartPackageIndex = existingCart.findIndex(
             (cartPackage) => cartPackage.articles.find((article) => article.article_id === articleId)
@@ -47,14 +46,14 @@ export default function Product() {
                 (article) => article.article_id === articleId
             ).quantity += quantity;
         } else {
-            const articles = [{article_id: articleId, quantity, articleName}];
+            const articles = [{article_id: articleId, quantity, articleName, articleImage}];
             existingCart.push({
                 articles,
             });
         }
 
         localStorage.setItem("packages", JSON.stringify(existingCart));
-        addToContext(articleId, quantity, articleName);
+        addToContext(articleId, quantity, articleName, articleImage);
     };
 
     const addToContext = (articleId, quantity, articleName) => {
@@ -115,7 +114,7 @@ export default function Product() {
                             type="submit"
                             width={"100"}
                             mb={"5"}
-                            onClick={() => addToCart(id, 1, data?.name)}
+                            onClick={() => addToCart(id, 1, data?.name, data?.images?.[0] ?? null)}
                         >
                             Ajouter au panier
                         </Button>

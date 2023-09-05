@@ -14,6 +14,7 @@ export default function CartForm() {
     const {user} = useContext(UserContext);
     const storedPackages = JSON.parse(localStorage.getItem("packages")) || [];
     const articleContext = useContext(ArticleContext);
+
     return (
         <>
             <TopCenterContainer>
@@ -23,9 +24,14 @@ export default function CartForm() {
                 <div key={`package_${packageIndex}`}>
                     {pkg.articles.map((articleInCart, articleIndex) => {
                         const articleInfo = articleContext.article[articleInCart.article_id];
-                        // console.log(articleInCart.article_id);
+                        const articleImage = articleInCart?.images?.[0] || "https://fastly.picsum.photos/id/367/200/200.jpg?hmac=6NmiWxiENMBIeAXEfu9fN20uigiBudgYzqHfz-eXZYk";
+                        console.log(articleImage)
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
+                                {articleImage && (
+                                    <img width="70" src={articleImage}
+                                         alt={`Image de ${articleInfo?.name ?? articleInCart.articleName}`}/>
+                                )}
                                 <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.articleName}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
                             </TopCenterContainer>
@@ -35,21 +41,13 @@ export default function CartForm() {
             ))}
             {Object.keys(user).length ? (
                 <TopCenterContainer>
-                    <Button
-                        variant="outlined"
-                        color="success"
-                        onClick={() => navigate("/deliveryForUser")}
-                    >
-                        Order
+                    <Button variant="outlined" color="success" onClick={() => navigate("/deliveryForUser")}>
+                        Commander
                     </Button>
                 </TopCenterContainer>
             ) : (
                 <TopCenterContainer>
-                    <Button
-                        variant="outlined"
-                        color="success"
-                        onClick={() => setIsOpen(true)}
-                    >
+                    <Button variant="outlined" color="success" onClick={() => setIsOpen(true)}>
                         Commander
                     </Button>
                 </TopCenterContainer>
