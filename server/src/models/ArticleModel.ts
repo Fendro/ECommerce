@@ -23,6 +23,12 @@ export class ArticleModel {
     data.views = 0;
     data.searches = 0;
 
+    for (const index in data.categories) {
+      data.categories[index] = ObjectId.createFromHexString(
+        data.categories[index],
+      );
+    }
+
     return await this.collection.insertOne(data);
   };
 
