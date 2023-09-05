@@ -48,14 +48,10 @@ export default function Product() {
               key={article._id ?? index}
               link={"/articles/" + article._id}
             >
+				<AnyImage width="20" bin={article?.image?.[0] ?? null}></AnyImage>
               {article.images?.map((img, ind) => {
                 return (
-                  <img
-                    alt="image article"
-                    width="200px"
-                    height="200px"
-                    src={article.images[0]}
-                  />
+					ind != 0 ? <AnyImage width="20" bin={article?.image?.[ind] ?? null}></AnyImage> : false
                 );
               })}
               <Linebreak />
