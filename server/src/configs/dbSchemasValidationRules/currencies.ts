@@ -1,7 +1,7 @@
-module.exports = {
+export const currencies = {
   $jsonSchema: {
     bsonType: "object",
-    title: "Category Object Validation",
+    title: "Currency Object Validation",
     required: ["name", "rate", "manuallySet"],
     properties: {
       name: {

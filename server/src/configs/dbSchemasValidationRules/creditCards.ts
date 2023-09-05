@@ -1,7 +1,7 @@
-module.exports = {
+export const creditCards = {
   $jsonSchema: {
     bsonType: "object",
-    title: "Article Object Validation",
+    title: "Credit Card Object Validation",
     required: ["user_id", "country", "number", "expirationDate", "token"],
     properties: {
       user_id: {

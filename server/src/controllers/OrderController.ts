@@ -1,6 +1,6 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { NotFound, OrderModel, ServiceError, Unauthorized } from "../models";
+import { getCollection } from "services";
+import { NotFound, OrderModel, ServiceError, Unauthorized } from "models";
 import { Request, Response } from "express";
 
 const editableFields = ["state"];

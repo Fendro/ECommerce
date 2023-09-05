@@ -1,6 +1,6 @@
 import fs from "fs";
 import { NextFunction, Request, Response } from "express";
-import { ResponseData } from "../types";
+import { ResponseData } from "types";
 
 const logDirectory = "./requests logs";
 

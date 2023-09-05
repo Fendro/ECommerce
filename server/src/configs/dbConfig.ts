@@ -1,4 +1,5 @@
-require("dotenv").config();
+import * as process from "process";
+
 const env = process.env.DOT_ENV === "production" ? "production" : "development";
 
 const development = {
@@ -6,9 +7,11 @@ const development = {
   hostname: "localhost",
   dbName: "Ecommerce",
   collections: [
+    "addresses",
     "articles",
     "categories",
     "countries",
+    "creditCards",
     "currencies",
     "guests",
     "orders",
@@ -22,8 +25,12 @@ const production = {
   hostname: "localhost",
   dbName: "Ecommerce",
   collections: [
+    "addresses",
     "articles",
     "categories",
+    "countries",
+    "creditCards",
+    "currencies",
     "guests",
     "orders",
     "packages",

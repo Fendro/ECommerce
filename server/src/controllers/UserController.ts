@@ -1,8 +1,7 @@
 import requestHandler from "../services/requestHandler";
-import { getCollection } from "../services";
-import { ServiceError, Unauthorized } from "../models";
+import { getCollection } from "services";
+import { ServiceError, Unauthorized, UserModel } from "models";
 import { NextFunction, Request, Response } from "express";
-import { UserModel } from "../models";
 
 const editableFields = [
   "addresses",
