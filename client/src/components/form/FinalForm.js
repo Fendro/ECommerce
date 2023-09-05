@@ -24,16 +24,17 @@ export default function Login() {
             const requestData = {
                 user_id: user._id,
                 packages: ordersToSend,
-                creditCart_id: localStorage.getItem("selectedCart")
+                creditCard_id: localStorage.getItem("selectedCard")
             };
-            console.log(user);
-            console.log("requestData:", requestData, typeof requestData);
-            console.log("user_id:", requestData.user_id, typeof requestData.user_id);
-            console.log("packages:", requestData.packages, typeof requestData.packages);
-            console.log("articles:", requestData.packages[0].articles, typeof requestData.packages[0].articles);
-            console.log("shippingMethod:", requestData.packages[0].shippingMethod, typeof requestData.packages[0].shippingMethod);
-            console.log("article_id:", requestData.packages[0].articles[0].article_id, typeof requestData.packages[0].articles[0].article_id);
-            console.log("quantity:", requestData.packages[0].articles[0].quantity, typeof requestData.packages[0].articles[0].quantity);
+            console.log(requestData)
+            // console.log(user);
+            // console.log("requestData:", requestData, typeof requestData);
+            // console.log("user_id:", requestData.user_id, typeof requestData.user_id);
+            // console.log("packages:", requestData.packages, typeof requestData.packages);
+            // console.log("articles:", requestData.packages[0].articles, typeof requestData.packages[0].articles);
+            // console.log("shippingMethod:", requestData.packages[0].shippingMethod, typeof requestData.packages[0].shippingMethod);
+            // console.log("article_id:", requestData.packages[0].articles[0].article_id, typeof requestData.packages[0].articles[0].article_id);
+            // console.log("quantity:", requestData.packages[0].articles[0].quantity, typeof requestData.packages[0].articles[0].quantity);
 
             axios
                 .post(serverURL("orders"), requestData)
