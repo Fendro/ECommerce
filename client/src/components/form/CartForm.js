@@ -2,7 +2,7 @@ import ReactModal from "react-modal";
 import React, {useContext, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import {Button} from "@mui/material";
-import {TopCenterContainer} from "../styling";
+import {AnyImage, TopCenterContainer} from "../styling";
 import {UserContext} from "../../context/UserContext";
 import {ArticleContext} from "../../context/ArticleContext";
 
@@ -14,6 +14,7 @@ export default function CartForm() {
     const {user} = useContext(UserContext);
     const storedPackages = JSON.parse(localStorage.getItem("packages")) || [];
     const articleContext = useContext(ArticleContext);
+
     return (
         <>
             <TopCenterContainer>
@@ -23,9 +24,12 @@ export default function CartForm() {
                 <div key={`package_${packageIndex}`}>
                     {pkg.articles.map((articleInCart, articleIndex) => {
                         const articleInfo = articleContext.article[articleInCart.article_id];
-                        // console.log(articleInCart.article_id);
+                        const articleImage = articleInCart?.images?.[0] || "https://fastly.picsum.photos/id/661/200/200.jpg?hmac=pTRumV7JHMWLu9tuOU6quaMWqF-oxcymEOAvPNfXG4I";
                         return (
                             <TopCenterContainer key={`article_${articleIndex}`}>
+                                {articleImage && (
+                                    <AnyImage width="10" src={articleImage} alt={`Image de ${articleInfo.name}`}/>
+                                )}
                                 <h2>Nom de l'article: {articleInfo?.name ?? articleInCart.articleName}</h2>
                                 <p>Quantité: {articleInCart.quantity}</p>
                             </TopCenterContainer>
@@ -35,21 +39,13 @@ export default function CartForm() {
             ))}
             {Object.keys(user).length ? (
                 <TopCenterContainer>
-                    <Button
-                        variant="outlined"
-                        color="success"
-                        onClick={() => navigate("/deliveryForUser")}
-                    >
+                    <Button variant="outlined" color="success" onClick={() => navigate("/deliveryForUser")}>
                         Order
                     </Button>
                 </TopCenterContainer>
             ) : (
                 <TopCenterContainer>
-                    <Button
-                        variant="outlined"
-                        color="success"
-                        onClick={() => setIsOpen(true)}
-                    >
+                    <Button variant="outlined" color="success" onClick={() => setIsOpen(true)}>
                         Commander
                     </Button>
                 </TopCenterContainer>
